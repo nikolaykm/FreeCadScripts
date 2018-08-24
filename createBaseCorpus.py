@@ -40,7 +40,6 @@ def getRowFromSpreadsheet(spreadsheetName, row):
 def createBody(bodyName):
     App.activeDocument().addObject('PartDesign::Body', bodyName)
     App.ActiveDocument.recompute()
-    App.activeDocument().addObject('Spreadsheet::Sheet', bodyName+"_Spreadsheet")
 
 def createSketch(sketchName, bodyName, supportName, supportFace):
     getattr(App.activeDocument(), bodyName).newObject('Sketcher::SketchObject', sketchName)
@@ -85,80 +84,78 @@ def createPadFromSketch(bodyName, sketchName, zL):
     App.ActiveDocument.recompute()
 
 
-def createBoard(bodyName, row, extraConList, cantToFaceDict):
+def createBoard(cabinetName, bodyName, row):
 
-    rowDict = getRowFromSpreadsheet(bodyName + "_Spreadsheet", row)
+    rowDict = getRowFromSpreadsheet(cabinetName + "_Spreadsheet", row)
     sketchName = rowDict['Name']
-    xL = rowDict[rowDict['xL']]
-    yL = rowDict[rowDict['yL']]
-    zL = rowDict[rowDict['zL']]
+    xL = rowDict['Width']
+    yL = rowDict['Height']
+    zL = rowDict['BoardThickness']
 
     #create the board
-    createSketch(sketchName, bodyName, rowDict['SupportName'], rowDict['SupportFace'])
-    createRectInSketch(sketchName, xL, yL, extraConList)
+    createSketch(sketchName, bodyName, 'XY_Plane', '')
+    conList = []
+    conList.append(Sketcher.Constraint('Symmetric',0,1,1,2,-1,1))
+    createRectInSketch(sketchName, xL, yL, conList)
     createPadFromSketch(bodyName, sketchName, zL)
 
     #cant the board
-    if len(cantToFaceDict) > 0:
-        for cant,face in cantToFaceDict.items():
-            if rowDict[cant] != "" and rowDict[cant] != "0" and rowDict[cant] != 0:
-                cantSketchName = sketchName + "_" + cant
-                createSketch(cantSketchName, bodyName, sketchName + "_Pad", face)
-                width = rowDict['Width'] if (cant == 'WCantFront' or cant == 'WCantBack') else rowDict['Height']
-                conList = []
-                conList.append(Sketcher.Constraint('DistanceY',-1,1,0,1,rowDict['BoardThickness']));
-                conList.append(Sketcher.Constraint('DistanceX',0,1,-1,1,width/2))
-                createRectInSketch(cantSketchName, width, rowDict['BoardThickness'], conList)
-                createPadFromSketch(bodyName, cantSketchName, rowDict[cant])
+    cantToFaceDict = {'WCantFront' : 'Face3', 'WCantBack' : 'Face1', 'HCantLeft' : 'Face4', 'HCantRight' : 'Face2'}
+    for cant,face in cantToFaceDict.items():
+        if rowDict[cant] != "" and rowDict[cant] != "0" and rowDict[cant] != 0:
+            cantSketchName = sketchName + "_" + cant
+            createSketch(cantSketchName, bodyName, sketchName + "_Pad", face)
+            width = rowDict['Width'] if (cant == 'WCantFront' or cant == 'WCantBack') else rowDict['Height']
+            conList = []
+            conList.append(Sketcher.Constraint('DistanceY',-1,1,0,1,rowDict['BoardThickness']));
+            conList.append(Sketcher.Constraint('DistanceX',0,1,-1,1,width/2))
+            createRectInSketch(cantSketchName, width, rowDict['BoardThickness'], conList)
+            createPadFromSketch(bodyName, cantSketchName, rowDict[cant])
             
 
 def createBaseCabinet(name, width, height, depth, boardThickness, sCantT, lCantT, legHeight):
-    createBody(name)
 
     #create spreadsheet column names
-    spreadSheetHeaders = ['Name', 'Width', 'Height', 'BoardThickness', 'WCantFront', 'WCantBack', 'HCantLeft', 'HCantRight', 'ByFlader', 'SupportName', 'SupportFace', 'xL', 'yL', 'zL']
+    App.activeDocument().addObject('Spreadsheet::Sheet', name + "_Spreadsheet")
+    spreadSheetHeaders = ['Name', 'Width', 'Height', 'BoardThickness', 'WCantFront', 'WCantBack', 'HCantLeft', 'HCantRight', 'ByFlader']
     writeRecordInSpreadsheet(name + "_Spreadsheet", spreadSheetHeaders)
     
     #create base
+    bodyName = name + "_Base";
+    createBody(bodyName)
     cants = [sCantT, sCantT, sCantT, sCantT]
     cantToFaceDict = {'WCantFront' : 'Face3', 'WCantBack' : 'Face1', 'HCantLeft' : 'Face4', 'HCantRight' : 'Face2'}
     calcWidth = width-cants[2]-cants[3];
     calcHeight = depth-cants[0]-cants[1]
-    sprRec = [name + '_SketchBase', calcWidth, calcHeight, boardThickness, cants[0], cants[1], cants[2], cants[3], 0, 'XY_Plane', '', 'Width', 'Height', 'BoardThickness']
+    sprRec = [bodyName + '_SketchBase', calcWidth, calcHeight, boardThickness, cants[0], cants[1], cants[2], cants[3], 0]
     row = writeRecordInSpreadsheet(name + "_Spreadsheet", sprRec)
-    conList = []
-    conList.append(Sketcher.Constraint('Symmetric',0,1,1,2,-1,1))
-    createBoard(name, row, conList, cantToFaceDict)
+    createBoard(name, bodyName, row)
 
+    #TODO: cant the upper side
     #create left side
-
+    bodyName = name + "_LeftSide"
+    createBody(bodyName)
     cants = [0, 0, sCantT, sCantT]
-    cantToFaceDict = []
-    #cantToFaceDict = {'HCantLeft' : 'Face14', 'HCantRight' : 'Face3'}
     calcWidth = depth-cants[2]-cants[3]
     calcHeight = height-cants[0]-cants[1]-boardThickness-legHeight
-    sprRec = [name + '_SketchLeftSide', calcWidth, calcHeight, boardThickness, cants[0], cants[1], cants[2], cants[3], 1, name + "_SketchBase_Pad", 'Face6', 'BoardThickness', 'Width', 'Height']
+    sprRec = [bodyName + '_SketchLeftSide', calcWidth, calcHeight, boardThickness, cants[0], cants[1], cants[2], cants[3], 1]
     row = writeRecordInSpreadsheet(name + "_Spreadsheet", sprRec)
-    conList = []
-    conList.append(Sketcher.Constraint('Distance',-1,1,3,width/2))
-    conList.append(Sketcher.Constraint('DistanceY',-1,1,0,1,calcWidth/2))
-    createBoard(name, row, conList, cantToFaceDict)
+    createBoard(name, bodyName, row)
+    getattr(App.activeDocument(), bodyName).Placement=App.Placement(App.Vector(-width/2,0,calcHeight/2+boardThickness), App.Rotation(90,0,90), App.Vector(0,0,0))
+    App.ActiveDocument.recompute()
 
-
-#    createSketch(name + '_SketchLeftSide', name, name + '_SketchBase_Pad', 'Face6')
-#    conList = []
-#    conList.append(Sketcher.Constraint('Distance',-1,1,3,width/2))
-#    conList.append(Sketcher.Constraint('DistanceY',-1,1,0,1,depth/2))
-#    cantsList = []
-#    createBoard(boardThickness, depth, height, cantsList, name, name + '_SketchLeftSide', name + '_SketchLeftSide_Pad', conList)
-
+    #TODO: cant the upper side
     #create right side
-#    createSketch(name + '_SketchRightSide', name, name + '_SketchBase_Pad', 'Face6')
-#    conList = []
-#    conList.append(Sketcher.Constraint('Distance',-1,1,1,width/2))
-#    conList.append(Sketcher.Constraint('DistanceY',-1,1,0,1,depth/2))
-#    cantsList = [sCantT, sCantT, sCantT, sCantT]
-#    createBoard(boardThickness, depth, height, cantsList, name, name + '_SketchRightSide', name + '_SketchRightSide_Pad', conList)
+    bodyName = name + "_RightSide"
+    createBody(bodyName)
+    cants = [0, 0, sCantT, sCantT]
+    calcWidth = depth-cants[2]-cants[3]
+    calcHeight = height-cants[0]-cants[1]-boardThickness-legHeight
+    sprRec = [bodyName + '_SketchRightSide', calcWidth, calcHeight, boardThickness, cants[0], cants[1], cants[2], cants[3], 1]
+    row = writeRecordInSpreadsheet(name + "_Spreadsheet", sprRec)
+    createBoard(name, bodyName, row)
+    getattr(App.activeDocument(), bodyName).Placement=App.Placement(App.Vector(width/2,0,calcHeight/2+boardThickness), App.Rotation(90,0,-90), App.Vector(0,0,0))
+    App.ActiveDocument.recompute()
 
     #create front up
 #    createSketch(name + '_SketchFrontUp', name, name + '_SketchLeftSide_Pad', 'Face9')
