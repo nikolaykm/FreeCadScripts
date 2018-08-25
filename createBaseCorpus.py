@@ -69,6 +69,18 @@ def createRectInSketch(sketchName, xL, yL, extraConList):
     getattr(App.activeDocument(), sketchName).addConstraint(conList)
     App.ActiveDocument.recompute()
 
+def createCircleInSketch(sketchName, radius):
+    getattr(App.activeDocument(), sketchName).addGeometry(Part.Circle(App.Vector(0,0,0),App.Vector(0,0,1),radius),False)
+    getattr(App.activeDocument(), sketchName).addConstraint(Sketcher.Constraint('Coincident',0,3,-1,1))
+
+def createLeg(cabinetName, bodyName, radius, legHeight):
+    createBody(bodyName)
+    sketchName = bodyName+"_Sketch"
+    createSketch(sketchName, bodyName, 'XY_Plane', '')
+    createCircleInSketch(sketchName, radius)
+    createPadFromSketch(bodyName, sketchName, legHeight)
+    
+
 def createPadFromSketch(bodyName, sketchName, zL):
     padName = sketchName + "_Pad"
     getattr(App.activeDocument(), bodyName).newObject("PartDesign::Pad", padName)
@@ -113,7 +125,7 @@ def createBoard(cabinetName, bodyName, row):
             createPadFromSketch(bodyName, cantSketchName, rowDict[cant])
             
 
-def createBaseCabinet(name, width, height, depth, boardThickness, sCantT, lCantT, legHeight):
+def createBaseCabinet(name, width, height, depth, boardThickness, cardboardThickness, sCantT, lCantT, legHeight):
 
     #create spreadsheet column names
     App.activeDocument().addObject('Spreadsheet::Sheet', name + "_Spreadsheet")
@@ -124,61 +136,92 @@ def createBaseCabinet(name, width, height, depth, boardThickness, sCantT, lCantT
     bodyName = name + "_Base";
     createBody(bodyName)
     cants = [sCantT, sCantT, sCantT, sCantT]
-    cantToFaceDict = {'WCantFront' : 'Face3', 'WCantBack' : 'Face1', 'HCantLeft' : 'Face4', 'HCantRight' : 'Face2'}
     calcWidth = width-cants[2]-cants[3];
-    calcHeight = depth-cants[0]-cants[1]
-    sprRec = [bodyName + '_SketchBase', calcWidth, calcHeight, boardThickness, cants[0], cants[1], cants[2], cants[3], 0]
+    calcHeight = depth-cants[0]-cants[1]-cardboardThickness
+    sprRec = [bodyName + '_Sketch', calcWidth, calcHeight, boardThickness, cants[0], cants[1], cants[2], cants[3], 0]
     row = writeRecordInSpreadsheet(name + "_Spreadsheet", sprRec)
     createBoard(name, bodyName, row)
 
-    #TODO: cant the upper side
     #create left side
     bodyName = name + "_LeftSide"
     createBody(bodyName)
-    cants = [0, 0, sCantT, sCantT]
-    calcWidth = depth-cants[2]-cants[3]
+    cants = [0, sCantT, sCantT, sCantT]
+    calcWidth = depth-cants[2]-cants[3]-cardboardThickness
     calcHeight = height-cants[0]-cants[1]-boardThickness-legHeight
-    sprRec = [bodyName + '_SketchLeftSide', calcWidth, calcHeight, boardThickness, cants[0], cants[1], cants[2], cants[3], 1]
+    sprRec = [bodyName + '_Sketch', calcWidth, calcHeight, boardThickness, cants[0], cants[1], cants[2], cants[3], 1]
     row = writeRecordInSpreadsheet(name + "_Spreadsheet", sprRec)
     createBoard(name, bodyName, row)
     getattr(App.activeDocument(), bodyName).Placement=App.Placement(App.Vector(-width/2,0,calcHeight/2+boardThickness), App.Rotation(90,0,90), App.Vector(0,0,0))
     App.ActiveDocument.recompute()
 
-    #TODO: cant the upper side
     #create right side
     bodyName = name + "_RightSide"
     createBody(bodyName)
-    cants = [0, 0, sCantT, sCantT]
-    calcWidth = depth-cants[2]-cants[3]
+    cants = [sCantT, 0, sCantT, sCantT]
+    calcWidth = depth-cants[2]-cants[3]-cardboardThickness
     calcHeight = height-cants[0]-cants[1]-boardThickness-legHeight
-    sprRec = [bodyName + '_SketchRightSide', calcWidth, calcHeight, boardThickness, cants[0], cants[1], cants[2], cants[3], 1]
+    sprRec = [bodyName + '_Sketch', calcWidth, calcHeight, boardThickness, cants[0], cants[1], cants[2], cants[3], 1]
     row = writeRecordInSpreadsheet(name + "_Spreadsheet", sprRec)
     createBoard(name, bodyName, row)
     getattr(App.activeDocument(), bodyName).Placement=App.Placement(App.Vector(width/2,0,calcHeight/2+boardThickness), App.Rotation(90,0,-90), App.Vector(0,0,0))
     App.ActiveDocument.recompute()
 
-    #create front up
-#    createSketch(name + '_SketchFrontUp', name, name + '_SketchLeftSide_Pad', 'Face9')
-#    conList = []
-#    conList.append(Sketcher.Constraint('Distance',-1,1,3,depth/2))
-#    conList.append(Sketcher.Constraint('DistanceY',-1,1,0,1,height + boardThickness))
-#    cantsList = [sCantT, sCantT, sCantT, sCantT]
-#    createBoard(100, boardThickness, width-2*boardThickness, cantsList, name, name + '_SketchFrontUp', name + '_SketchFrontUp_Pad', conList)
+    #create front blend
+    bodyName = name + "_FrontBlend";
+    createBody(bodyName)
+    cants = [sCantT, 0, 0, 0]
+    calcWidth = width-cants[2]-cants[3]-2*boardThickness;
+    calcHeight = 100
+    sprRec = [bodyName + '_Sketch', calcWidth, calcHeight, boardThickness, cants[0], cants[1], cants[2], cants[3], 0]
+    row = writeRecordInSpreadsheet(name + "_Spreadsheet", sprRec)
+    createBoard(name, bodyName, row)
+    getattr(App.activeDocument(), bodyName).Placement=App.Placement(App.Vector(0,-depth/2+calcHeight/2+cants[0]+cardboardThickness/2,height-legHeight-boardThickness), App.Rotation(0,0,0), App.Vector(0,0,0))
+    App.ActiveDocument.recompute()
 
-    #create back up
-#    createSketch(name + '_SketchBackUp', name, name + '_SketchLeftSide_Pad', 'Face9')
-#    conList = []
-#    conList.append(Sketcher.Constraint('Distance',-1,1,1,depth/2))
-#    conList.append(Sketcher.Constraint('DistanceY',-1,1,0,1,height + boardThickness))
-#    cantsList = [sCantT, sCantT, sCantT, sCantT]
-#    createBoard(100, boardThickness, width-2*boardThickness, cantsList, name, name + '_SketchBackUp', name + '_SketchBackUp_Pad', conList)
+    #create back blend
+    bodyName = name + "_BackBlend";
+    createBody(bodyName)
+    cants = [0, sCantT, 0, 0]
+    calcWidth = width-cants[2]-cants[3]-2*boardThickness;
+    calcHeight = 100
+    sprRec = [bodyName + '_Sketch', calcWidth, calcHeight, boardThickness, cants[0], cants[1], cants[2], cants[3], 0]
+    row = writeRecordInSpreadsheet(name + "_Spreadsheet", sprRec)
+    createBoard(name, bodyName, row)
+    getattr(App.activeDocument(), bodyName).Placement=App.Placement(App.Vector(0,depth/2-calcHeight/2-cants[1]-cardboardThickness/2,height-legHeight-boardThickness), App.Rotation(0,0,0), App.Vector(0,0,0))
+    App.ActiveDocument.recompute()
+
 
     #create back
-#    createSketch(name + '_SketchBack', name, name + '_SketchBase_Pad', 'Face1')
-#    conList = []
-#    conList.append(Sketcher.Constraint('Distance',-1,1,1,width/2))
-#    conList.append(Sketcher.Constraint('DistanceY',-1,1,0,1,height + boardThickness))
-#    cantsList = [sCantT, sCantT, sCantT, sCantT]
-#    createBoard(width, height, 3, cantsList, name, name + '_SketchBack', name + '_SketchBack_Pad', conList)
+    bodyName = name + "_Back";
+    createBody(bodyName)
+    cants = [0, 0, 0, 0]
+    calcWidth = width - 3;
+    calcHeight = height-legHeight-3
+    sprRec = [bodyName + '_Sketch', calcWidth, calcHeight, cardboardThickness, cants[0], cants[1], cants[2], cants[3], 0]
+    row = writeRecordInSpreadsheet(name + "_Spreadsheet", sprRec)
+    createBoard(name, bodyName, row)
+    getattr(App.activeDocument(), bodyName).Placement=App.Placement(App.Vector(0,depth/2+cardboardThickness/2,height/2-legHeight/2), App.Rotation(0,0,90), App.Vector(0,0,0))
+    App.ActiveDocument.recompute()
 
-createBaseCabinet("BottlesLeft", 600, 750, 520, 18, 0.8, 2, 100)
+    # create legs
+    bodyName = name + "_Leg1"
+    createLeg(name, bodyName, 20, legHeight)
+    getattr(App.activeDocument(), bodyName).Placement=App.Placement(App.Vector(width/3,depth/3,0), App.Rotation(0,0,180), App.Vector(0,0,0))
+    App.ActiveDocument.recompute()
+
+    bodyName = name + "_Leg2"
+    createLeg(name, bodyName, 20, legHeight)
+    getattr(App.activeDocument(), bodyName).Placement=App.Placement(App.Vector(-width/3,depth/3,0), App.Rotation(0,0,180), App.Vector(0,0,0))
+    App.ActiveDocument.recompute()
+
+    bodyName = name + "_Leg3"
+    createLeg(name, bodyName, 20, legHeight)
+    getattr(App.activeDocument(), bodyName).Placement=App.Placement(App.Vector(width/3,-depth/3,0), App.Rotation(0,0,180), App.Vector(0,0,0))
+    App.ActiveDocument.recompute()
+
+    bodyName = name + "_Leg4"
+    createLeg(name, bodyName, 20, legHeight)
+    getattr(App.activeDocument(), bodyName).Placement=App.Placement(App.Vector(-width/3,-depth/3,0), App.Rotation(0,0,180), App.Vector(0,0,0))
+    App.ActiveDocument.recompute()
+
+createBaseCabinet("BottlesLeft", 600.0, 750.0, 520.0, 18.0, 3.0, 0.8, 2.0, 100.0)
