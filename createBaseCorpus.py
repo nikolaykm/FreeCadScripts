@@ -224,4 +224,4 @@ def createBaseCabinet(name, width, height, depth, boardThickness, cardboardThick
     getattr(App.activeDocument(), bodyName).Placement=App.Placement(App.Vector(-width/3,-depth/3,0), App.Rotation(0,0,180), App.Vector(0,0,0))
     App.ActiveDocument.recompute()
 
-createBaseCabinet("BottlesLeft", 600.0, 750.0, 520.0, 18.0, 3.0, 0.8, 2.0, 100.0)
+#createBaseCabinet("BottlesLeft", 300.0, 890.0, 560.0, 18.0, 3.0, 0.8, 2.0, 100.0)
