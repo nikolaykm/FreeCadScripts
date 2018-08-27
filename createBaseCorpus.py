@@ -37,8 +37,9 @@ def getRowFromSpreadsheet(spreadsheetName, row):
 
     return resultDict
 
-def createBody(bodyName):
+def createBody(bodyName, objects):
     App.activeDocument().addObject('PartDesign::Body', bodyName)
+    objects.append(bodyName)
     App.ActiveDocument.recompute()
 
 def createSketch(sketchName, bodyName, supportName, supportFace):
@@ -73,8 +74,8 @@ def createCircleInSketch(sketchName, radius):
     App.activeDocument().getObject(sketchName).addGeometry(Part.Circle(App.Vector(0,0,0),App.Vector(0,0,1),radius),False)
     App.activeDocument().getObject(sketchName).addConstraint(Sketcher.Constraint('Coincident',0,3,-1,1))
 
-def createLeg(cabinetName, bodyName, radius, legHeight):
-    createBody(bodyName)
+def createLeg(cabinetName, bodyName, radius, legHeight, objects):
+    createBody(bodyName, objects)
     sketchName = bodyName+"_Sketch"
     createSketch(sketchName, bodyName, 'XY_Plane', '')
     createCircleInSketch(sketchName, radius)
@@ -125,7 +126,7 @@ def createBoard(cabinetName, bodyName, row):
             createPadFromSketch(bodyName, cantSketchName, rowDict[cant])
             
 
-def createBaseCabinet(name, width, height, depth, boardThickness, cardboardThickness, sCantT, lCantT, legHeight):
+def createBaseCabinet(name, width, height, depth, boardThickness, cardboardThickness, sCantT, lCantT, legHeight, visibleBack):
 
     objects = []
 
@@ -137,21 +138,21 @@ def createBaseCabinet(name, width, height, depth, boardThickness, cardboardThick
     
     #create base
     bodyName = name + "_Base"
-    objects.append(name + "_Base")
-    createBody(bodyName)
-    cants = [sCantT, sCantT, sCantT, sCantT]
+    createBody(bodyName, objects)
+    cants = [sCantT, sCantT if visibleBack else 0, sCantT, sCantT]
     calcWidth = width-cants[2]-cants[3];
-    calcHeight = depth-cants[0]-cants[1]-cardboardThickness
+    calcHeight = depth-cants[0]-cants[1]-(0 if visibleBack else cardboardThickness)
+    baseWidth = calcWidth
+    baseHeight = calcHeight
     sprRec = [bodyName + '_Sketch', calcWidth, calcHeight, boardThickness, cants[0], cants[1], cants[2], cants[3], 0]
     row = writeRecordInSpreadsheet(name + "_Spreadsheet", sprRec)
     createBoard(name, bodyName, row)
 
     #create left side
     bodyName = name + "_LeftSide"
-    objects.append(name + "_LeftSide")
-    createBody(bodyName)
-    cants = [0, sCantT, sCantT, sCantT]
-    calcWidth = depth-cants[2]-cants[3]-cardboardThickness
+    createBody(bodyName, objects)
+    cants = [0, 0, sCantT, sCantT if visibleBack else 0]
+    calcWidth = depth-cants[2]-cants[3]-(0 if visibleBack else cardboardThickness)
     calcHeight = height-cants[0]-cants[1]-boardThickness-legHeight
     sprRec = [bodyName + '_Sketch', calcWidth, calcHeight, boardThickness, cants[0], cants[1], cants[2], cants[3], 1]
     row = writeRecordInSpreadsheet(name + "_Spreadsheet", sprRec)
@@ -161,10 +162,9 @@ def createBaseCabinet(name, width, height, depth, boardThickness, cardboardThick
 
     #create right side
     bodyName = name + "_RightSide"
-    objects.append(name + "_RightSide")
-    createBody(bodyName)
-    cants = [sCantT, 0, sCantT, sCantT]
-    calcWidth = depth-cants[2]-cants[3]-cardboardThickness
+    createBody(bodyName, objects)
+    cants = [0, 0, sCantT, sCantT if visibleBack else 0]
+    calcWidth = depth-cants[2]-cants[3]-(0 if visibleBack else cardboardThickness)
     calcHeight = height-cants[0]-cants[1]-boardThickness-legHeight
     sprRec = [bodyName + '_Sketch', calcWidth, calcHeight, boardThickness, cants[0], cants[1], cants[2], cants[3], 1]
     row = writeRecordInSpreadsheet(name + "_Spreadsheet", sprRec)
@@ -174,57 +174,54 @@ def createBaseCabinet(name, width, height, depth, boardThickness, cardboardThick
 
     #create front blend
     bodyName = name + "_FrontBlend";
-    objects.append(name + "_FrontBlend")
-    createBody(bodyName)
+    createBody(bodyName, objects)
     cants = [sCantT, 0, 0, 0]
     calcWidth = width-cants[2]-cants[3]-2*boardThickness;
     calcHeight = 100
     sprRec = [bodyName + '_Sketch', calcWidth, calcHeight, boardThickness, cants[0], cants[1], cants[2], cants[3], 0]
     row = writeRecordInSpreadsheet(name + "_Spreadsheet", sprRec)
     createBoard(name, bodyName, row)
-    App.activeDocument().getObject(bodyName).Placement=App.Placement(App.Vector(0,-depth/2+calcHeight/2+cants[0]+cardboardThickness/2,height-legHeight-boardThickness), App.Rotation(0,0,0), App.Vector(0,0,0))
+    App.activeDocument().getObject(bodyName).Placement=App.Placement(App.Vector(0,-baseHeight/2+calcHeight/2, height-legHeight-boardThickness), App.Rotation(0,0,0), App.Vector(0,0,0))
     App.ActiveDocument.recompute()
 
     #create back blend
     bodyName = name + "_BackBlend";
-    objects.append(name + "_BackBlend")
-    createBody(bodyName)
-    cants = [0, sCantT, 0, 0]
+    createBody(bodyName, objects)
+    cants = [0, sCantT if visibleBack else 0, 0, 0]
     calcWidth = width-cants[2]-cants[3]-2*boardThickness;
     calcHeight = 100
     sprRec = [bodyName + '_Sketch', calcWidth, calcHeight, boardThickness, cants[0], cants[1], cants[2], cants[3], 0]
     row = writeRecordInSpreadsheet(name + "_Spreadsheet", sprRec)
     createBoard(name, bodyName, row)
-    App.activeDocument().getObject(bodyName).Placement=App.Placement(App.Vector(0,depth/2-calcHeight/2-cants[1]-cardboardThickness/2,height-legHeight-boardThickness), App.Rotation(0,0,0), App.Vector(0,0,0))
+    App.activeDocument().getObject(bodyName).Placement=App.Placement(App.Vector(0,baseHeight/2-calcHeight/2, height-legHeight-boardThickness), App.Rotation(0,0,0), App.Vector(0,0,0))
     App.ActiveDocument.recompute()
 
-
-    #create back
-    bodyName = name + "_Back";
-    objects.append(name + "_Back")
-    createBody(bodyName)
-    cants = [0, 0, 0, 0]
-    calcWidth = width - 3;
-    calcHeight = height-legHeight-3
-    sprRec = [bodyName + '_Sketch', calcWidth, calcHeight, cardboardThickness, cants[0], cants[1], cants[2], cants[3], 0]
-    row = writeRecordInSpreadsheet(name + "_Spreadsheet", sprRec)
-    createBoard(name, bodyName, row)
-    App.activeDocument().getObject(bodyName).Placement=App.Placement(App.Vector(0,depth/2+cardboardThickness/2,height/2-legHeight/2), App.Rotation(0,0,90), App.Vector(0,0,0))
-    App.ActiveDocument.recompute()
+    if not visibleBack:
+        #create back from cardboard
+        bodyName = name + "_Back";
+        createBody(bodyName, objects)
+        cants = [0, 0, 0, 0]
+        calcWidth = width - 3;
+        calcHeight = height-legHeight-3
+        sprRec = [bodyName + '_Sketch', calcWidth, calcHeight, cardboardThickness, cants[0], cants[1], cants[2], cants[3], 0]
+        row = writeRecordInSpreadsheet(name + "_Spreadsheet", sprRec)
+        createBoard(name, bodyName, row)
+        App.activeDocument().getObject(bodyName).Placement=App.Placement(App.Vector(0,baseHeight/2+cardboardThickness,height/2-legHeight/2), App.Rotation(0,0,90), App.Vector(0,0,0))
+        App.ActiveDocument.recompute()
+    else:
+        #create back from normal board
+        pass
 
     # create legs
     signW = -1
     signH = 1
     for legNum in range(1,5):
         bodyName = name + "_Leg" + str(legNum)
-        print bodyName
-        objects.append(bodyName)
-        createLeg(name, bodyName, 20, legHeight)
+        createLeg(name, bodyName, 20, legHeight, objects)
         signW = signW * (-1 if legNum%2==1 else 1)
         signH = signH * (1 if legNum%2==1 else -1)
         legWidth = (width/3)*signW
         legDepth = (depth/3)*signH
-        print("LW=" + str(legWidth) + ", LH=" + str(legHeight))
         App.activeDocument().getObject(bodyName).Placement=App.Placement(App.Vector(legWidth,legDepth,0), App.Rotation(0,0,180), App.Vector(0,0,0))
         App.ActiveDocument.recompute()
 
@@ -237,17 +234,17 @@ def createBaseCabinet(name, width, height, depth, boardThickness, cardboardThick
 
     App.ActiveDocument.recompute()
 
-createBaseCabinet('Bottles', 300.0, 890.0, 560.0, 18.0, 3.0, 0.8, 2.0, 100.0)
+createBaseCabinet('Bottles', 300.0, 890.0, 560.0, 18.0, 3.0, 0.8, 2.0, 100.0, False)
 App.ActiveDocument.getObject('Bottles_Fusion').Placement = App.Placement(App.Vector(-1312,-402,100),App.Rotation(App.Vector(0,0,1),0))
-createBaseCabinet('Oven', 600.0, 890.0, 560.0, 18.0, 3.0, 0.8, 2.0, 100.0)
+createBaseCabinet('Oven', 600.0, 890.0, 560.0, 18.0, 3.0, 0.8, 2.0, 100.0, False)
 App.ActiveDocument.getObject('Oven_Fusion').Placement = App.Placement(App.Vector(-1762,-402,100),App.Rotation(App.Vector(0,0,1),0))
-createBaseCabinet('Cab1', 600.0, 890.0, 560.0, 18.0, 3.0, 0.8, 2.0, 100.0)
+createBaseCabinet('Cab1', 600.0, 890.0, 560.0, 18.0, 3.0, 0.8, 2.0, 100.0, False)
 App.ActiveDocument.getObject('Cab1_Fusion').Placement = App.Placement(App.Vector(-2362,-402,100),App.Rotation(App.Vector(0,0,1),0))
-createBaseCabinet('Dishwasher', 600.0, 890.0, 560.0, 18.0, 3.0, 0.8, 2.0, 100.0)
+createBaseCabinet('Dishwasher', 600.0, 890.0, 560.0, 18.0, 3.0, 0.8, 2.0, 100.0, False)
 App.ActiveDocument.getObject('Dishwasher_Fusion').Placement = App.Placement(App.Vector(-2962,-402,100),App.Rotation(App.Vector(0,0,1),0))
-createBaseCabinet('Sink', 600.0, 890.0, 560.0, 18.0, 3.0, 0.8, 2.0, 100.0)
+createBaseCabinet('Sink', 600.0, 890.0, 560.0, 18.0, 3.0, 0.8, 2.0, 100.0, False)
 App.ActiveDocument.getObject('Sink_Fusion').Placement = App.Placement(App.Vector(-3655,-1463,100),App.Rotation(App.Vector(0,0,1),90))
-createBaseCabinet('Cab2', 1090.0, 890.0, 370.0, 18.0, 3.0, 0.8, 2.0, 100.0)
+createBaseCabinet('Cab2', 1090.0, 890.0, 370.0, 18.0, 3.0, 0.8, 2.0, 100.0, False)
 App.ActiveDocument.getObject('Cab2_Fusion').Placement = App.Placement(App.Vector(-3391,-1947,100),App.Rotation(App.Vector(0,0,1),180))
 
 App.ActiveDocument.recompute()
