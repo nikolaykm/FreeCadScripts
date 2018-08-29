@@ -145,7 +145,7 @@ def createBaseCabinet(name, width, height, depth, boardThickness, cardboardThick
     calcHeight = depth-cants[0]-cants[1]-(0 if visibleBack else cardboardThickness)
     baseWidth = calcWidth
     baseHeight = calcHeight
-    sprRec = [bodyName + '_Sketch', calcWidth, calcHeight, boardThickness, cants[0], cants[1], cants[2], cants[3], 0]
+    sprRec = [bodyName + '_Sketch', calcWidth, calcHeight, boardThickness, cants[0], cants[1], cants[2], cants[3], 1]
     row = writeRecordInSpreadsheet(name + "_Spreadsheet", sprRec)
     createBoard(name, bodyName, row)
 
@@ -243,24 +243,78 @@ def createBaseCabinet(name, width, height, depth, boardThickness, cardboardThick
 
     App.ActiveDocument.recompute()
 
+#creating base corpuses
 #createBaseCabinet('Bottles', 300.0, 890.0, 560.0, 18.0, 3.0, 0.8, 2.0, 100.0, False)
 #App.ActiveDocument.getObject('Bottles_Fusion').Placement = App.Placement(App.Vector(-1312,-402,100),App.Rotation(App.Vector(0,0,1),0))
 #createBaseCabinet('Oven', 600.0, 890.0, 560.0, 18.0, 3.0, 0.8, 2.0, 100.0, False)
 #App.ActiveDocument.getObject('Oven_Fusion').Placement = App.Placement(App.Vector(-1762,-402,100),App.Rotation(App.Vector(0,0,1),0))
-#createBaseCabinet('Cab1', 600.0, 890.0, 560.0, 18.0, 3.0, 0.8, 2.0, 100.0, False)
-#App.ActiveDocument.getObject('Cab1_Fusion').Placement = App.Placement(App.Vector(-2362,-402,100),App.Rotation(App.Vector(0,0,1),0))
-#createBaseCabinet('Dishwasher', 600.0, 890.0, 560.0, 18.0, 3.0, 0.8, 2.0, 100.0, False)
-#App.ActiveDocument.getObject('Dishwasher_Fusion').Placement = App.Placement(App.Vector(-2962,-402,100),App.Rotation(App.Vector(0,0,1),0))
+##createBaseCabinet('Dishwasher', 600.0, 890.0, 560.0, 18.0, 3.0, 0.8, 2.0, 100.0, False)
+##App.ActiveDocument.getObject('Dishwasher_Fusion').Placement = App.Placement(App.Vector(-2362,-402,100),App.Rotation(App.Vector(0,0,1),0))
+#createBaseCabinet('Cab1', 1220.0, 890.0, 500.0, 18.0, 3.0, 0.8, 2.0, 100.0, False)
+#App.ActiveDocument.getObject('Cab1_Fusion').Placement = App.Placement(App.Vector(-3272,-432,100),App.Rotation(App.Vector(0,0,1),0))
+#createBaseCabinet('Cab2', 482.0, 890.0, 520.0, 18.0, 3.0, 0.8, 2.0, 100.0, False)
+#App.ActiveDocument.getObject('Cab2_Fusion').Placement = App.Placement(App.Vector(-3630,-922,100),App.Rotation(App.Vector(0,0,1),90))
 #createBaseCabinet('Sink', 600.0, 890.0, 560.0, 18.0, 3.0, 0.8, 2.0, 100.0, False)
 #App.ActiveDocument.getObject('Sink_Fusion').Placement = App.Placement(App.Vector(-3655,-1463,100),App.Rotation(App.Vector(0,0,1),90))
-#createBaseCabinet('Cab2', 1090.0, 890.0, 370.0, 18.0, 3.0, 0.8, 2.0, 100.0, False)
-#App.ActiveDocument.getObject('Cab2_Fusion').Placement = App.Placement(App.Vector(-3391,-1947,100),App.Rotation(App.Vector(0,0,1),180))
-#createBaseCabinet('Cab10', 492.0, 890.0, 560.0, 18.0, 3.0, 0.8, 2.0, 100.0, True)
-#App.ActiveDocument.getObject('Cab10_Fusion').Placement = App.Placement(App.Vector(-2600,-2043,100),App.Rotation(App.Vector(0,0,1),180))
-#createBaseCabinet('Cab11', 492.0, 890.0, 560.0, 18.0, 3.0, 0.8, 2.0, 100.0, True)
-#App.ActiveDocument.getObject('Cab11_Fusion').Placement = App.Placement(App.Vector(-2108,-2043,100),App.Rotation(App.Vector(0,0,1),180))
-#createBaseCabinet('Cab12', 600.0, 890.0, 560.0, 18.0, 3.0, 0.8, 2.0, 100.0, True)
-#App.ActiveDocument.getObject('Cab12_Fusion').Placement = App.Placement(App.Vector(-1562,-2043,100),App.Rotation(App.Vector(0,0,1),180))
+#createBaseCabinet('Cab3', 1090.0, 890.0, 370.0, 18.0, 3.0, 0.8, 2.0, 100.0, False)
+#App.ActiveDocument.getObject('Cab3_Fusion').Placement = App.Placement(App.Vector(-3391,-1947,100),App.Rotation(App.Vector(0,0,1),180))
+#createBaseCabinet('Cab4', 492.0, 890.0, 560.0, 18.0, 3.0, 0.8, 2.0, 100.0, True)
+#App.ActiveDocument.getObject('Cab4_Fusion').Placement = App.Placement(App.Vector(-2600,-2043,100),App.Rotation(App.Vector(0,0,1),180))
+#createBaseCabinet('Cab5', 492.0, 890.0, 560.0, 18.0, 3.0, 0.8, 2.0, 100.0, True)
+#App.ActiveDocument.getObject('Cab5_Fusion').Placement = App.Placement(App.Vector(-2108,-2043,100),App.Rotation(App.Vector(0,0,1),180))
+#createBaseCabinet('Cab6', 600.0, 890.0, 560.0, 18.0, 3.0, 0.8, 2.0, 100.0, True)
+#App.ActiveDocument.getObject('Cab6_Fusion').Placement = App.Placement(App.Vector(-1562,-2043,100),App.Rotation(App.Vector(0,0,1),180))
+
+
+#create plots
+name = "Plots"
+plotObjects = []
+
+#create spreadsheet column names
+App.activeDocument().addObject('Spreadsheet::Sheet', name + "_Spreadsheet")
+plotObjects.append(name + "_Spreadsheet")
+spreadSheetHeaders = ['Name', 'Width', 'Height', 'BoardThickness', 'WCantFront', 'WCantBack', 'HCantLeft', 'HCantRight', 'ByFlader']
+writeRecordInSpreadsheet(name + "_Spreadsheet", spreadSheetHeaders)
+
+#create right plot
+bodyName = name + "_Right";
+createBody(bodyName, plotObjects)
+cants = [0, 0, 0, 0]
+calcWidth = 2180
+calcHeight = 600
+sprRec = [bodyName + '_Sketch', calcWidth, calcHeight, 40, cants[0], cants[1], cants[2], cants[3], 0]
+row = writeRecordInSpreadsheet(name + "_Spreadsheet", sprRec)
+createBoard(name, bodyName, row)
+App.activeDocument().getObject(bodyName).Placement=App.Placement(App.Vector(-2252,-420,890), App.Rotation(0,0,0), App.Vector(0,0,0))
+App.ActiveDocument.recompute()
+
+#create front plot
+bodyName = name + "_Front";
+createBody(bodyName, plotObjects)
+cants = [0, 0, 0, 0]
+calcWidth = 2020
+calcHeight = 600
+sprRec = [bodyName + '_Sketch', calcWidth, calcHeight, 40, cants[0], cants[1], cants[2], cants[3], 0]
+row = writeRecordInSpreadsheet(name + "_Spreadsheet", sprRec)
+createBoard(name, bodyName, row)
+App.activeDocument().getObject(bodyName).Placement=App.Placement(App.Vector(-3642,-1130,890),App.Rotation(App.Vector(0,0,1),90))
+App.ActiveDocument.recompute()
+
+#create left plot
+bodyName = name + "_Left";
+createBody(bodyName, plotObjects)
+cants = [0, 0, 0, 0]
+calcWidth = 2080
+calcHeight = 600
+sprRec = [bodyName + '_Sketch', calcWidth, calcHeight, 40, cants[0], cants[1], cants[2], cants[3], 0]
+row = writeRecordInSpreadsheet(name + "_Spreadsheet", sprRec)
+createBoard(name, bodyName, row)
+App.activeDocument().getObject(bodyName).Placement=App.Placement(App.Vector(-2302,-2023,890), App.Rotation(0,0,0), App.Vector(0,0,0))
+App.ActiveDocument.recompute()
+
+
 
 
 App.ActiveDocument.recompute()
+
+#execfile('/home/nm/Dev/FreeCadScripts/createBaseCorpus.py')
