@@ -312,9 +312,17 @@ def createUpCorpuses(height):
     #creating up corpuses
     upCabinetsObjects = []
     createCabinet('BottlesUp', 300.0, height-238.0, 300.0, 18.0, 3.0, 0.8, 2.0, 100.0, False, upCabinetsObjects, False)
-    App.ActiveDocument.getObject('BottlesUp_Fusion').Placement = App.Placement(App.Vector(-1312,-402,1530),App.Rotation(App.Vector(0,0,1),0))
+    App.ActiveDocument.getObject('BottlesUp_Fusion').Placement = App.Placement(App.Vector(-1312,-266,1530),App.Rotation(App.Vector(0,0,1),0))
     createCabinet('OvenUp', 600.0, height, 300.0, 18.0, 3.0, 0.8, 2.0, 100.0, False, upCabinetsObjects, False)
-    App.ActiveDocument.getObject('OvenUp_Fusion').Placement = App.Placement(App.Vector(-1762,-402,1530),App.Rotation(App.Vector(0,0,1),0))
+    App.ActiveDocument.getObject('OvenUp_Fusion').Placement = App.Placement(App.Vector(-1762,-266,1530),App.Rotation(App.Vector(0,0,1),0))
+
+    createCabinet('Cab1Up', 1183.0, height, 300.0, 18.0, 3.0, 0.8, 2.0, 100.0, False, upCabinetsObjects, False)
+    App.ActiveDocument.getObject('Cab1Up_Fusion').Placement = App.Placement(App.Vector(-2654,-266,1530),App.Rotation(App.Vector(0,0,1),0))
+
+    App.ActiveDocument.addObject("App::DocumentObjectGroup","UpCabinets")
+    for obj in upCabinetsObjects:
+        App.ActiveDocument.getObject("UpCabinets").addObject(App.ActiveDocument.getObject(obj+"_Fusion"))
+
 
 def createPlots():
     #create plots
