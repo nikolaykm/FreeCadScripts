@@ -269,6 +269,17 @@ def createPlot(name, plotName, width, plotObjects):
     row = writeRecordInSpreadsheet(name + "_Spreadsheet", sprRec)
     createBoard(name, bodyName, row)
 
+def createPlotBack(name, plotBackName, width, height, plotBackObjects, sCantT, boardThickness):
+    bodyName = name + plotBackName
+    createBody(bodyName, plotBackObjects)
+    cants = [0, 0, sCantT, sCantT]
+    calcWidth = width
+    calcHeight = height
+    sprRec = [bodyName + '_Sketch', calcWidth, calcHeight, boardThickness, cants[0], cants[1], cants[2], cants[3], 0]
+    row = writeRecordInSpreadsheet(name + "_Spreadsheet", sprRec)
+    createBoard(name, bodyName, row)
+
+
 def createBaseCorpuses(height):
     #creating base corpuses
     baseCabinetsObjects = []
@@ -297,6 +308,14 @@ def createBaseCorpuses(height):
     for obj in baseCabinetsObjects:
         App.ActiveDocument.getObject("BaseCabinets").addObject(App.ActiveDocument.getObject(obj+"_Fusion"))
 
+def createUpCorpuses(height):
+    #creating up corpuses
+    upCabinetsObjects = []
+    createCabinet('BottlesUp', 300.0, height-238.0, 300.0, 18.0, 3.0, 0.8, 2.0, 100.0, False, upCabinetsObjects, False)
+    App.ActiveDocument.getObject('BottlesUp_Fusion').Placement = App.Placement(App.Vector(-1312,-402,1530),App.Rotation(App.Vector(0,0,1),0))
+    createCabinet('OvenUp', 600.0, height, 300.0, 18.0, 3.0, 0.8, 2.0, 100.0, False, upCabinetsObjects, False)
+    App.ActiveDocument.getObject('OvenUp_Fusion').Placement = App.Placement(App.Vector(-1762,-402,1530),App.Rotation(App.Vector(0,0,1),0))
+
 def createPlots():
     #create plots
     name = "Plots"
@@ -322,6 +341,34 @@ def createPlots():
     App.ActiveDocument.addObject("App::DocumentObjectGroup","Plots")
     for obj in plotObjects:
         App.ActiveDocument.getObject("Plots").addObject(App.ActiveDocument.getObject(obj))
+
+def createBackForPlots():
+    #create backs for plots
+    name = "PlotsBacks"
+    plotObjects = []
+
+    #create spreadsheet column names
+    App.activeDocument().addObject('Spreadsheet::Sheet', name + "_Spreadsheet")
+    plotObjects.append(name + "_Spreadsheet")
+    spreadSheetHeaders = ['Name', 'Width', 'Height', 'BoardThickness', 'WCantFront', 'WCantBack', 'HCantLeft', 'HCantRight', 'ByFlader']
+    writeRecordInSpreadsheet(name + "_Spreadsheet", spreadSheetHeaders)
+
+    plotProperties = []
+    plotProperties.append(["_Right", 2100.0, 600.0, App.Placement(App.Vector(-2213,-115,1230),App.Rotation(App.Vector(1,0,0),90))])
+#    plotProperties.append(["_Front", 1570.0, App.Placement(App.Vector(-3642,-1356,890),App.Rotation(App.Vector(0,0,1),90))])
+#    plotProperties.append(["_Front1", 450.0, App.Placement(App.Vector(-3642,-346,890),App.Rotation(App.Vector(0,0,1),90))])
+#    plotProperties.append(["_Left", 2080.0, App.Placement(App.Vector(-2302,-2023,890), App.Rotation(0,0,0), App.Vector(0,0,0))])
+
+    for plotProp in plotProperties:
+        createPlotBack(name, plotProp[0], plotProp[1], plotProp[2], plotObjects, 0.8, 18)
+        App.activeDocument().getObject(name+plotProp[0]).Placement=plotProp[3]
+    App.ActiveDocument.recompute()
+
+    App.ActiveDocument.addObject("App::DocumentObjectGroup","PlotsBacks")
+    for obj in plotObjects:
+        App.ActiveDocument.getObject("PlotsBacks").addObject(App.ActiveDocument.getObject(obj))
+
+
 
 #create Vitodens 111-W with fux
 def createVitodens():
@@ -349,5 +396,7 @@ def createVitodens():
 #createBaseCorpuses(890.0)
 #createPlots()
 #createVitodens()
+#createBackForPlots()
+createUpCorpuses(900)
 
 #execfile('/home/nm/Dev/FreeCadScripts/createBaseCorpus.py')
