@@ -125,7 +125,7 @@ def createBoard(cabinetName, bodyName, row):
             createRectInSketch(cantSketchName, width, rowDict['BoardThickness'], conList)
             createPadFromSketch(bodyName, cantSketchName, rowDict[cant])
             
-def createCabinet(name, width, height, depth, boardThickness, cardboardThickness, sCantT, lCantT, legHeight, visibleBack, baseCabinetsObjects, isBase):
+def createCabinet(name, width, height, depth, boardThickness, cardboardThickness, sCantT, lCantT, legHeight, visibleBack, baseCabinetsObjects, isBase, isHavingBack = True):
 
     baseCabinetsObjects.append(name)
 
@@ -211,10 +211,11 @@ def createCabinet(name, width, height, depth, boardThickness, cardboardThickness
         createBoard(name, bodyName, row)
         App.activeDocument().getObject(bodyName).Placement=App.Placement(App.Vector(0,0, height-boardThickness), App.Rotation(0,0,0), App.Vector(0,0,0))
         App.ActiveDocument.recompute()
-      
-    bodyName = name + "_Back";
-    createBody(bodyName, objects)
-    cants = [0, 0, 0, 0]
+    
+    if isHavingBack:  
+        bodyName = name + "_Back";
+        createBody(bodyName, objects)
+        cants = [0, 0, 0, 0]
 
     if not visibleBack:
         #create back from cardboard
@@ -226,15 +227,15 @@ def createCabinet(name, width, height, depth, boardThickness, cardboardThickness
         App.activeDocument().getObject(bodyName).Placement=App.Placement(App.Vector(0,baseHeight/2+cardboardThickness,height/2-(legHeight if isBase else 0)/2), App.Rotation(0,0,90), App.Vector(0,0,0))
         App.ActiveDocument.recompute()
     else:
-        #create back from normal board
-        calcWidth = width-cants[2]-cants[3]-2*boardThickness;
-        calcHeight = height-(legHeight if isBase else 0)-cants[0]-cants[1]-2*boardThickness
-        sprRec = [bodyName + '_Sketch', calcWidth, calcHeight, boardThickness, cants[0], cants[1], cants[2], cants[3], 1]
-        row = writeRecordInSpreadsheet(name + "_Spreadsheet", sprRec)
-        createBoard(name, bodyName, row)
-        App.activeDocument().getObject(bodyName).Placement=App.Placement(App.Vector(0,baseHeight/2+baseCants[1],height/2-(legHeight if isBase else 0)/2), App.Rotation(0,0,90), App.Vector(0,0,0))
-        App.ActiveDocument.recompute()
-        pass
+        if isHavingBack:
+            #create back from normal board
+            calcWidth = width-cants[2]-cants[3]-2*boardThickness;
+            calcHeight = height-(legHeight if isBase else 0)-cants[0]-cants[1]-2*boardThickness
+            sprRec = [bodyName + '_Sketch', calcWidth, calcHeight, boardThickness, cants[0], cants[1], cants[2], cants[3], 1]
+            row = writeRecordInSpreadsheet(name + "_Spreadsheet", sprRec)
+            createBoard(name, bodyName, row)
+            App.activeDocument().getObject(bodyName).Placement=App.Placement(App.Vector(0,baseHeight/2+baseCants[1],height/2-(legHeight if isBase else 0)/2), App.Rotation(0,0,90), App.Vector(0,0,0))
+            App.ActiveDocument.recompute()
 
     if isBase:
         # create legs
@@ -308,16 +309,19 @@ def createBaseCorpuses(height):
     for obj in baseCabinetsObjects:
         App.ActiveDocument.getObject("BaseCabinets").addObject(App.ActiveDocument.getObject(obj+"_Fusion"))
 
-def createUpCorpuses(height):
+def createUpCorpuses(height, depth):
     #creating up corpuses
     upCabinetsObjects = []
-    createCabinet('BottlesUp', 300.0, height-238.0, 300.0, 18.0, 3.0, 0.8, 2.0, 100.0, False, upCabinetsObjects, False)
-    App.ActiveDocument.getObject('BottlesUp_Fusion').Placement = App.Placement(App.Vector(-1312,-266,1530),App.Rotation(App.Vector(0,0,1),0))
-    createCabinet('OvenUp', 600.0, height, 300.0, 18.0, 3.0, 0.8, 2.0, 100.0, False, upCabinetsObjects, False)
-    App.ActiveDocument.getObject('OvenUp_Fusion').Placement = App.Placement(App.Vector(-1762,-266,1530),App.Rotation(App.Vector(0,0,1),0))
+    createCabinet('BottlesUp', 300.0, height-238.0, depth, 18.0, 3.0, 0.8, 2.0, 100.0, False, upCabinetsObjects, False)
+    App.ActiveDocument.getObject('BottlesUp_Fusion').Placement = App.Placement(App.Vector(-1312,-266,1580),App.Rotation(App.Vector(0,0,1),0))
+    createCabinet('OvenUp', 600.0, height, depth, 18.0, 3.0, 0.8, 2.0, 100.0, False, upCabinetsObjects, False)
+    App.ActiveDocument.getObject('OvenUp_Fusion').Placement = App.Placement(App.Vector(-1762,-266,2430),App.Rotation(App.Vector(0,1,0),180))
 
-    createCabinet('Cab1Up', 1183.0, height, 300.0, 18.0, 3.0, 0.8, 2.0, 100.0, False, upCabinetsObjects, False)
-    App.ActiveDocument.getObject('Cab1Up_Fusion').Placement = App.Placement(App.Vector(-2654,-266,1530),App.Rotation(App.Vector(0,0,1),0))
+    createCabinet('Cab1Up', 1183.0, height, depth, 18.0, 3.0, 0.8, 2.0, 100.0, False, upCabinetsObjects, False)
+    App.ActiveDocument.getObject('Cab1Up_Fusion').Placement = App.Placement(App.Vector(-2654,-266,1580),App.Rotation(App.Vector(0,0,1),0))
+
+    createCabinet('Cab2Up', 698.0, height+600, 480.0, 18.0, 3.0, 0.8, 2.0, 100.0, True, upCabinetsObjects, False, False)
+    App.ActiveDocument.getObject('Cab2Up_Fusion').Placement = App.Placement(App.Vector(-3595,-373,930),App.Rotation(App.Vector(0,0,1),0))
 
     App.ActiveDocument.addObject("App::DocumentObjectGroup","UpCabinets")
     for obj in upCabinetsObjects:
@@ -350,7 +354,7 @@ def createPlots():
     for obj in plotObjects:
         App.ActiveDocument.getObject("Plots").addObject(App.ActiveDocument.getObject(obj))
 
-def createBackForPlots():
+def createBackForPlots(height):
     #create backs for plots
     name = "PlotsBacks"
     plotObjects = []
@@ -362,7 +366,7 @@ def createBackForPlots():
     writeRecordInSpreadsheet(name + "_Spreadsheet", spreadSheetHeaders)
 
     plotProperties = []
-    plotProperties.append(["_Right", 2100.0, 600.0, App.Placement(App.Vector(-2213,-115,1230),App.Rotation(App.Vector(1,0,0),90))])
+    plotProperties.append(["_Right", 2100.0, height, App.Placement(App.Vector(-2213,-115,1255),App.Rotation(App.Vector(1,0,0),90))])
 #    plotProperties.append(["_Front", 1570.0, App.Placement(App.Vector(-3642,-1356,890),App.Rotation(App.Vector(0,0,1),90))])
 #    plotProperties.append(["_Front1", 450.0, App.Placement(App.Vector(-3642,-346,890),App.Rotation(App.Vector(0,0,1),90))])
 #    plotProperties.append(["_Left", 2080.0, App.Placement(App.Vector(-2302,-2023,890), App.Rotation(0,0,0), App.Vector(0,0,0))])
@@ -404,7 +408,7 @@ def createVitodens():
 #createBaseCorpuses(890.0)
 #createPlots()
 #createVitodens()
-#createBackForPlots()
-createUpCorpuses(900)
+createBackForPlots(650.0)
+createUpCorpuses(850.0, 300.0)
 
 #execfile('/home/nm/Dev/FreeCadScripts/createBaseCorpus.py')
