@@ -125,7 +125,7 @@ def createBoard(cabinetName, bodyName, row):
             createRectInSketch(cantSketchName, width, rowDict['BoardThickness'], conList)
             createPadFromSketch(bodyName, cantSketchName, rowDict[cant])
             
-def createCabinet(name, width, height, depth, boardThickness, cardboardThickness, sCantT, lCantT, legHeight, visibleBack, baseCabinetsObjects, isBase, isHavingBack = True):
+def createCabinet(name, width, height, depth, boardThickness, cardboardThickness, sCantT, lCantT, legHeight, visibleBack, baseCabinetsObjects, isBase, isHavingBack = True, shiftBlend = 0.0):
 
     baseCabinetsObjects.append(name)
 
@@ -209,7 +209,7 @@ def createCabinet(name, width, height, depth, boardThickness, cardboardThickness
         sprRec = [bodyName + '_Sketch', calcWidth, calcHeight, boardThickness, cants[0], cants[1], cants[2], cants[3], 0]
         row = writeRecordInSpreadsheet(name + "_Spreadsheet", sprRec)
         createBoard(name, bodyName, row)
-        App.activeDocument().getObject(bodyName).Placement=App.Placement(App.Vector(0,0, height-boardThickness), App.Rotation(0,0,0), App.Vector(0,0,0))
+        App.activeDocument().getObject(bodyName).Placement=App.Placement(App.Vector(0,0, height-boardThickness-shiftBlend), App.Rotation(0,0,0), App.Vector(0,0,0))
         App.ActiveDocument.recompute()
     
     if isHavingBack:  
@@ -314,7 +314,7 @@ def createUpCorpuses(height, depth):
     upCabinetsObjects = []
     createCabinet('BottlesUp', 300.0, height-238.0, depth, 18.0, 3.0, 0.8, 2.0, 100.0, False, upCabinetsObjects, False)
     App.ActiveDocument.getObject('BottlesUp_Fusion').Placement = App.Placement(App.Vector(-1312,-266,1580),App.Rotation(App.Vector(0,0,1),0))
-    createCabinet('OvenUp', 600.0, height, depth, 18.0, 3.0, 0.8, 2.0, 100.0, False, upCabinetsObjects, False)
+    createCabinet('OvenUp', 600.0, height-40, depth, 18.0, 3.0, 0.8, 2.0, 100.0, False, upCabinetsObjects, False, True, 220.0)
     App.ActiveDocument.getObject('OvenUp_Fusion').Placement = App.Placement(App.Vector(-1762,-266,2430),App.Rotation(App.Vector(0,1,0),180))
 
     createCabinet('Cab1Up', 1183.0, height, depth, 18.0, 3.0, 0.8, 2.0, 100.0, False, upCabinetsObjects, False)
@@ -408,7 +408,7 @@ def createVitodens():
 #createBaseCorpuses(890.0)
 #createPlots()
 #createVitodens()
-createBackForPlots(650.0)
+#createBackForPlots(650.0)
 createUpCorpuses(850.0, 300.0)
 
 #execfile('/home/nm/Dev/FreeCadScripts/createBaseCorpus.py')
