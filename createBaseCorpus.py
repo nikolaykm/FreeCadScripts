@@ -285,13 +285,13 @@ def createBaseCorpuses(height):
     #creating base corpuses
     baseCabinetsObjects = []
     createCabinet('Bottles', 300.0, height, 560.0, 18.0, 3.0, 0.8, 2.0, 100.0, False, baseCabinetsObjects, True)
-    App.ActiveDocument.getObject('Bottles_Fusion').Placement = App.Placement(App.Vector(-1312,-402,100),App.Rotation(App.Vector(0,0,1),0))
+    App.ActiveDocument.getObject('Bottles_Fusion').Placement = App.Placement(App.Vector(-1316,-402,100),App.Rotation(App.Vector(0,0,1),0))
     createCabinet('Oven', 600.0, height, 560.0, 18.0, 3.0, 0.8, 2.0, 100.0, False, baseCabinetsObjects, True)
-    App.ActiveDocument.getObject('Oven_Fusion').Placement = App.Placement(App.Vector(-1762,-402,100),App.Rotation(App.Vector(0,0,1),0))
+    App.ActiveDocument.getObject('Oven_Fusion').Placement = App.Placement(App.Vector(-1766,-402,100),App.Rotation(App.Vector(0,0,1),0))
     ##createCabinet('Dishwasher', 600.0, height, 560.0, 18.0, 3.0, 0.8, 2.0, 100.0, False, baseCabinetsObjects, True)
-    ##App.ActiveDocument.getObject('Dishwasher_Fusion').Placement = App.Placement(App.Vector(-2362,-402,100),App.Rotation(App.Vector(0,0,1),0))
+    ##App.ActiveDocument.getObject('Dishwasher_Fusion').Placement = App.Placement(App.Vector(-2366,-402,100),App.Rotation(App.Vector(0,0,1),0))
     createCabinet('Cab1', 1220.0, height, 500.0, 18.0, 3.0, 0.8, 2.0, 100.0, False, baseCabinetsObjects, True)
-    App.ActiveDocument.getObject('Cab1_Fusion').Placement = App.Placement(App.Vector(-3272,-432,100),App.Rotation(App.Vector(0,0,1),0))
+    App.ActiveDocument.getObject('Cab1_Fusion').Placement = App.Placement(App.Vector(-3276,-432,100),App.Rotation(App.Vector(0,0,1),0))
     createCabinet('Cab2', 482.0, height, 520.0, 18.0, 3.0, 0.8, 2.0, 100.0, False, baseCabinetsObjects, True)
     App.ActiveDocument.getObject('Cab2_Fusion').Placement = App.Placement(App.Vector(-3630,-922,100),App.Rotation(App.Vector(0,0,1),90))
     createCabinet('Sink', 600.0, height, 560.0, 18.0, 3.0, 0.8, 2.0, 100.0, False, baseCabinetsObjects, True)
@@ -328,7 +328,7 @@ def createUpCorpuses(height, depth):
         App.ActiveDocument.getObject("UpCabinets").addObject(App.ActiveDocument.getObject(obj+"_Fusion"))
 
 
-def createPlots():
+def createPlots(height):
     #create plots
     name = "Plots"
     plotObjects = []
@@ -340,10 +340,9 @@ def createPlots():
     writeRecordInSpreadsheet(name + "_Spreadsheet", spreadSheetHeaders)
 
     plotProperties = []
-    plotProperties.append(["_Right", 2180.0, App.Placement(App.Vector(-2252,-420,890), App.Rotation(0,0,0), App.Vector(0,0,0))])
-    plotProperties.append(["_Front", 1570.0, App.Placement(App.Vector(-3642,-1356,890),App.Rotation(App.Vector(0,0,1),90))])
-    plotProperties.append(["_Front1", 450.0, App.Placement(App.Vector(-3642,-346,890),App.Rotation(App.Vector(0,0,1),90))])
-    plotProperties.append(["_Left", 2080.0, App.Placement(App.Vector(-2302,-2023,890), App.Rotation(0,0,0), App.Vector(0,0,0))])
+    plotProperties.append(["_Right", 2172.0, App.Placement(App.Vector(-2252,-420,height-40), App.Rotation(0,0,0), App.Vector(0,0,0))])
+    plotProperties.append(["_Front", 2020.0, App.Placement(App.Vector(-3640,-1130,height-40), App.Rotation(App.Vector(0,0,1),90))])
+    plotProperties.append(["_Left", 2060.0, App.Placement(App.Vector(-2308,-2023,height-40), App.Rotation(0,0,0), App.Vector(0,0,0))])
 
     for plotProp in plotProperties:
         createPlot(name, plotProp[0], plotProp[1], plotObjects)
@@ -405,10 +404,10 @@ def createVitodens():
     App.ActiveDocument.getObject("Vitodens").addObject(App.ActiveDocument.getObject("Vitodens_Spreadsheet"))
     App.ActiveDocument.getObject("Vitodens").addObject(App.ActiveDocument.getObject("Vitodens_111W"))
 
-#createBaseCorpuses(890.0)
-#createPlots()
+#createBaseCorpuses(860.0)
+#createPlots(900)
 #createVitodens()
-#createBackForPlots(650.0)
-createUpCorpuses(850.0, 300.0)
+#createBackForPlots(600.0)
+#createUpCorpuses(850.0, 300.0)
 
 #execfile('/home/nm/Dev/FreeCadScripts/createBaseCorpus.py')
