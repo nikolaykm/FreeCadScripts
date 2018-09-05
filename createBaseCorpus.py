@@ -317,16 +317,19 @@ def createBaseCorpuses(height):
     #createCabinet('Cab1', 1220.0, height, 500.0, addOns, 18.0, 3.0, 0.8, 2.0, 100.0, False, baseCabinetsObjects, True)
     #App.ActiveDocument.getObject('Cab1_Fusion').Placement = App.Placement(App.Vector(-3276,-432,100),App.Rotation(App.Vector(0,0,1),0))
 
-    #addOns = [["Shelf1", 426.0, 506.2, [0.8, 0, 0, 0], 0, 0.4, 350.0, False],
-    #          ["Door1", 459.0, height-103.0, [2, 2, 2, 2], 0, 0, 0, True]]
-    #createCabinet('Cab2', 462.0, height, 510.0, addOns, 18.0, 3.0, 0.8, 2.0, 100.0, False, baseCabinetsObjects, True)
-    #App.ActiveDocument.getObject('Cab2_Fusion').Placement = App.Placement(App.Vector(-3630,-932,100),App.Rotation(App.Vector(0,0,1),90))
+    #addOns = [["Shelf1", 406.0, 506.2, [0.8, 0, 0, 0], 0, 0.4, 350.0, False],
+    #          ["Door1", 439.0, height-103.0, [2, 2, 2, 2], 0, 0, 0, True]]
+    #createCabinet('Cab2', 442.0, height, 510.0, addOns, 18.0, 3.0, 0.8, 2.0, 100.0, False, baseCabinetsObjects, True)
+    #App.ActiveDocument.getObject('Cab2_Fusion').Placement = App.Placement(App.Vector(-3630,-922,100),App.Rotation(App.Vector(0,0,1),90))
 
-    #addOns = []
+    #addOns = [["Door1", 597.0, height-103.0, [2, 2, 2, 2], 0, 0, 0, True]]
     #createCabinet('Sink', 600.0, height, 560.0, addOns, 18.0, 3.0, 0.8, 2.0, 100.0, False, baseCabinetsObjects, True)
-    #App.ActiveDocument.getObject('Sink_Fusion').Placement = App.Placement(App.Vector(-3655,-1463,100),App.Rotation(App.Vector(0,0,1),90))
+    #App.ActiveDocument.getObject('Sink_Fusion').Placement = App.Placement(App.Vector(-3655,-1443,100),App.Rotation(App.Vector(0,0,1),90))
 
-    #addOns = []
+    #addOns = [["Shelf1", 1054.0, 366.2, [0.8, 0, 0, 0], 0, 0.4, 350.0, False],
+    #          ["Plank1", 100.0, height-103.0, [0,0,0,0], 492, 0, 0, True],
+    #          ["Plank2", 197.0, height-103.0, [2,2,2,0], 7.5, 0, 0, True], 
+    #          ["Door1", 450.0, height-103.0, [2,2,2,2], -318.5, 0, 0, True]]
     #createCabinet('Cab3', 1090.0, height, 370.0, addOns, 18.0, 3.0, 0.8, 2.0, 100.0, False, baseCabinetsObjects, True)
     #App.ActiveDocument.getObject('Cab3_Fusion').Placement = App.Placement(App.Vector(-3391,-1947,100),App.Rotation(App.Vector(0,0,1),180))
  
@@ -334,7 +337,9 @@ def createBaseCorpuses(height):
     #createCabinet('Cab4', 600.0, height, 560.0, addOns, 18.0, 3.0, 0.8, 2.0, 100.0, True, baseCabinetsObjects, True)
     #App.ActiveDocument.getObject('Cab4_Fusion').Placement = App.Placement(App.Vector(-2546,-2043,100),App.Rotation(App.Vector(0,0,1),180))
 
-    #addOns = []
+    #addOns = [["Shelf1", 932.0, 541.2, [0.8, 0, 0, 0], 0, -9, 350.0, False],
+    #          ["Door1", 481.0, height-103.0, [2,2,2,2], -242, 0, 0, True],
+    #          ["Door2", 481.0, height-103.0, [2,2,2,2], 242, 0, 0, True]]
     #createCabinet('Cab5', 968.0, height, 560.0, addOns, 18.0, 3.0, 0.8, 2.0, 100.0, True, baseCabinetsObjects, True)
     #App.ActiveDocument.getObject('Cab5_Fusion').Placement = App.Placement(App.Vector(-1762,-2043,100),App.Rotation(App.Vector(0,0,1),180))
 
