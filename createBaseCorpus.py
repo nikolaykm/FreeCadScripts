@@ -353,25 +353,32 @@ def createUpCorpuses(height, depth):
     #creating up corpuses
     upCabinetsObjects = []
 
-    addOns = []
-    createCabinet('BottlesUp', 300.0, height-253.0, depth, addOns, 18.0, 3.0, 0.8, 2.0, 100.0, False, upCabinetsObjects, False)
-    App.ActiveDocument.getObject('BottlesUp_Fusion').Placement = App.Placement(App.Vector(-1316,-266,2197),App.Rotation(App.Vector(0,1,0),180))
+    #addOns = [["Shelf1", 264.0, depth-3-0.8, [0.8, 0, 0, 0], 0, 0.4, 350.0, False],
+    #          ["Door1", 297.0, height-253-3, [2, 2, 2, 2], 0, 0, 0, True]]
+    #createCabinet('BottlesUp', 300.0, height-253.0, depth, addOns, 18.0, 3.0, 0.8, 2.0, 100.0, False, upCabinetsObjects, False)
+    #App.ActiveDocument.getObject('BottlesUp_Fusion').Placement = App.Placement(App.Vector(-1316,-266,2197),App.Rotation(App.Vector(0,1,0),180))
 
-    addOns = []
-    createCabinet('OvenUp', 600.0, height-40, depth, addOns, 18.0, 3.0, 0.8, 2.0, 100.0, False, upCabinetsObjects, False, True, 220.0)
-    App.ActiveDocument.getObject('OvenUp_Fusion').Placement = App.Placement(App.Vector(-1766,-266,2450),App.Rotation(App.Vector(0,1,0),180))
+    #addOns = [["Shelf1", 564.0, depth-3-0.8, [0.8, 0, 0, 0], 0, 0.4, 350.0, False],
+    #          ["Door1", 597.0, height-40-3, [2, 2, 2, 2], 0, 0, 0, True]]
+    #createCabinet('OvenUp', 600.0, height-40, depth, addOns, 18.0, 3.0, 0.8, 2.0, 100.0, False, upCabinetsObjects, False, True, 220.0)
+    #App.ActiveDocument.getObject('OvenUp_Fusion').Placement = App.Placement(App.Vector(-1766,-266,2450),App.Rotation(App.Vector(0,1,0),180))
 
-    addOns = []
-    createCabinet('Cab1Up', 1160.0, height, depth, addOns, 18.0, 3.0, 0.8, 2.0, 100.0, False, upCabinetsObjects, False)
-    App.ActiveDocument.getObject('Cab1Up_Fusion').Placement = App.Placement(App.Vector(-2646,-266,2450),App.Rotation(App.Vector(0,1,0),180))
+    #addOns = [["Shelf1", 1124.0, depth-3-0.8, [0.8, 0, 0, 0], 0, 0.4, 350.0, False],
+    #          ["Shelf2", 1124.0, depth-3-0.8, [0.8, 0, 0, 0], 0, 0.4, 672.0, False],
+    #          ["Door1", 577.0, height-3, [2,2,2,2], -290, 0, 0, True],
+    #          ["Door2", 577.0, height-3, [2,2,2,2], 290, 0, 0, True]]
+    #createCabinet('Cab1Up', 1160.0, height, depth, addOns, 18.0, 3.0, 0.8, 2.0, 100.0, False, upCabinetsObjects, False)
+    #App.ActiveDocument.getObject('Cab1Up_Fusion').Placement = App.Placement(App.Vector(-2646,-266,2450),App.Rotation(App.Vector(0,1,0),180))
 
-    addOns = []
-    createCabinet('Cab2Up', 700.0, height+600, 480.0, addOns, 18.0, 3.0, 0.8, 2.0, 100.0, True, upCabinetsObjects, False, False)
-    App.ActiveDocument.getObject('Cab2Up_Fusion').Placement = App.Placement(App.Vector(-3577,-373,2450),App.Rotation(App.Vector(0,1,0),180))
+    #addOns = [["Door1", 697.0, height+200-3, [2, 2, 2, 2], 0, 0, 0, True]]
+    #createCabinet('Cab2Up', 700.0, height+200, 480.0, addOns, 18.0, 3.0, 0.8, 2.0, 100.0, True, upCabinetsObjects, False, False)
+    #App.ActiveDocument.getObject('Cab2Up_Fusion').Placement = App.Placement(App.Vector(-3577,-373,2450),App.Rotation(App.Vector(0,1,0),180))
 
-    addOns = []
-    createCabinet('Cab3Up', 600.0, height, 250.0, addOns, 18.0, 3.0, 0.8, 2.0, 100.0, False, upCabinetsObjects, False)
-    App.ActiveDocument.getObject('Cab3Up_Fusion').Placement = App.Placement(App.Vector(-3160,-2019,1500),App.Rotation(App.Vector(0,0,1),180))
+    #addOns = [["Shelf1", 564.0, 250-3-0.8, [0.8, 0, 0, 0], 0, 0.4, 350.0, False],
+    #          ["Shelf2", 564.0, 250-3-0.8, [0.8, 0, 0, 0], 0, 0.4, 672.0, False],
+    #          ["Door1", 597.0, height-3, [2,2,2,2], 0, 0, 0, True]]
+    #createCabinet('Cab3Up', 600.0, height, 250.0, addOns, 18.0, 3.0, 0.8, 2.0, 100.0, False, upCabinetsObjects, False)
+    #App.ActiveDocument.getObject('Cab3Up_Fusion').Placement = App.Placement(App.Vector(-3160,-2019,1500),App.Rotation(App.Vector(0,0,1),180))
 
     App.ActiveDocument.addObject("App::DocumentObjectGroup","UpCabinets")
     for obj in upCabinetsObjects:
@@ -458,7 +465,7 @@ def createVitodens():
     App.ActiveDocument.getObject("Vitodens").addObject(App.ActiveDocument.getObject("Vitodens_Spreadsheet"))
     App.ActiveDocument.getObject("Vitodens").addObject(App.ActiveDocument.getObject("Vitodens_111W"))
 
-createBaseCorpuses(860.0)
+#createBaseCorpuses(860.0)
 #createPlots(900)
 #createVitodens()
 #createBackForPlots(600.0)
