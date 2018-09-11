@@ -465,10 +465,26 @@ def createVitodens():
     App.ActiveDocument.getObject("Vitodens").addObject(App.ActiveDocument.getObject("Vitodens_Spreadsheet"))
     App.ActiveDocument.getObject("Vitodens").addObject(App.ActiveDocument.getObject("Vitodens_111W"))
 
+def createLivingRoomCorpuses():
+    #creating up corpuses
+    livingRoomObjects = []
+
+    addOns = []
+    #addOns = [["Shelf1", 264.0, depth-3-0.8, [0.8, 0, 0, 0], 0, 0.4, 350.0, False],
+    #          ["Door1", 297.0, height-253-3, [2, 2, 2, 2], 0, 0, 0, True]]
+    createCabinet('LivingRoomCab1', 450.0, 1800.0, 450.0, addOns, 18.0, 3.0, 0.8, 2.0, 100.0, False, livingRoomObjects, True)
+    App.ActiveDocument.getObject('LivingRoomCab1_Fusion').Placement = App.Placement(App.Vector(504.0,-346.0,0),App.Rotation(App.Vector(0,0,0),0))
+
+    App.ActiveDocument.addObject("App::DocumentObjectGroup","LivingRoomCabinets")
+    for obj in livingRoomObjects:
+        App.ActiveDocument.getObject("LivingRoomCabinets").addObject(App.ActiveDocument.getObject(obj+"_Fusion"))
+
+
 #createBaseCorpuses(860.0)
 #createPlots(900)
 #createVitodens()
 #createBackForPlots(600.0)
 #createUpCorpuses(950.0, 300.0)
+createLivingRoomCorpuses()
 
 #execfile('/home/nm/Dev/FreeCadScripts/createBaseCorpus.py')
