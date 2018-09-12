@@ -422,10 +422,11 @@ def createBackForPlots(height):
     writeRecordInSpreadsheet(name + "_Spreadsheet", spreadSheetHeaders)
 
     plotProperties = []
-    plotProperties.append(["_Right", 2100.0, height, App.Placement(App.Vector(-2216,-115,1200),App.Rotation(App.Vector(1,0,0),90)), [0.8, 0.8, 0.8, 0.8]])
+    plotProperties.append(["_Right1", 2100.0, height, App.Placement(App.Vector(-2216,-115,1200),App.Rotation(App.Vector(1,0,0),90)), [0.8, 0.8, 0.8, 0.8]])
+    plotProperties.append(["_Right2", 80.0, 400.0, App.Placement(App.Vector(-3245,-173,1100), App.Rotation(90,0,90), App.Vector(0,0,0)), [0.8, 0.8, 0.8, 0.8]])
     plotProperties.append(["_Front1", 70.0, height, App.Placement(App.Vector(-3945,-2110,1200), App.Rotation(90,0,90), App.Vector(0,0,0)), [0.8, 0.8, 0.8, 0.8]])
     plotProperties.append(["_Front2", 1320.0, 115.0, App.Placement(App.Vector(-3945,-1415,957), App.Rotation(90,0,90), App.Vector(0,0,0)), [0.8, 0.8, 0.8, 0.8]])
-    plotProperties.append(["_Front3", 300.0, height, App.Placement(App.Vector(-3945,-605,1200), App.Rotation(90,0,90), App.Vector(0,0,0)), [0.8, 0.8, 0.8, 0.8]])
+    plotProperties.append(["_Front3", 620.0, height, App.Placement(App.Vector(-3945,-445,1200), App.Rotation(90,0,90), App.Vector(0,0,0)), [0.8, 0.8, 0.8, 0.8]])
     plotProperties.append(["_Left1", 1072.0, height, App.Placement(App.Vector(-3391,-2127,1200),App.Rotation(App.Vector(1,0,0),90)), [0.8, 0.8, 0.8, 0.8]])
     plotProperties.append(["_Left2", 203.0, height, App.Placement(App.Vector(-2855,-2229,1200), App.Rotation(90,0,90), App.Vector(0,0,0)), [0.8, 0.8, 0.8, 0.8]])
     plotProperties.append(["_Left3", 1559.0, 400.0, App.Placement(App.Vector(-2058,-2312,1100),App.Rotation(App.Vector(1,0,0),90)), [0.8, 0.8, 0.8, 0.8]])
@@ -483,8 +484,8 @@ def createLivingRoomCorpuses():
 #createBaseCorpuses(860.0)
 #createPlots(900)
 #createVitodens()
-#createBackForPlots(600.0)
+createBackForPlots(600.0)
 #createUpCorpuses(950.0, 300.0)
-createLivingRoomCorpuses()
+#createLivingRoomCorpuses()
 
 #execfile('/home/nm/Dev/FreeCadScripts/createBaseCorpus.py')
