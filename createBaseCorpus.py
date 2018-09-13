@@ -273,6 +273,31 @@ def createCabinet(name, width, height, depth, addOns, boardThickness, cardboardT
 
     App.ActiveDocument.recompute()
 
+def createDrawer(name, width, height, depth, addOns, boardThickness, cardboardThickness, sCantT, lCantT, drawersObjects):
+    drawersObjects.append(name)
+
+    objects = []
+
+    #create spreadsheet column names
+    App.activeDocument().addObject('Spreadsheet::Sheet', name + "_Spreadsheet")
+    objects.append(name + "_Spreadsheet")
+    spreadSheetHeaders = ['Name', 'Width', 'Height', 'BoardThickness', 'WCantFront', 'WCantBack', 'HCantLeft', 'HCantRight', 'ByFlader']
+    writeRecordInSpreadsheet(name + "_Spreadsheet", spreadSheetHeaders)
+
+    #create base
+    bodyName = name + "_Base"
+    createBody(bodyName, objects)
+    cants = [sCantT, sCantT if visibleBack else 0, sCantT, sCantT]
+    baseCants = cants
+    calcWidth = width-cants[2]-cants[3];
+    calcHeight = depth-cants[0]-cants[1]-(0 if visibleBack else cardboardThickness)
+    baseWidth = calcWidth
+    baseHeight = calcHeight
+    sprRec = [bodyName + '_Sketch', calcWidth, calcHeight, boardThickness, cants[0], cants[1], cants[2], cants[3], 1]
+    row = writeRecordInSpreadsheet(name + "_Spreadsheet", sprRec)
+    createBoard(name, bodyName, row)
+ 
+
 def createPlot(name, plotName, width, plotObjects):
     bodyName = name + plotName
     createBody(bodyName, plotObjects)
@@ -484,7 +509,7 @@ def createLivingRoomCorpuses():
 #createBaseCorpuses(860.0)
 #createPlots(900)
 #createVitodens()
-createBackForPlots(600.0)
+#createBackForPlots(600.0)
 #createUpCorpuses(950.0, 300.0)
 #createLivingRoomCorpuses()
 
