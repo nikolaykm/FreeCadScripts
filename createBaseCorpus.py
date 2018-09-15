@@ -274,6 +274,29 @@ def createCabinet(material, name, width, height, depth, addOns, boardThickness, 
     App.ActiveDocument.recompute()
 
 def createDrawer(material, name, width, height, depth, boardThickness, cardboardThickness, sCantT, lCantT, drawersObjects, visibleBack):
+
+    #create spreadsheet column names
+    App.activeDocument().addObject('Spreadsheet::Sheet', name + "LeftSlide_Spreadsheet")
+    spreadSheetHeaders = ['Name', 'Width', 'Height', 'BoardThickness', 'WCantFront', 'WCantBack', 'HCantLeft', 'HCantRight', 'ByFlader']
+    writeRecordInSpreadsheet(name + "LeftSlide_Spreadsheet", spreadSheetHeaders)
+
+    bodyName = name + "LeftSlideBody"
+    createBody(bodyName, [])
+    cants = [0, 0, 0, 0]
+    calcWidth = 42.0
+    calcHeight = 500.0
+    sprRec = [bodyName + '_Sketch', calcWidth, calcHeight, 42.0, cants[0], cants[1], cants[2], cants[3], 0]
+    row = writeRecordInSpreadsheet(name + "LeftSlide_Spreadsheet", sprRec)
+    createBoard(name + "LeftSlide", name + "LeftSlideBody", row)
+
+    #App.activeDocument().getObject(name + "LeftSide").Placement = App.Placement(App.Vector(-300,0,500), App.Rotation(0,0,0), App.Vector(0,0,0))
+
+    #App.ActiveDocument.addObject("App::DocumentObjectGroup","Vitodens")
+    #App.ActiveDocument.getObject("Vitodens").addObject(App.ActiveDocument.getObject("Vitodens_Spreadsheet"))
+    #App.ActiveDocument.getObject("Vitodens").addObject(App.ActiveDocument.getObject("Vitodens_111W"))
+
+
+
     drawersObjects.append(name)
 
     objects = []
@@ -631,8 +654,8 @@ def processAllSpreadSheetsByMaterial():
 #createBackForPlots(600.0)
 #createUpCorpuses(950.0, 300.0)
 #createLivingRoomCorpuses()
-processAllSpreadSheetsByMaterial()
-#drawersObjects = []
-#createDrawer('WallnutTropic','Cab1_Drawer1', 600.0, 187.0, 560.0, 18.0, 3.0, 0.8, 2.0, drawersObjects, True)
+#processAllSpreadSheetsByMaterial()
+drawersObjects = []
+createDrawer('WallnutTropic','Cab1_Drawer1', 600.0, 187.0, 560.0, 18.0, 3.0, 0.8, 2.0, drawersObjects, True)
 
 #execfile('/home/nm/Dev/FreeCadScripts/createBaseCorpus.py')
