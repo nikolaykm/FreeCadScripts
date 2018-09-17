@@ -1,3 +1,10 @@
+boardThickness = 18.0
+cardboardThickness = 3.0
+sCantT = 0.8
+lCantT = 2.0
+cabMaterial = 'WallnutTropic'
+baseLegHeight = 100.0
+
 def writeRecordInSpreadsheet(spreadsheetName, recArr):
     #find next empty row
     row = 1
@@ -36,6 +43,10 @@ def getRowFromSpreadsheet(spreadsheetName, row):
         column = column + 1
 
     return resultDict
+
+def placeObjects(placementMatrix):
+    for p in placementMatrix:
+         App.ActiveDocument.getObject(p['name']).Placement = App.Placement(App.Vector(p['x'],p['y'],p['z']),App.Rotation(App.Vector(p['xR'],p['yR'],p['zR']),p['R']))
 
 def createBody(bodyName, objects):
     App.activeDocument().addObject('PartDesign::Body', bodyName)
@@ -125,9 +136,7 @@ def createBoard(cabinetName, bodyName, row):
             createRectInSketch(cantSketchName, width, rowDict['BoardThickness'], conList)
             createPadFromSketch(bodyName, cantSketchName, rowDict[cant])
             
-def createCabinet(material, name, width, height, depth, addOns, boardThickness, cardboardThickness, sCantT, lCantT, legHeight, visibleBack, baseCabinetsObjects, isBase, isHavingBack = True, shiftBlend = 0.0):
-
-    baseCabinetsObjects.append(name)
+def createCabinet(name, width, height, depth, addOns, legHeight=baseLegHeight, visibleBack = False, isBase = True, isHavingBack = True, shiftBlend = 0.0, groupName = "", material=cabMaterial):
 
     objects = []
 
@@ -273,7 +282,10 @@ def createCabinet(material, name, width, height, depth, addOns, boardThickness, 
 
     App.ActiveDocument.recompute()
 
-def createDrawer(material, name, width, height, depth, boardThickness, cardboardThickness, sCantT, lCantT, drawersObjects, visibleBack):
+    if groupName != "":
+        App.ActiveDocument.getObject(groupName).addObject(App.ActiveDocument.getObject(name+"_Fusion"))
+
+def createDrawer(material, name, width, height, depth, drawersObjects, visibleBack):
 
     #create spreadsheet column names
     App.activeDocument().addObject('Spreadsheet::Sheet', name + "LeftSlide_Spreadsheet")
@@ -415,55 +427,53 @@ def createPlotBack(material, name, plotBackName, width, height, plotBackObjects,
 
 def createBaseCorpuses(height):
     #creating base corpuses
-    baseCabinetsObjects = []
+
+    App.ActiveDocument.addObject("App::DocumentObjectGroup","BaseCabinets")
 
     addOns = [["Door1", 297.0, height-103.0, [2, 2, 2, 2], 0, 0, 0, True]]
-    createCabinet('WallnutTropic', 'Bottles', 300.0, height, 560.0, addOns, 18.0, 3.0, 0.8, 2.0, 100.0, False, baseCabinetsObjects, True)
-    App.ActiveDocument.getObject('Bottles_Fusion').Placement = App.Placement(App.Vector(-1316,-402,100),App.Rotation(App.Vector(0,0,1),0))
+    createCabinet('Bottles', 300.0, height, 560.0, addOns)
 
     addOns = [["Shelf1", 564.0, 526.2, [0.8, 0, 0, 0], 0, -15.40, 122.0, False], 
               ["Door1", 597.0, 137.0, [2, 2, 2, 2], 0, 0, -309.5, True]]
-    createCabinet('WallnutTropic', 'Oven', 600.0, height, 560.0, addOns, 18.0, 3.0, 0.8, 2.0, 100.0, False, baseCabinetsObjects, True)
-    App.ActiveDocument.getObject('Oven_Fusion').Placement = App.Placement(App.Vector(-1766,-402,100),App.Rotation(App.Vector(0,0,1),0))
+    createCabinet('Oven', 600.0, height, 560.0, addOns)
 
     addOns = [["Shelf1", 1184.0, 496.2, [0.8, 0, 0, 0], 0, 0.4, 350.0, False],
               ["Plank1", 100.0, height-103.0, [0,0,0,0], -557, 0, 0, True],
               ["Plank2", 197.0, height-103.0, [2,2,0,2], -90, 0, 0, True], 
               ["Door1", 597.0, height-103.0, [2,2,2,2], 310, 0, 0, True]]
-    createCabinet('WallnutTropic', 'Cab1', 1220.0, height, 500.0, addOns, 18.0, 3.0, 0.8, 2.0, 100.0, False, baseCabinetsObjects, True)
-    App.ActiveDocument.getObject('Cab1_Fusion').Placement = App.Placement(App.Vector(-3276,-432,100),App.Rotation(App.Vector(0,0,1),0))
+    createCabinet('Cab1', 1220.0, height, 500.0, addOns)
 
     addOns = [["Shelf1", 406.0, 506.2, [0.8, 0, 0, 0], 0, 0.4, 350.0, False],
               ["Door1", 439.0, height-103.0, [2, 2, 2, 2], 0, 0, 0, True]]
-    createCabinet('WallnutTropic', 'Cab2', 442.0, height, 510.0, addOns, 18.0, 3.0, 0.8, 2.0, 100.0, False, baseCabinetsObjects, True)
-    App.ActiveDocument.getObject('Cab2_Fusion').Placement = App.Placement(App.Vector(-3630,-922,100),App.Rotation(App.Vector(0,0,1),90))
+    createCabinet('Cab2', 442.0, height, 510.0, addOns)
 
     addOns = [["Door1", 597.0, height-103.0, [2, 2, 2, 2], 0, 0, 0, True]]
-    createCabinet('WallnutTropic', 'Sink', 600.0, height, 560.0, addOns, 18.0, 3.0, 0.8, 2.0, 100.0, False, baseCabinetsObjects, True)
-    App.ActiveDocument.getObject('Sink_Fusion').Placement = App.Placement(App.Vector(-3655,-1443,100),App.Rotation(App.Vector(0,0,1),90))
+    createCabinet('Sink', 600.0, height, 560.0, addOns)
 
     addOns = [["Shelf1", 1054.0, 366.2, [0.8, 0, 0, 0], 0, 0.4, 350.0, False],
               ["Plank1", 100.0, height-103.0, [0,0,0,0], 492, 0, 0, True],
               ["Plank2", 197.0, height-103.0, [2,2,2,0], 7.5, 0, 0, True], 
               ["Door1", 450.0, height-103.0, [2,2,2,2], -318.5, 0, 0, True]]
-    createCabinet('WallnutTropic', 'Cab3', 1090.0, height, 370.0, addOns, 18.0, 3.0, 0.8, 2.0, 100.0, False, baseCabinetsObjects, True)
-    App.ActiveDocument.getObject('Cab3_Fusion').Placement = App.Placement(App.Vector(-3391,-1947,100),App.Rotation(App.Vector(0,0,1),180))
+    createCabinet('Cab3', 1090.0, height, 370.0, addOns)
  
     addOns = []
-    createCabinet('WallnutTropic', 'Cab4', 600.0, height, 560.0, addOns, 18.0, 3.0, 0.8, 2.0, 100.0, True, baseCabinetsObjects, True)
-    App.ActiveDocument.getObject('Cab4_Fusion').Placement = App.Placement(App.Vector(-2546,-2043,100),App.Rotation(App.Vector(0,0,1),180))
+    createCabinet('Cab4', 600.0, height, 560.0, addOns, visibleBack=True)
 
     addOns = [["Shelf1", 932.0, 541.2, [0.8, 0, 0, 0], 0, -9, 350.0, False],
               ["Door1", 481.0, height-103.0, [2,2,2,2], -242, 0, 0, True],
               ["Door2", 481.0, height-103.0, [2,2,2,2], 242, 0, 0, True]]
-    createCabinet('WallnutTropic', 'Cab5', 968.0, height, 560.0, addOns, 18.0, 3.0, 0.8, 2.0, 100.0, True, baseCabinetsObjects, True)
-    App.ActiveDocument.getObject('Cab5_Fusion').Placement = App.Placement(App.Vector(-1762,-2043,100),App.Rotation(App.Vector(0,0,1),180))
+    createCabinet('Cab5', 968.0, height, 560.0, addOns, visibleBack=True)
 
+    placementMatrix = [{'name':'Bottles_Fusion','x':-1316, 	'y':-402,	'z':100,	'xR':0,	'yR':0, 'zR':1, 'R':0},
+                       {'name':'Oven_Fusion',	'x':-1766, 	'y':-402, 	'z':100,	'xR':0,	'yR':0, 'zR':1, 'R':0},
+                       {'name':'Cab1_Fusion',	'x':-3276, 	'y':-432, 	'z':100,	'xR':0,	'yR':0, 'zR':1, 'R':0},
+                       {'name':'Cab2_Fusion',	'x':-3630, 	'y':-922, 	'z':100,	'xR':0, 'yR':0, 'zR':1, 'R':90},
+                       {'name':'Sink_Fusion',	'x':-3655, 	'y':-1443, 	'z':100,	'xR':0, 'yR':0, 'zR':1, 'R':90},
+                       {'name':'Cab3_Fusion',	'x':-3391, 	'y':-1947, 	'z':100,	'xR':0, 'yR':0, 'zR':1, 'R':180},
+                       {'name':'Cab4_Fusion',	'x':-2546, 	'y':-2043, 	'z':100,	'xR':0, 'yR':0, 'zR':1, 'R':180},
+                       {'name':'Cab5_Fusion',	'x':-1762, 	'y':-2043, 	'z':100,	'xR':0, 'yR':0, 'zR':1, 'R':180}]
 
-
-    App.ActiveDocument.addObject("App::DocumentObjectGroup","BaseCabinets")
-    for obj in baseCabinetsObjects:
-        App.ActiveDocument.getObject("BaseCabinets").addObject(App.ActiveDocument.getObject(obj+"_Fusion"))
+    placeObjects(placementMatrix)
 
 def createUpCorpuses(height, depth):
     #creating up corpuses
@@ -471,29 +481,29 @@ def createUpCorpuses(height, depth):
 
     addOns = [["Shelf1", 264.0, depth-3-0.8, [0.8, 0, 0, 0], 0, 0.4, 350.0, False],
               ["Door1", 297.0, height-253-3, [2, 2, 2, 2], 0, 0, 0, True]]
-    createCabinet('WallnutTropic', 'BottlesUp', 300.0, height-253.0, depth, addOns, 18.0, 3.0, 0.8, 2.0, 100.0, False, upCabinetsObjects, False)
+    createCabinet('WallnutTropic', 'BottlesUp', 300.0, height-253.0, depth, addOns, 100.0, False, upCabinetsObjects, False)
     App.ActiveDocument.getObject('BottlesUp_Fusion').Placement = App.Placement(App.Vector(-1316,-266,2197),App.Rotation(App.Vector(0,1,0),180))
 
     addOns = [["Shelf1", 564.0, depth-3-0.8, [0.8, 0, 0, 0], 0, 0.4, 350.0, False],
               ["Door1", 597.0, height-40-3, [2, 2, 2, 2], 0, 0, 0, True]]
-    createCabinet('WallnutTropic', 'OvenUp', 600.0, height-40, depth, addOns, 18.0, 3.0, 0.8, 2.0, 100.0, False, upCabinetsObjects, False, True, 220.0)
+    createCabinet('WallnutTropic', 'OvenUp', 600.0, height-40, depth, addOns, 100.0, False, upCabinetsObjects, False, True, 220.0)
     App.ActiveDocument.getObject('OvenUp_Fusion').Placement = App.Placement(App.Vector(-1766,-266,2450),App.Rotation(App.Vector(0,1,0),180))
 
     addOns = [["Shelf1", 1124.0, depth-3-0.8, [0.8, 0, 0, 0], 0, 0.4, 350.0, False],
               ["Shelf2", 1124.0, depth-3-0.8, [0.8, 0, 0, 0], 0, 0.4, 672.0, False],
               ["Door1", 577.0, height-3, [2,2,2,2], -290, 0, 0, True],
               ["Door2", 577.0, height-3, [2,2,2,2], 290, 0, 0, True]]
-    createCabinet('WallnutTropic', 'Cab1Up', 1160.0, height, depth, addOns, 18.0, 3.0, 0.8, 2.0, 100.0, False, upCabinetsObjects, False)
+    createCabinet('WallnutTropic', 'Cab1Up', 1160.0, height, depth, addOns, 100.0, False, upCabinetsObjects, False)
     App.ActiveDocument.getObject('Cab1Up_Fusion').Placement = App.Placement(App.Vector(-2646,-266,2450),App.Rotation(App.Vector(0,1,0),180))
 
     addOns = [["Door1", 697.0, height+200-3, [2, 2, 2, 2], 0, 0, 0, True]]
-    createCabinet('WallnutTropic', 'Cab2Up', 700.0, height+200, 480.0, addOns, 18.0, 3.0, 0.8, 2.0, 100.0, True, upCabinetsObjects, False, False)
+    createCabinet('WallnutTropic', 'Cab2Up', 700.0, height+200, 480.0, addOns, 100.0, True, upCabinetsObjects, False, False)
     App.ActiveDocument.getObject('Cab2Up_Fusion').Placement = App.Placement(App.Vector(-3577,-373,2450),App.Rotation(App.Vector(0,1,0),180))
 
     addOns = [["Shelf1", 564.0, 250-3-0.8, [0.8, 0, 0, 0], 0, 0.4, 350.0, False],
               ["Shelf2", 564.0, 250-3-0.8, [0.8, 0, 0, 0], 0, 0.4, 672.0, False],
               ["Door1", 597.0, height-3, [2,2,2,2], 0, 0, 0, True]]
-    createCabinet('WallnutTropic', 'Cab3Up', 600.0, height, 250.0, addOns, 18.0, 3.0, 0.8, 2.0, 100.0, False, upCabinetsObjects, False)
+    createCabinet('WallnutTropic', 'Cab3Up', 600.0, height, 250.0, addOns, 100.0, False, upCabinetsObjects, False)
     App.ActiveDocument.getObject('Cab3Up_Fusion').Placement = App.Placement(App.Vector(-3160,-2019,1500),App.Rotation(App.Vector(0,0,1),180))
 
     App.ActiveDocument.addObject("App::DocumentObjectGroup","UpCabinets")
@@ -589,7 +599,7 @@ def createLivingRoomCorpuses():
     addOns = []
     #addOns = [["Shelf1", 264.0, depth-3-0.8, [0.8, 0, 0, 0], 0, 0.4, 350.0, False],
     #          ["Door1", 297.0, height-253-3, [2, 2, 2, 2], 0, 0, 0, True]]
-    createCabinet('WallnutTropic', 'LivingRoomCab1', 450.0, 1800.0, 450.0, addOns, 18.0, 3.0, 0.8, 2.0, 100.0, False, livingRoomObjects, True)
+    createCabinet('WallnutTropic', 'LivingRoomCab1', 450.0, 1800.0, 450.0, addOns, 100.0, False, livingRoomObjects, True)
     App.ActiveDocument.getObject('LivingRoomCab1_Fusion').Placement = App.Placement(App.Vector(504.0,-346.0,0),App.Rotation(App.Vector(0,0,0),0))
 
     App.ActiveDocument.addObject("App::DocumentObjectGroup","LivingRoomCabinets")
@@ -648,14 +658,14 @@ def processAllSpreadSheetsByMaterial():
             writeRecordInSpreadsheet(mat + "_Spreadsheet", row)
                     
 
-#createBaseCorpuses(860.0)
+createBaseCorpuses(860.0)
 #createPlots(900)
 #createVitodens()
 #createBackForPlots(600.0)
 #createUpCorpuses(950.0, 300.0)
 #createLivingRoomCorpuses()
 #processAllSpreadSheetsByMaterial()
-drawersObjects = []
-createDrawer('WallnutTropic','Cab1_Drawer1', 600.0, 187.0, 560.0, 18.0, 3.0, 0.8, 2.0, drawersObjects, True)
+#drawersObjects = []
+#createDrawer('WallnutTropic','Cab1_Drawer1', 600.0, 187.0, 560.0, drawersObjects, True)
 
 #execfile('/home/nm/Dev/FreeCadScripts/createBaseCorpus.py')
