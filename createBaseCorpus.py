@@ -5,6 +5,8 @@ lCantT = 2.0
 cabMaterial = 'WallnutTropic'
 baseLegHeight = 100.0
 spaceBetweenDoors = 3.0
+drawerSliderHole = 10.0
+drawerSliderHoleToBottom = 12.0
 
 def writeRecordInSpreadsheet(spreadsheetName, recArr):
     #find next empty row
@@ -307,31 +309,27 @@ def createCabinet(name, width, height, depth, addOns, legHeight=baseLegHeight, v
     if groupName != "":
         App.ActiveDocument.getObject(groupName).addObject(App.ActiveDocument.getObject(name+"_Fusion"))
 
-def createDrawer(material, name, width, height, depth, drawersObjects, visibleBack):
+def createDrawer(material, name, width, height, depth, visibleBack):
 
-    #create spreadsheet column names
-    App.activeDocument().addObject('Spreadsheet::Sheet', name + "LeftSlide_Spreadsheet")
-    spreadSheetHeaders = ['Name', 'Width', 'Height', 'BoardThickness', 'WCantFront', 'WCantBack', 'HCantLeft', 'HCantRight', 'ByFlader']
-    writeRecordInSpreadsheet(name + "LeftSlide_Spreadsheet", spreadSheetHeaders)
+    ##create spreadsheet column names
+    #App.activeDocument().addObject('Spreadsheet::Sheet', name + "LeftSlide_Spreadsheet")
+    #spreadSheetHeaders = ['Name', 'Width', 'Height', 'BoardThickness', 'WCantFront', 'WCantBack', 'HCantLeft', 'HCantRight', 'ByFlader']
+    #writeRecordInSpreadsheet(name + "LeftSlide_Spreadsheet", spreadSheetHeaders)
 
-    bodyName = name + "LeftSlideBody"
-    createBody(bodyName, [])
-    cants = [0, 0, 0, 0]
-    calcWidth = 42.0
-    calcHeight = 500.0
-    sprRec = [bodyName + '_Sketch', calcWidth, calcHeight, 42.0, cants[0], cants[1], cants[2], cants[3], 0]
-    row = writeRecordInSpreadsheet(name + "LeftSlide_Spreadsheet", sprRec)
-    createBoard(name + "LeftSlide", name + "LeftSlideBody", row)
+    #bodyName = name + "LeftSlideBody"
+    #createBody(bodyName, [])
+    #cants = [0, 0, 0, 0]
+    #calcWidth = 42.0
+    #calcHeight = 500.0
+    #sprRec = [bodyName + '_Sketch', calcWidth, calcHeight, 42.0, cants[0], cants[1], cants[2], cants[3], 0]
+    #row = writeRecordInSpreadsheet(name + "LeftSlide_Spreadsheet", sprRec)
+    #createBoard(name + "LeftSlide", name + "LeftSlideBody", row)
 
-    #App.activeDocument().getObject(name + "LeftSide").Placement = App.Placement(App.Vector(-300,0,500), App.Rotation(0,0,0), App.Vector(0,0,0))
+    ##App.activeDocument().getObject(name + "LeftSide").Placement = App.Placement(App.Vector(-300,0,500), App.Rotation(0,0,0), App.Vector(0,0,0))
 
-    #App.ActiveDocument.addObject("App::DocumentObjectGroup","Vitodens")
-    #App.ActiveDocument.getObject("Vitodens").addObject(App.ActiveDocument.getObject("Vitodens_Spreadsheet"))
-    #App.ActiveDocument.getObject("Vitodens").addObject(App.ActiveDocument.getObject("Vitodens_111W"))
-
-
-
-    drawersObjects.append(name)
+    ##App.ActiveDocument.addObject("App::DocumentObjectGroup","Vitodens")
+    ##App.ActiveDocument.getObject("Vitodens").addObject(App.ActiveDocument.getObject("Vitodens_Spreadsheet"))
+    ##App.ActiveDocument.getObject("Vitodens").addObject(App.ActiveDocument.getObject("Vitodens_111W"))
 
     objects = []
 
@@ -341,16 +339,30 @@ def createDrawer(material, name, width, height, depth, drawersObjects, visibleBa
     spreadSheetHeaders = ['Name', 'Width', 'Height', 'BoardThickness', 'WCantFront', 'WCantBack', 'HCantLeft', 'HCantRight', 'ByFlader', 'Material']
     writeRecordInSpreadsheet(name + "_Spreadsheet", spreadSheetHeaders)
 
-    #create base
-    bodyName = name + "_Base"
+    #create door
+    bodyName = name + "_Door"
     createBody(bodyName, objects)
-    cants = [0, 0, 0, 0]
-    calcWidth = width-cants[2]-cants[3]-4*boardThickness+6;
-    calcHeight = depth-cants[2]-cants[3]-(boardThickness if visibleBack else cardboardThickness)-5
-    sprRec = [bodyName + '_Sketch', calcWidth, calcHeight, cardboardThickness, cants[0], cants[1], cants[2], cants[3], 'H', material+"_card"]
+    cants = [lCantT, lCantT, lCantT, lCantT]
+    calcWidth = width-cants[2]-cants[3]-3;
+    calcHeight = height-cants[0]-cants[1]-3
+    sprRec = [bodyName + '_Sketch', calcWidth, calcHeight, boardThickness, cants[0], cants[1], cants[2], cants[3], 'H', material]
     row = writeRecordInSpreadsheet(name + "_Spreadsheet", sprRec)
     createBoard(name, bodyName, row)
-    App.activeDocument().getObject(bodyName).Placement=App.Placement(App.Vector(0,0,-(height-cants[0]-cants[1]-2*30)/2-cardboardThickness+20), App.Rotation(0,0,0), App.Vector(0,0,0))
+    zeroZ = (calcHeight+cants[0]+cants[1])/2
+    App.activeDocument().getObject(bodyName).Placement=App.Placement(App.Vector(0,-(depth-sCantT-(boardThickness if visibleBack else cardboardThickness)-5)/2, zeroZ), App.Rotation(0,0,90), App.Vector(0,0,0))
+    App.ActiveDocument.recompute()
+
+    #create front
+    bodyName = name + "_Front"
+    createBody(bodyName, objects)
+    cants = [sCantT, sCantT, 0, 0]
+    calcWidth = width-cants[2]-cants[3]-4*boardThickness-10;
+    calcHeight = height-cants[0]-cants[1]-2*30 - drawerSliderHole - cardboardThickness
+    sprRec = [bodyName + '_Sketch', calcWidth, calcHeight, boardThickness, cants[0], cants[1], cants[2], cants[3], 'W', material]
+    row = writeRecordInSpreadsheet(name + "_Spreadsheet", sprRec)
+    createBoard(name, bodyName, row)
+    zeroZ = (calcHeight+cants[0]+cants[1])/2
+    App.activeDocument().getObject(bodyName).Placement=App.Placement(App.Vector(0,-(depth-sCantT-3*(boardThickness if visibleBack else cardboardThickness)-5)/2, zeroZ+drawerSliderHole+cardboardThickness+drawerSliderHoleToBottom+cardboardThickness+boardThickness), App.Rotation(0,0,90), App.Vector(0,0,0))
     App.ActiveDocument.recompute()
 
     #create left side
@@ -362,7 +374,8 @@ def createDrawer(material, name, width, height, depth, drawersObjects, visibleBa
     sprRec = [bodyName + '_Sketch', calcWidth, calcHeight, boardThickness, cants[0], cants[1], cants[2], cants[3], 'W', material]
     row = writeRecordInSpreadsheet(name + "_Spreadsheet", sprRec)
     createBoard(name, bodyName, row)
-    App.activeDocument().getObject(bodyName).Placement=App.Placement(App.Vector(-width/2+boardThickness+5,0,0), App.Rotation(90,0,90), App.Vector(0,0,0))
+    zeroZ = (calcHeight+cants[0]+cants[1])/2
+    App.activeDocument().getObject(bodyName).Placement=App.Placement(App.Vector(-width/2+boardThickness+5,0,zeroZ+drawerSliderHoleToBottom+cardboardThickness+boardThickness), App.Rotation(90,0,90), App.Vector(0,0,0))
     App.ActiveDocument.recompute()
 
     #create right side
@@ -374,7 +387,8 @@ def createDrawer(material, name, width, height, depth, drawersObjects, visibleBa
     sprRec = [bodyName + '_Sketch', calcWidth, calcHeight, boardThickness, cants[0], cants[1], cants[2], cants[3], 'W', material]
     row = writeRecordInSpreadsheet(name + "_Spreadsheet", sprRec)
     createBoard(name, bodyName, row)
-    App.activeDocument().getObject(bodyName).Placement=App.Placement(App.Vector(width/2-boardThickness-5,0,0), App.Rotation(90,0,-90), App.Vector(0,0,0))
+    zeroZ = (calcHeight+cants[0]+cants[1])/2
+    App.activeDocument().getObject(bodyName).Placement=App.Placement(App.Vector(width/2-boardThickness-5,0,zeroZ+drawerSliderHoleToBottom+cardboardThickness+boardThickness), App.Rotation(90,0,-90), App.Vector(0,0,0))
     App.ActiveDocument.recompute()
 
     #create back
@@ -382,38 +396,26 @@ def createDrawer(material, name, width, height, depth, drawersObjects, visibleBa
     createBody(bodyName, objects)
     cants = [sCantT, sCantT, 0, 0]
     calcWidth = width-cants[2]-cants[3]-4*boardThickness-10
-    calcHeight = height-cants[0]-cants[1]-2*30 - 20
+    calcHeight = height-cants[0]-cants[1]-2*30 - drawerSliderHole - cardboardThickness
     sprRec = [bodyName + '_Sketch', calcWidth, calcHeight, boardThickness, cants[0], cants[1], cants[2], cants[3], 'W', material]
     row = writeRecordInSpreadsheet(name + "_Spreadsheet", sprRec)
     createBoard(name, bodyName, row)
-    App.activeDocument().getObject(bodyName).Placement=App.Placement(App.Vector(0,(depth+sCantT-(boardThickness if visibleBack else cardboardThickness)-5)/2, 10), App.Rotation(0,0,90), App.Vector(0,0,0))
+    zeroZ = (calcHeight+cants[0]+cants[1])/2
+    App.activeDocument().getObject(bodyName).Placement=App.Placement(App.Vector(0,(depth+sCantT-(boardThickness if visibleBack else cardboardThickness)-5)/2, zeroZ+drawerSliderHole+cardboardThickness+drawerSliderHoleToBottom+cardboardThickness+boardThickness), App.Rotation(0,0,90), App.Vector(0,0,0))
     App.ActiveDocument.recompute()
 
-    #create front
-    bodyName = name + "_Front"
+    #create base
+    bodyName = name + "_Base"
     createBody(bodyName, objects)
-    cants = [sCantT, sCantT, 0, 0]
-    calcWidth = width-cants[2]-cants[3]-4*boardThickness-10;
-    calcHeight = height-cants[0]-cants[1]-2*30 - 20
-    sprRec = [bodyName + '_Sketch', calcWidth, calcHeight, boardThickness, cants[0], cants[1], cants[2], cants[3], 'W', material]
+    cants = [0, 0, 0, 0]
+    calcWidth = width-cants[2]-cants[3]-4*boardThickness+6;
+    calcHeight = depth-cants[2]-cants[3]-(boardThickness if visibleBack else cardboardThickness)-5
+    sprRec = [bodyName + '_Sketch', calcWidth, calcHeight, cardboardThickness, cants[0], cants[1], cants[2], cants[3], 'H', material+"_card"]
     row = writeRecordInSpreadsheet(name + "_Spreadsheet", sprRec)
     createBoard(name, bodyName, row)
-    App.activeDocument().getObject(bodyName).Placement=App.Placement(App.Vector(0,-(depth-sCantT-3*(boardThickness if visibleBack else cardboardThickness)-5)/2, 10), App.Rotation(0,0,90), App.Vector(0,0,0))
+    zeroZ = 0
+    App.activeDocument().getObject(bodyName).Placement=App.Placement(App.Vector(0,0,zeroZ+drawerSliderHole+drawerSliderHoleToBottom+cardboardThickness+boardThickness), App.Rotation(0,0,0), App.Vector(0,0,0))
     App.ActiveDocument.recompute()
-
-    #create door
-    bodyName = name + "_Door"
-    createBody(bodyName, objects)
-    cants = [lCantT, lCantT, lCantT, lCantT]
-    calcWidth = width-cants[2]-cants[3]-3;
-    calcHeight = height-cants[0]-cants[1]-3
-    sprRec = [bodyName + '_Sketch', calcWidth, calcHeight, boardThickness, cants[0], cants[1], cants[2], cants[3], 'H', material]
-    row = writeRecordInSpreadsheet(name + "_Spreadsheet", sprRec)
-    createBoard(name, bodyName, row)
-    App.activeDocument().getObject(bodyName).Placement=App.Placement(App.Vector(0,-(depth-sCantT-(boardThickness if visibleBack else cardboardThickness)-5)/2, 10), App.Rotation(0,0,90), App.Vector(0,0,0))
-    App.ActiveDocument.recompute()
-
-
 
     App.activeDocument().addObject("Part::MultiFuse",name + "_Fusion")
     objectsFreeCad = []
@@ -658,10 +660,9 @@ def processAllSpreadSheetsByMaterial():
 #createPlots(900)
 #createVitodens()
 #createBackForPlots(600.0)
-createUpCorpuses(950.0, 300.0)
+#createUpCorpuses(950.0, 300.0)
 #createLivingRoomCorpuses()
 #processAllSpreadSheetsByMaterial()
-#drawersObjects = []
-#createDrawer('WallnutTropic','Cab1_Drawer1', 600.0, 187.0, 560.0, drawersObjects, True)
+createDrawer('WallnutTropic','Cab1_DrawerTest', 600.0, 187.0, 560.0, True)
 
 #execfile('/home/nm/Dev/FreeCadScripts/createBaseCorpus.py')
