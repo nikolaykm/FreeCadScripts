@@ -267,18 +267,22 @@ def createCabinet(name, width, height, depth, addOns, legHeight=baseLegHeight, v
     if 'doors' in addOns:
         doorsCount = addOns['doors']
 
-        if doorsCount == 1:
-            calcWidth = width - spaceBetweenDoors - (spaceBetweenDoors/2 if 'doorsWallRight' in addOns else 0) - (spaceBetweenDoors/2 if 'doorsWallLeft' in addOns else 0)
-            calcHeight = height-(legHeight if isBase else 0)-spaceBetweenDoors
-            addOns['list'].append(["Door1", calcWidth, calcHeight, [lCantT, lCantT, lCantT, lCantT], 0, 0, 0, True])
+        calcWidth = width/doorsCount - spaceBetweenDoors - (spaceBetweenDoors/2 if 'doorsWallRight' in addOns else 0) - (spaceBetweenDoors/2 if 'doorsWallLeft' in addOns else 0)
+        calcHeight = height-(legHeight if isBase else 0)-spaceBetweenDoors
+        for curDoor in range(0, doorsCount):
+            xPos = calcWidth*curDoor + calcWidth/2 - width/2 + spaceBetweenDoors/2
+            if curDoor == 0 and 'doorsWallLeft' in addOns: xPos = xPos + spaceBetweenDoors/2
+            if curDoor != 0: xPos = xPos + spaceBetweenDoors
+            addOns['list'].append(["Door" + str(curDoor+1), calcWidth, calcHeight, [lCantT, lCantT, lCantT, lCantT], xPos, 0, 0, True])
 
     if 'shelves' in addOns:
         shelvesCount = addOns['shelves']
-        ["Shelf1", 564.0, 526.2, [0.8, 0, 0, 0], 0, -15.40, 122.0, False]
-        for x in range(1, shelvesCount+1):
+        for curShelf in range(1, shelvesCount+1):
             calcWidth = width - 2*boardThickness
             calcHeight = depth - (boardThickness if visibleBack else cardboardThickness) - sCantT
-            addOns['list'].append(["Shelf" + str(x), calcWidth, calcHeight, [sCantT, 0, 0, 0], 0, -15.40, ((height-(legHeight if isBase else 0))/(shelvesCount+1))*x, False])
+            yPos = (sCantT - boardThickness/2) if visibleBack else sCantT/2
+            xPos = ((height-(legHeight if isBase else 0))/(shelvesCount+1))*curShelf
+            addOns['list'].append(["Shelf" + str(curShelf), calcWidth, calcHeight, [sCantT, 0, 0, 0], 0, yPos, xPos, False])
 
     #create addOns
     for addOn in addOns['list']:
@@ -450,38 +454,27 @@ def createBaseCorpuses(height):
 
     App.ActiveDocument.addObject("App::DocumentObjectGroup","BaseCabinets")
 
-    addOns = {'doors': 1, 'doorsWallRight': True}
-    createCabinet('Bottles', 300.0, height, 560.0, addOns)
+    createCabinet('Bottles', 300.0, height, 560.0, {'doors': 1, 'doorsWallRight': True}, groupName="BaseCabinets")
 
     addOns = {'list' : [["Shelf1", 564.0, 526.2, [0.8, 0, 0, 0], 0, -15.40, 122.0, False], 
                         ["Door1", 597.0, 137.0, [2, 2, 2, 2], 0, 0, -309.5, True]]}
-    createCabinet('Oven', 600.0, height, 560.0, addOns)
+    createCabinet('Oven', 600.0, height, 560.0, addOns, groupName="BaseCabinets")
 
-    addOns = {'list' : [["Shelf1", 1184.0, 496.2, [0.8, 0, 0, 0], 0, 0.4, 350.0, False],
-              ["Plank1", 100.0, height-103.0, [0,0,0,0], -557, 0, 0, True],
+    addOns = {'shelves' : 1, 'list' : [["Plank1", 100.0, height-103.0, [0,0,0,0], -557, 0, 0, True],
               ["Plank2", 197.0, height-103.0, [2,2,0,2], -90, 0, 0, True], 
               ["Door1", 597.0, height-103.0, [2,2,2,2], 310, 0, 0, True]]}
-    createCabinet('Cab1', 1220.0, height, 500.0, addOns)
+    createCabinet('Cab1', 1220.0, height, 500.0, addOns, groupName="BaseCabinets")
 
-    addOns = {'doors' : 1, 'doorsWallRight' : True, 'shelves': 1}
-    createCabinet('Cab2', 442.0, height, 510.0, addOns)
+    createCabinet('Cab2', 442.0, height, 510.0, {'doors' : 1, 'doorsWallRight' : True, 'shelves': 1}, groupName="BaseCabinets")
+    createCabinet('Sink', 600.0, height, 560.0, {'doors' : 1, 'doorsWallLeft' : True}, groupName="BaseCabinets")
 
-    addOns = {'list' : [["Door1", 597.0, height-103.0, [2, 2, 2, 2], 0, 0, 0, True]]}
-    createCabinet('Sink', 600.0, height, 560.0, addOns)
-
-    addOns = {'list':[["Shelf1", 1054.0, 366.2, [0.8, 0, 0, 0], 0, 0.4, 350.0, False],
-              ["Plank1", 100.0, height-103.0, [0,0,0,0], 492, 0, 0, True],
+    addOns = {'shelves' : 1, 'list':[["Plank1", 100.0, height-103.0, [0,0,0,0], 492, 0, 0, True],
               ["Plank2", 197.0, height-103.0, [2,2,2,0], 7.5, 0, 0, True], 
               ["Door1", 450.0, height-103.0, [2,2,2,2], -318.5, 0, 0, True]]}
-    createCabinet('Cab3', 1090.0, height, 370.0, addOns)
+    createCabinet('Cab3', 1090.0, height, 370.0, addOns, groupName="BaseCabinets")
  
-    addOns = {}
-    createCabinet('Cab4', 600.0, height, 560.0, addOns, visibleBack=True)
-
-    addOns = {'list':[["Shelf1", 932.0, 541.2, [0.8, 0, 0, 0], 0, -9, 350.0, False],
-              ["Door1", 481.0, height-103.0, [2,2,2,2], -242, 0, 0, True],
-              ["Door2", 481.0, height-103.0, [2,2,2,2], 242, 0, 0, True]]}
-    createCabinet('Cab5', 968.0, height, 560.0, addOns, visibleBack=True)
+    createCabinet('Cab4', 600.0, height, 560.0, {}, visibleBack=True, groupName="BaseCabinets")
+    createCabinet('Cab5', 968.0, height, 560.0, {'shelves' : 1, 'doors' : 2}, visibleBack=True, groupName="BaseCabinets")
 
     placementMatrix = [{'name':'Bottles_Fusion','x':-1316, 	'y':-402,	'z':100,	'xR':0,	'yR':0, 'zR':1, 'R':0},
                        {'name':'Oven_Fusion',	'x':-1766, 	'y':-402, 	'z':100,	'xR':0,	'yR':0, 'zR':1, 'R':0},
