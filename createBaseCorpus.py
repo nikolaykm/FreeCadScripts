@@ -227,17 +227,16 @@ def createCabinet(name, width, height, depth, addOns, legHeight=baseLegHeight, v
         createBody(bodyName, objects)
         cants = [0, 0, 0, 0]
 
-    if not visibleBack:
-        #create back from cardboard
-        calcWidth = width - 3;
-        calcHeight = height-(legHeight if isBase else 0)-3
-        sprRec = [bodyName + '_Sketch', calcWidth, calcHeight, cardboardThickness, cants[0], cants[1], cants[2], cants[3], 'H', material+"_card"]
-        row = writeRecordInSpreadsheet(name + "_Spreadsheet", sprRec)
-        createBoard(name, bodyName, row)
-        App.activeDocument().getObject(bodyName).Placement=App.Placement(App.Vector(0,baseHeight/2+cardboardThickness,height/2-(legHeight if isBase else 0)/2), App.Rotation(0,0,90), App.Vector(0,0,0))
-        App.ActiveDocument.recompute()
-    else:
-        if isHavingBack:
+        if not visibleBack:
+            #create back from cardboard
+            calcWidth = width - 3;
+            calcHeight = height-(legHeight if isBase else 0)-3
+            sprRec = [bodyName + '_Sketch', calcWidth, calcHeight, cardboardThickness, cants[0], cants[1], cants[2], cants[3], 'H', material+"_card"]
+            row = writeRecordInSpreadsheet(name + "_Spreadsheet", sprRec)
+            createBoard(name, bodyName, row)
+            App.activeDocument().getObject(bodyName).Placement=App.Placement(App.Vector(0,baseHeight/2+cardboardThickness,height/2-(legHeight if isBase else 0)/2), App.Rotation(0,0,90), App.Vector(0,0,0))
+            App.ActiveDocument.recompute()
+        else:
             #create back from normal board
             calcWidth = width-cants[2]-cants[3]-2*boardThickness;
             calcHeight = height-(legHeight if isBase else 0)-cants[0]-cants[1]-2*boardThickness
@@ -266,8 +265,7 @@ def createCabinet(name, width, height, depth, addOns, legHeight=baseLegHeight, v
 
     if 'doors' in addOns:
         doorsCount = addOns['doors']
-
-        calcWidth = width/doorsCount - spaceBetweenDoors - (spaceBetweenDoors/2 if 'doorsWallRight' in addOns else 0) - (spaceBetweenDoors/2 if 'doorsWallLeft' in addOns else 0)
+        calcWidth = width/doorsCount - spaceBetweenDoors - (spaceBetweenDoors/(2*doorsCount) if 'doorsWallRight' in addOns else 0) - (spaceBetweenDoors/(2*doorsCount) if 'doorsWallLeft' in addOns else 0)
         calcHeight = height-(legHeight if isBase else 0)-spaceBetweenDoors
         for curDoor in range(0, doorsCount):
             xPos = calcWidth*curDoor + calcWidth/2 - width/2 + spaceBetweenDoors/2
@@ -277,9 +275,9 @@ def createCabinet(name, width, height, depth, addOns, legHeight=baseLegHeight, v
 
     if 'shelves' in addOns:
         shelvesCount = addOns['shelves']
+        calcWidth = width - 2*boardThickness
+        calcHeight = depth - (boardThickness if visibleBack else cardboardThickness) - sCantT
         for curShelf in range(1, shelvesCount+1):
-            calcWidth = width - 2*boardThickness
-            calcHeight = depth - (boardThickness if visibleBack else cardboardThickness) - sCantT
             yPos = (sCantT - boardThickness/2) if visibleBack else sCantT/2
             xPos = ((height-(legHeight if isBase else 0))/(shelvesCount+1))*curShelf
             addOns['list'].append(["Shelf" + str(curShelf), calcWidth, calcHeight, [sCantT, 0, 0, 0], 0, yPos, xPos, False])
@@ -489,39 +487,25 @@ def createBaseCorpuses(height):
 
 def createUpCorpuses(height, depth):
     #creating up corpuses
-    upCabinetsObjects = []
-
-    addOns = [["Shelf1", 264.0, depth-3-0.8, [0.8, 0, 0, 0], 0, 0.4, 350.0, False],
-              ["Door1", 297.0, height-253-3, [2, 2, 2, 2], 0, 0, 0, True]]
-    createCabinet('WallnutTropic', 'BottlesUp', 300.0, height-253.0, depth, addOns, 100.0, False, upCabinetsObjects, False)
-    App.ActiveDocument.getObject('BottlesUp_Fusion').Placement = App.Placement(App.Vector(-1316,-266,2197),App.Rotation(App.Vector(0,1,0),180))
-
-    addOns = [["Shelf1", 564.0, depth-3-0.8, [0.8, 0, 0, 0], 0, 0.4, 350.0, False],
-              ["Door1", 597.0, height-40-3, [2, 2, 2, 2], 0, 0, 0, True]]
-    createCabinet('WallnutTropic', 'OvenUp', 600.0, height-40, depth, addOns, 100.0, False, upCabinetsObjects, False, True, 220.0)
-    App.ActiveDocument.getObject('OvenUp_Fusion').Placement = App.Placement(App.Vector(-1766,-266,2450),App.Rotation(App.Vector(0,1,0),180))
-
-    addOns = [["Shelf1", 1124.0, depth-3-0.8, [0.8, 0, 0, 0], 0, 0.4, 350.0, False],
-              ["Shelf2", 1124.0, depth-3-0.8, [0.8, 0, 0, 0], 0, 0.4, 672.0, False],
-              ["Door1", 577.0, height-3, [2,2,2,2], -290, 0, 0, True],
-              ["Door2", 577.0, height-3, [2,2,2,2], 290, 0, 0, True]]
-    createCabinet('WallnutTropic', 'Cab1Up', 1160.0, height, depth, addOns, 100.0, False, upCabinetsObjects, False)
-    App.ActiveDocument.getObject('Cab1Up_Fusion').Placement = App.Placement(App.Vector(-2646,-266,2450),App.Rotation(App.Vector(0,1,0),180))
-
-    addOns = [["Door1", 697.0, height+200-3, [2, 2, 2, 2], 0, 0, 0, True]]
-    createCabinet('WallnutTropic', 'Cab2Up', 700.0, height+200, 480.0, addOns, 100.0, True, upCabinetsObjects, False, False)
-    App.ActiveDocument.getObject('Cab2Up_Fusion').Placement = App.Placement(App.Vector(-3577,-373,2450),App.Rotation(App.Vector(0,1,0),180))
-
-    addOns = [["Shelf1", 564.0, 250-3-0.8, [0.8, 0, 0, 0], 0, 0.4, 350.0, False],
-              ["Shelf2", 564.0, 250-3-0.8, [0.8, 0, 0, 0], 0, 0.4, 672.0, False],
-              ["Door1", 597.0, height-3, [2,2,2,2], 0, 0, 0, True]]
-    createCabinet('WallnutTropic', 'Cab3Up', 600.0, height, 250.0, addOns, 100.0, False, upCabinetsObjects, False)
-    App.ActiveDocument.getObject('Cab3Up_Fusion').Placement = App.Placement(App.Vector(-3160,-2019,1500),App.Rotation(App.Vector(0,0,1),180))
 
     App.ActiveDocument.addObject("App::DocumentObjectGroup","UpCabinets")
-    for obj in upCabinetsObjects:
-        App.ActiveDocument.getObject("UpCabinets").addObject(App.ActiveDocument.getObject(obj+"_Fusion"))
 
+    createCabinet('BottlesUp', 300.0, height-253.0, depth, {'shelves':1, 'doors' : 1, 'doorsWallLeft' : True}, isBase=False, groupName='UpCabinets')
+
+    addOns = {'shelves':1, 'list': [["Door1", 597.0, height-40-3, [2, 2, 2, 2], 0, 0, 0, True]] }
+    createCabinet('OvenUp', 600.0, height-40, depth, addOns, isBase=False, shiftBlend=220.0, groupName='UpCabinets')
+
+    createCabinet('Cab1Up', 1160.0, height, depth, {'shelves' : 2, 'doors' : 2, 'doorsWallRight' : True}, isBase=False, groupName='UpCabinets')
+    createCabinet('Cab2Up', 700.0, height+200, 480.0, {'doors' : 1, 'doorsWallRight' : True}, isBase=False, isHavingBack=False, groupName='UpCabinets')
+    createCabinet('Cab3Up', 600.0, height, 250.0, {'shelves' : 2, 'doors' : 1}, isBase=False, groupName='UpCabinets')
+
+    placementMatrix = [{'name':'BottlesUp_Fusion',	'x':-1316,      'y':-266,       'z':2197,        'xR':0, 'yR':1, 'zR':0, 'R':180},
+                       {'name':'OvenUp_Fusion',		'x':-1766,      'y':-266,       'z':2450,        'xR':0, 'yR':1, 'zR':0, 'R':180},
+                       {'name':'Cab1Up_Fusion',         'x':-2646,      'y':-266,       'z':2450,        'xR':0, 'yR':1, 'zR':0, 'R':180},
+                       {'name':'Cab2Up_Fusion',         'x':-3577,      'y':-373,       'z':2450,        'xR':0, 'yR':1, 'zR':0, 'R':180},
+                       {'name':'Cab3Up_Fusion',         'x':-3160,      'y':-2019,      'z':1500,        'xR':0, 'yR':0, 'zR':1, 'R':180}]
+
+    placeObjects(placementMatrix)
 
 def createPlots(height):
     #create plots
@@ -670,11 +654,11 @@ def processAllSpreadSheetsByMaterial():
             writeRecordInSpreadsheet(mat + "_Spreadsheet", row)
                     
 
-createBaseCorpuses(860.0)
+#createBaseCorpuses(860.0)
 #createPlots(900)
 #createVitodens()
 #createBackForPlots(600.0)
-#createUpCorpuses(950.0, 300.0)
+createUpCorpuses(950.0, 300.0)
 #createLivingRoomCorpuses()
 #processAllSpreadSheetsByMaterial()
 #drawersObjects = []
