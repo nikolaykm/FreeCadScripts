@@ -107,9 +107,14 @@ def createPadFromSketch(bodyName, sketchName, zL):
     App.activeDocument().getObject(padName).Reversed = 0
     App.activeDocument().getObject(padName).Midplane = 0
     App.activeDocument().getObject(padName).Offset = 0.000000
-
     App.ActiveDocument.recompute()
 
+def createPocketFromSketch(bodyName, sketchName, zL):
+    pocketName = sketchName + "_Pocket"
+    App.activeDocument().getObject(bodyName).newObject("PartDesign::Pocket", pocketName)
+    App.activeDocument().getObject(pocketName).Profile = App.activeDocument().getObject(sketchName)
+    App.activeDocument().getObject(pocketName).Length = zL
+    App.ActiveDocument.recompute()
 
 def createBoard(cabinetName, bodyName, row):
 
@@ -297,6 +302,15 @@ def createCabinet(name, width, height, depth, addOns, legHeight=baseLegHeight, v
         App.activeDocument().getObject(bodyName).Placement=App.Placement(App.Vector(addOn[4],(-baseHeight/2-baseCants[0]-2) if addOn[7] else addOn[5], ((height/2 - (legHeight if isBase else 0)/2) if addOn[7] else 0) + addOn[6]), App.Rotation(0,0,(90 if addOn[7] else 0)), App.Vector(0,0,0))
         App.ActiveDocument.recompute()
 
+    #create drawers
+    if 'drawers' in addOns:
+        drawersCount = addOns['drawers']
+        drawerHeight = (height - (legHeight if isBase else 0) - spaceBetweenDoors)/drawersCount
+        for curDrawer in range(1, drawersCount+1):
+            createDrawer(cabMaterial,name + "_Drawer" + str(curDrawer), width, drawerHeight, depth, visibleBack)
+            objects.append(name + "_Drawer" + str(curDrawer) + "_Fusion")
+            App.activeDocument().getObject(name + "_Drawer" + str(curDrawer) + "_Fusion").Placement=App.Placement(App.Vector(0,-14,spaceBetweenDoors/2+(curDrawer-1)*drawerHeight), App.Rotation(0,0,0), App.Vector(0,0,0)) 
+
     App.activeDocument().addObject("Part::MultiFuse",name + "_Fusion")
     objectsFreeCad = []
     for objName in objects:
@@ -309,29 +323,50 @@ def createCabinet(name, width, height, depth, addOns, legHeight=baseLegHeight, v
     if groupName != "":
         App.ActiveDocument.getObject(groupName).addObject(App.ActiveDocument.getObject(name+"_Fusion"))
 
+def createDrawerSlider(name, sliderName, width, isLeft):
+    #create spreadsheet column names
+    App.activeDocument().addObject('Spreadsheet::Sheet', name + sliderName + "_Spreadsheet")
+    spreadSheetHeaders = ['Name', 'Width', 'Height', 'BoardThickness', 'WCantFront', 'WCantBack', 'HCantLeft', 'HCantRight', 'ByFlader']
+    writeRecordInSpreadsheet(name + sliderName + "_Spreadsheet", spreadSheetHeaders)
+
+    bodyName = name + sliderName + "Body"
+    createBody(bodyName, [])
+    cants = [0, 0, 0, 0]
+    calcWidth = 42.0
+    calcHeight = 500.0
+    sprRec = [bodyName + '_Sketch', calcWidth, calcHeight, 42.0, cants[0], cants[1], cants[2], cants[3], 0]
+    row = writeRecordInSpreadsheet(name + sliderName + "_Spreadsheet", sprRec)
+    createBoard(name + sliderName, name + sliderName + "Body", row)
+
+    createSketch(bodyName + "_Pad1_Sketch", bodyName, bodyName + "_Sketch_Pad", "Face6")
+    conList = []
+    conList.append(Sketcher.Constraint('Distance',-1,1,0,250.0))
+    conList.append(Sketcher.Constraint('Distance',-1,1,3,19.0) if isLeft else Sketcher.Constraint('Distance',-1,1,1,19.0))
+    createRectInSketch(bodyName + "_Pad1_Sketch", 21, 500, conList)
+    createPocketFromSketch(bodyName, bodyName + "_Pad1_Sketch", 32.0)
+    Gui.activeDocument().hide(bodyName + "Pad1_Sketch")
+    Gui.activeDocument().hide(bodyName + "_Sketch_Pad")
+
+    createSketch(bodyName + "_Pad2_Sketch", bodyName, bodyName + "_Pad1_Sketch_Pocket", "Face4")
+    conList = []
+    conList.append(Sketcher.Constraint('Distance',-1,1,0,250.0))
+    conList.append(Sketcher.Constraint('Distance',-1,1,1,21.0) if isLeft else Sketcher.Constraint('Distance',-1,1,3,21.0))
+    createRectInSketch(bodyName + "_Pad2_Sketch", 19, 500, conList)
+    createPocketFromSketch(bodyName, bodyName + "_Pad2_Sketch", 20.0)
+    Gui.activeDocument().hide(bodyName + "_Pad2_Sketch")
+    Gui.activeDocument().hide(bodyName + "_Pad1_Sketch")
+    Gui.activeDocument().hide(bodyName + "_Pad1_Sketch_Pocket")
+
+    App.activeDocument().getObject(name + sliderName + "Body").Placement = App.Placement(App.Vector((-1 if isLeft else 1)*(width-2*boardThickness-42)/2,0,21), App.Rotation(0,0,0), App.Vector(0,0,0))
+    App.activeDocument().removeObject(name + sliderName + "_Spreadsheet")
+    App.activeDocument().recompute()
+
+
 def createDrawer(material, name, width, height, depth, visibleBack):
 
-    ##create spreadsheet column names
-    #App.activeDocument().addObject('Spreadsheet::Sheet', name + "LeftSlide_Spreadsheet")
-    #spreadSheetHeaders = ['Name', 'Width', 'Height', 'BoardThickness', 'WCantFront', 'WCantBack', 'HCantLeft', 'HCantRight', 'ByFlader']
-    #writeRecordInSpreadsheet(name + "LeftSlide_Spreadsheet", spreadSheetHeaders)
-
-    #bodyName = name + "LeftSlideBody"
-    #createBody(bodyName, [])
-    #cants = [0, 0, 0, 0]
-    #calcWidth = 42.0
-    #calcHeight = 500.0
-    #sprRec = [bodyName + '_Sketch', calcWidth, calcHeight, 42.0, cants[0], cants[1], cants[2], cants[3], 0]
-    #row = writeRecordInSpreadsheet(name + "LeftSlide_Spreadsheet", sprRec)
-    #createBoard(name + "LeftSlide", name + "LeftSlideBody", row)
-
-    ##App.activeDocument().getObject(name + "LeftSide").Placement = App.Placement(App.Vector(-300,0,500), App.Rotation(0,0,0), App.Vector(0,0,0))
-
-    ##App.ActiveDocument.addObject("App::DocumentObjectGroup","Vitodens")
-    ##App.ActiveDocument.getObject("Vitodens").addObject(App.ActiveDocument.getObject("Vitodens_Spreadsheet"))
-    ##App.ActiveDocument.getObject("Vitodens").addObject(App.ActiveDocument.getObject("Vitodens_111W"))
-
-    objects = []
+    createDrawerSlider(name, "LeftSlider", width, True);
+    createDrawerSlider(name, "RightSlider", width, False);
+    objects = [name + "LeftSliderBody", name + "RightSliderBody"]
 
     #create spreadsheet column names
     App.activeDocument().addObject('Spreadsheet::Sheet', name + "_Spreadsheet")
@@ -473,7 +508,7 @@ def createBaseCorpuses(height):
               ["Door1", 450.0, height-103.0, [2,2,2,2], -318.5, 0, 0, True]]}
     createCabinet('Cab3', 1090.0, height, 370.0, addOns, groupName="BaseCabinets")
  
-    createCabinet('Cab4', 600.0, height, 560.0, {}, visibleBack=True, groupName="BaseCabinets")
+    createCabinet('Cab4', 600.0, height, 560.0, {'drawers' : 4}, visibleBack=True, groupName="BaseCabinets")
     createCabinet('Cab5', 968.0, height, 560.0, {'shelves' : 1, 'doors' : 2}, visibleBack=True, groupName="BaseCabinets")
 
     placementMatrix = [{'name':'Bottles_Fusion','x':-1316, 	'y':-402,	'z':100,	'xR':0,	'yR':0, 'zR':1, 'R':0},
@@ -663,6 +698,5 @@ def processAllSpreadSheetsByMaterial():
 #createUpCorpuses(950.0, 300.0)
 #createLivingRoomCorpuses()
 #processAllSpreadSheetsByMaterial()
-createDrawer('WallnutTropic','Cab1_DrawerTest', 600.0, 187.0, 560.0, True)
 
 #execfile('/home/nm/Dev/FreeCadScripts/createBaseCorpus.py')
