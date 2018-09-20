@@ -273,7 +273,7 @@ def createCabinet(name, width, height, depth, addOns, legHeight=baseLegHeight, v
     if 'doors' in addOns:
         doorsCount = addOns['doors']
         calcWidth = width/doorsCount - spaceBetweenDoors - (spaceBetweenDoors/(2*doorsCount) if 'doorsWallRight' in addOns else 0) - (spaceBetweenDoors/(2*doorsCount) if 'doorsWallLeft' in addOns else 0)
-        calcHeight = height-(legHeight if isBase else 0)-spaceBetweenDoors
+        calcHeight = height-(legHeight+spaceBetweenDoors/2 if isBase else 0)-spaceBetweenDoors
         for curDoor in range(0, doorsCount):
             xPos = calcWidth*curDoor + calcWidth/2 - width/2 + spaceBetweenDoors/2
             if curDoor == 0 and 'doorsWallLeft' in addOns: xPos = xPos + spaceBetweenDoors/2
@@ -299,13 +299,13 @@ def createCabinet(name, width, height, depth, addOns, legHeight=baseLegHeight, v
         sprRec = [bodyName + '_Sketch', calcWidth, calcHeight, boardThickness, cants[0], cants[1], cants[2], cants[3], 'H' if addOn[7] else 'W', material]
         row = writeRecordInSpreadsheet(name + "_Spreadsheet", sprRec)
         createBoard(name, bodyName, row)
-        App.activeDocument().getObject(bodyName).Placement=App.Placement(App.Vector(addOn[4],(-baseHeight/2-baseCants[0]-2) if addOn[7] else addOn[5], ((height/2 - (legHeight if isBase else 0)/2) if addOn[7] else 0) + addOn[6]), App.Rotation(0,0,(90 if addOn[7] else 0)), App.Vector(0,0,0))
+        App.activeDocument().getObject(bodyName).Placement=App.Placement(App.Vector(addOn[4],(-baseHeight/2-baseCants[0]-2) if addOn[7] else addOn[5], ((height/2 - (legHeight+spaceBetweenDoors/2 if isBase else 0)/2) if addOn[7] else 0) + addOn[6]), App.Rotation(0,0,(90 if addOn[7] else 0)), App.Vector(0,0,0))
         App.ActiveDocument.recompute()
 
     #create drawers
     if 'drawers' in addOns:
         drawersCount = addOns['drawers']
-        drawerHeight = (height - (legHeight if isBase else 0) - spaceBetweenDoors)/drawersCount
+        drawerHeight = (height - (legHeight if isBase else 0) - spaceBetweenDoors/2)/drawersCount
         for curDrawer in range(1, drawersCount+1):
             createDrawer(cabMaterial,name + "_Drawer" + str(curDrawer), width, drawerHeight, depth, visibleBack)
             objects.append(name + "_Drawer" + str(curDrawer) + "_Fusion")
@@ -691,7 +691,7 @@ def processAllSpreadSheetsByMaterial():
             writeRecordInSpreadsheet(mat + "_Spreadsheet", row)
                     
 
-#createBaseCorpuses(860.0)
+createBaseCorpuses(860.0)
 #createPlots(900)
 #createVitodens()
 #createBackForPlots(600.0)
