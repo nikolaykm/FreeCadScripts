@@ -2,6 +2,7 @@ boardThickness = 18.0
 cardboardThickness = 3.0
 sCantT = 0.8
 lCantT = 2.0
+plotsBackMaterial = 'DecoriniQuads'
 cabMaterial = 'WallnutTropic'
 baseLegHeight = 100.0
 spaceBetweenDoors = 3.0
@@ -533,13 +534,13 @@ def createUpCorpuses(height, depth):
     createCabinet('OvenUp', 600.0, height-40, depth, addOns, isBase=False, shiftBlend=220.0, groupName='UpCabinets')
 
     createCabinet('Cab1Up', 1160.0, height, depth, {'shelves' : 2, 'doors' : 2, 'doorsWallRight' : True}, isBase=False, groupName='UpCabinets')
-    createCabinet('Cab2Up', 700.0, height+200, 480.0, {'doors' : 1, 'doorsWallRight' : True}, isBase=False, isHavingBack=False, groupName='UpCabinets')
+    createCabinet('Cab2Up', 700.0, height+150, 480.0, {'doors' : 1, 'doorsWallRight' : True}, isBase=False, isHavingBack=False, groupName='UpCabinets')
     createCabinet('Cab3Up', 600.0, height, 250.0, {'shelves' : 2, 'doors' : 1}, isBase=False, groupName='UpCabinets')
 
     placementMatrix = [{'name':'BottlesUp_Fusion',	'x':-1316,      'y':-266,       'z':2197,        'xR':0, 'yR':1, 'zR':0, 'R':180},
                        {'name':'OvenUp_Fusion',		'x':-1766,      'y':-266,       'z':2450,        'xR':0, 'yR':1, 'zR':0, 'R':180},
                        {'name':'Cab1Up_Fusion',         'x':-2646,      'y':-266,       'z':2450,        'xR':0, 'yR':1, 'zR':0, 'R':180},
-                       {'name':'Cab2Up_Fusion',         'x':-3577,      'y':-373,       'z':2450,        'xR':0, 'yR':1, 'zR':0, 'R':180},
+                       {'name':'Cab2Up_Fusion',         'x':-3577,      'y':-371,       'z':2450,        'xR':0, 'yR':1, 'zR':0, 'R':180},
                        {'name':'Cab3Up_Fusion',         'x':-3160,      'y':-2019,      'z':1500,        'xR':0, 'yR':0, 'zR':1, 'R':180}]
 
     placeObjects(placementMatrix)
@@ -565,6 +566,14 @@ def createPlots(height):
         App.activeDocument().getObject(name+plotProp[0]).Placement=plotProp[2]
     App.ActiveDocument.recompute()
 
+    createSketch("Plots_Front_Sink_Sketch", "Plots_Front", "Plots_Front_Sketch_Pad", "Face6")
+    conList = []
+    conList.append(Sketcher.Constraint('Distance',-1,1,3,580.0))
+    conList.append(Sketcher.Constraint('Distance',-1,1,2,250.0))
+    createRectInSketch("Plots_Front_Sink_Sketch", 990, 490, conList)
+    createPocketFromSketch("Plots_Front", "Plots_Front_Sink_Sketch", 40.0)
+    Gui.activeDocument().hide("Plots_Front_Sketch_Pad")
+
     App.ActiveDocument.addObject("App::DocumentObjectGroup","Plots")
     for obj in plotObjects:
         App.ActiveDocument.getObject("Plots").addObject(App.ActiveDocument.getObject(obj))
@@ -581,18 +590,21 @@ def createBackForPlots(height):
     writeRecordInSpreadsheet(name + "_Spreadsheet", spreadSheetHeaders)
 
     plotProperties = []
-    plotProperties.append(["_Right1", 2100.0, height, App.Placement(App.Vector(-2216,-115,1200),App.Rotation(App.Vector(1,0,0),90)), [0.8, 0.8, 0.8, 0.8]])
-    plotProperties.append(["_Right2", 80.0, 400.0, App.Placement(App.Vector(-3245,-173,1100), App.Rotation(90,0,90), App.Vector(0,0,0)), [0.8, 0.8, 0.8, 0.8]])
-    plotProperties.append(["_Front1", 70.0, height, App.Placement(App.Vector(-3945,-2110,1200), App.Rotation(90,0,90), App.Vector(0,0,0)), [0.8, 0.8, 0.8, 0.8]])
-    plotProperties.append(["_Front2", 1320.0, 115.0, App.Placement(App.Vector(-3945,-1415,957), App.Rotation(90,0,90), App.Vector(0,0,0)), [0.8, 0.8, 0.8, 0.8]])
-    plotProperties.append(["_Front3", 620.0, height, App.Placement(App.Vector(-3945,-445,1200), App.Rotation(90,0,90), App.Vector(0,0,0)), [0.8, 0.8, 0.8, 0.8]])
-    plotProperties.append(["_Left1", 1072.0, height, App.Placement(App.Vector(-3391,-2127,1200),App.Rotation(App.Vector(1,0,0),90)), [0.8, 0.8, 0.8, 0.8]])
-    plotProperties.append(["_Left2", 203.0, height, App.Placement(App.Vector(-2855,-2229,1200), App.Rotation(90,0,90), App.Vector(0,0,0)), [0.8, 0.8, 0.8, 0.8]])
-    plotProperties.append(["_Left3", 1559.0, 400.0, App.Placement(App.Vector(-2058,-2312,1100),App.Rotation(App.Vector(1,0,0),90)), [0.8, 0.8, 0.8, 0.8]])
+    plotProperties.append(["_Right1", 2100.0, height, App.Placement(App.Vector(-2216,-115,1200),App.Rotation(App.Vector(1,0,0),90)), [0.8, 0.8, 0.8, 0.8], plotsBackMaterial])
+    plotProperties.append(["_Right2", 200.0, 450.0, App.Placement(App.Vector(-3245,-233,1125), App.Rotation(90,0,90), App.Vector(0,0,0)), [0.8, 0.8, 0.8, 0.8], cabMaterial])
+    plotProperties.append(["_Right3", 700.0, 100.0, App.Placement(App.Vector(-3577.6,-333,949.4),App.Rotation(App.Vector(1,0,0),90)), [0.8, 2, 0.8, 2], cabMaterial])
+    plotProperties.append(["_Right4", 695.5, 345.5, App.Placement(App.Vector(-3576.25,-333,1175.75),App.Rotation(App.Vector(1,0,0),90)), [2, 2, 2, 2], cabMaterial])
+    plotProperties.append(["_Right5", 200.0, 450.0, App.Placement(App.Vector(-3927,-233,1125), App.Rotation(90,0,90), App.Vector(0,0,0)), [0.8, 0.8, 0.8, 0.8], cabMaterial])
+    plotProperties.append(["_Front1", 70.0, height, App.Placement(App.Vector(-3945,-2110,1200), App.Rotation(90,0,90), App.Vector(0,0,0)), [0.8, 0.8, 0.8, 0.8], plotsBackMaterial])
+    plotProperties.append(["_Front2", 1320.0, 115.0, App.Placement(App.Vector(-3945,-1415,957), App.Rotation(90,0,90), App.Vector(0,0,0)), [0.8, 0.8, 0.8, 0.8], plotsBackMaterial])
+    plotProperties.append(["_Front3", 620.0, height, App.Placement(App.Vector(-3945,-445,1200), App.Rotation(90,0,90), App.Vector(0,0,0)), [0.8, 0.8, 0.8, 0.8], plotsBackMaterial])
+    plotProperties.append(["_Left1", 1072.0, height, App.Placement(App.Vector(-3391,-2127,1200),App.Rotation(App.Vector(1,0,0),90)), [0.8, 0.8, 0.8, 0.8], plotsBackMaterial])
+    plotProperties.append(["_Left2", 203.0, height, App.Placement(App.Vector(-2855,-2229,1200), App.Rotation(90,0,90), App.Vector(0,0,0)), [0.8, 0.8, 0.8, 0.8], plotsBackMaterial])
+    plotProperties.append(["_Left3", 1559.0, 400.0, App.Placement(App.Vector(-2058,-2312,1100),App.Rotation(App.Vector(1,0,0),90)), [0.8, 0.8, 0.8, 0.8], plotsBackMaterial])
     #TODO:Add window plots back
 
     for plotProp in plotProperties:
-        createPlotBack('DecoriniQuadrs',name, plotProp[0], plotProp[1], plotProp[2], plotObjects, plotProp[4], 18)
+        createPlotBack(plotProp[5],name, plotProp[0], plotProp[1], plotProp[2], plotObjects, plotProp[4], 18)
         App.activeDocument().getObject(name+plotProp[0]).Placement=plotProp[3]
     App.ActiveDocument.recompute()
 
@@ -615,11 +627,11 @@ def createVitodens():
     cants = [0, 0, 0, 0]
     calcWidth = 600.0
     calcHeight = 480.0
-    sprRec = [bodyName + '_Sketch', calcWidth, calcHeight, 1060.0, cants[0], cants[1], cants[2], cants[3], 0]
+    sprRec = [bodyName + '_Sketch', calcWidth, calcHeight, 1000.0, cants[0], cants[1], cants[2], cants[3], 0]
     row = writeRecordInSpreadsheet("Vitodens_Spreadsheet", sprRec)
     createBoard("Vitodens", "Vitodens_111W", row)
 
-    App.activeDocument().getObject("Vitodens_111W").Placement = App.Placement(App.Vector(-3600,-355,1000), App.Rotation(0,0,0), App.Vector(0,0,0))
+    App.activeDocument().getObject("Vitodens_111W").Placement = App.Placement(App.Vector(-3585,-355,1400), App.Rotation(0,0,0), App.Vector(0,0,0))
 
     App.ActiveDocument.addObject("App::DocumentObjectGroup","Vitodens")
     App.ActiveDocument.getObject("Vitodens").addObject(App.ActiveDocument.getObject("Vitodens_Spreadsheet"))
@@ -691,8 +703,8 @@ def processAllSpreadSheetsByMaterial():
             writeRecordInSpreadsheet(mat + "_Spreadsheet", row)
                     
 
-createBaseCorpuses(860.0)
-#createPlots(900)
+#createBaseCorpuses(860.0)
+createPlots(900)
 #createVitodens()
 #createBackForPlots(600.0)
 #createUpCorpuses(950.0, 300.0)
