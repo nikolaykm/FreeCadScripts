@@ -609,6 +609,10 @@ def createBackForPlots(height):
     plotProperties.append(["_Left1", 1072.0, height, App.Placement(App.Vector(-3391,-2127,1200),App.Rotation(App.Vector(1,0,0),90)), [0.8, 0.8, 0.8, 0.8], plotsBackMaterial])
     plotProperties.append(["_Left2", 203.0, height, App.Placement(App.Vector(-2855,-2229,1200), App.Rotation(90,0,90), App.Vector(0,0,0)), [0.8, 0.8, 0.8, 0.8], plotsBackMaterial])
     plotProperties.append(["_Left3", 1559.0, 400.0, App.Placement(App.Vector(-2058,-2312,1100),App.Rotation(App.Vector(1,0,0),90)), [0.8, 0.8, 0.8, 0.8], plotsBackMaterial])
+    plotProperties.append(["_Right1_Down", 2310.0, 100.0, App.Placement(App.Vector(-2321,-617,50),App.Rotation(App.Vector(1,0,0),90)), [0.8, 0.8, 0.8, 0.8], cabMaterial])
+    plotProperties.append(["_Front1_Down", 1173.0, 100.0, App.Placement(App.Vector(-3430,-1221,50), App.Rotation(90,0,90), App.Vector(0,0,0)), [0.8, 0.8, 0.8, 0.8], cabMaterial])
+    plotProperties.append(["_Left1_Down", 2210.0, 100.0, App.Placement(App.Vector(-2401,-1808,50),App.Rotation(App.Vector(1,0,0),90)), [0.8, 0.8, 0.8, 0.8], cabMaterial])
+    plotProperties.append(["_Left2_Down", 560.0, 100.0, App.Placement(App.Vector(-1296,-2043,50), App.Rotation(90,0,90), App.Vector(0,0,0)), [0.8, 0.8, 0.8, 0.8], cabMaterial])
     #TODO:Add window plots back
 
     for plotProp in plotProperties:
@@ -712,9 +716,9 @@ def processAllSpreadSheetsByMaterial():
                     
 
 #createBaseCorpuses(860.0)
-createPlots(900)
+#createPlots(900)
 #createVitodens()
-#createBackForPlots(600.0)
+createBackForPlots(600.0)
 #createUpCorpuses(950.0, 300.0)
 #createLivingRoomCorpuses()
 #processAllSpreadSheetsByMaterial()
