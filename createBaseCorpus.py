@@ -569,10 +569,18 @@ def createPlots(height):
     createSketch("Plots_Front_Sink_Sketch", "Plots_Front", "Plots_Front_Sketch_Pad", "Face6")
     conList = []
     conList.append(Sketcher.Constraint('Distance',-1,1,3,580.0))
-    conList.append(Sketcher.Constraint('Distance',-1,1,2,250.0))
-    createRectInSketch("Plots_Front_Sink_Sketch", 990, 490, conList)
+    conList.append(Sketcher.Constraint('Distance',-1,1,2,240.0))
+    createRectInSketch("Plots_Front_Sink_Sketch", 980, 480, conList)
     createPocketFromSketch("Plots_Front", "Plots_Front_Sink_Sketch", 40.0)
     Gui.activeDocument().hide("Plots_Front_Sketch_Pad")
+
+    createSketch("Plots_Right_Bosch_Sketch", "Plots_Right", "Plots_Right_Sketch_Pad", "Face6")
+    conList = []
+    conList.append(Sketcher.Constraint('Distance',-1,1,1,766.0))
+    conList.append(Sketcher.Constraint('Distance',-1,1,0,250.0))
+    createRectInSketch("Plots_Right_Bosch_Sketch", 560, 490, conList)
+    createPocketFromSketch("Plots_Right", "Plots_Right_Bosch_Sketch", 40.0)
+    Gui.activeDocument().hide("Plots_Right_Sketch_Pad")
 
     App.ActiveDocument.addObject("App::DocumentObjectGroup","Plots")
     for obj in plotObjects:
