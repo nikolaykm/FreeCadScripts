@@ -4,6 +4,7 @@ sCantT = 0.8
 lCantT = 2.0
 plotsBackMaterial = 'DecoriniQuads'
 cabMaterial = 'WallnutTropic'
+columnMaterial = 'ColumnMaterial'
 baseLegHeight = 100.0
 spaceBetweenDoors = 3.0
 drawerSliderHole = 10.0
@@ -615,6 +616,10 @@ def createBackForPlots(height):
     plotProperties.append(["_Front1_Down", 1173.0, 100.0, App.Placement(App.Vector(-3430,-1221,50), App.Rotation(90,0,90), App.Vector(0,0,0)), [0.8, 0.8, 0.8, 0.8], cabMaterial])
     plotProperties.append(["_Left1_Down", 2210.0, 100.0, App.Placement(App.Vector(-2401,-1808,50),App.Rotation(App.Vector(1,0,0),90)), [0.8, 0.8, 0.8, 0.8], cabMaterial])
     plotProperties.append(["_Left2_Down", 560.0, 100.0, App.Placement(App.Vector(-1296,-2043,50), App.Rotation(90,0,90), App.Vector(0,0,0)), [0.8, 0.8, 0.8, 0.8], cabMaterial])
+
+    plotProperties.append(["_Column1", 620.0, 2200.0, App.Placement(App.Vector(-1163,-425,1100), App.Rotation(90,0,90), App.Vector(0,0,0)), [0.8, 0.8, 0.8, 0.8], columnMaterial])
+    plotProperties.append(["_Column2", 694.0, 2450.0, App.Placement(App.Vector(-816,-735,1225),App.Rotation(App.Vector(1,0,0),90)), [0.8, 0.8, 0.8, 0.8], columnMaterial])
+    plotProperties.append(["_Column3", 620.0, 2450.0, App.Placement(App.Vector(-487,-425,1225), App.Rotation(90,0,90), App.Vector(0,0,0)), [0.8, 0.8, 0.8, 0.8], columnMaterial])
     #TODO:Add window plots back
 
     for plotProp in plotProperties:
