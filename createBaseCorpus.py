@@ -479,6 +479,13 @@ def createPlot(material, name, plotName, width, plotObjects):
     row = writeRecordInSpreadsheet(name + "_Spreadsheet", sprRec)
     createBoard(name, bodyName, row)
 
+    App.activeDocument().getObject(name + plotName).newObject("PartDesign::Fillet",name + plotName + "Fillet")
+    App.activeDocument().getObject(name + plotName + "Fillet").Base = (App.ActiveDocument.getObject(name + plotName + "_Sketch_Pad"),["Face3"])
+    App.activeDocument().getObject(name + plotName + "Fillet").Radius = 6.0
+    Gui.activeDocument().hide(name + plotName + "_Sketch")
+    Gui.activeDocument().hide(name + plotName + "_Sketch_Pad")
+    App.activeDocument().recompute()
+
 def createPlotBack(material, name, plotBackName, width, height, plotBackObjects, cants, boardThickness):
     bodyName = name + plotBackName
     createBody(bodyName, plotBackObjects)
@@ -561,9 +568,9 @@ def createPlots(height):
     writeRecordInSpreadsheet(name + "_Spreadsheet", spreadSheetHeaders)
 
     plotProperties = []
-    plotProperties.append(["_Right", 2172.0, App.Placement(App.Vector(-2252,-420,height-40), App.Rotation(0,0,0), App.Vector(0,0,0))])
+    plotProperties.append(["_Right", 2172.0, App.Placement(App.Vector(-2252,-420,height-40),  App.Rotation(App.Vector(0,0,1),0))])
     plotProperties.append(["_Front", 2020.0, App.Placement(App.Vector(-3640,-1130,height-40), App.Rotation(App.Vector(0,0,1),90))])
-    plotProperties.append(["_Left", 2060.0, App.Placement(App.Vector(-2308,-2023,height-40), App.Rotation(0,0,0), App.Vector(0,0,0))])
+    plotProperties.append(["_Left", 2060.0, App.Placement(App.Vector(-2308,-2023,height-40),  App.Rotation(App.Vector(0,0,1),180))])
 
     for plotProp in plotProperties:
         createPlot('PlotsGranite', name, plotProp[0], plotProp[1], plotObjects)
@@ -623,6 +630,11 @@ def createBackForPlots(height):
     plotProperties.append(["_Column1", 620.0, 2200.0, App.Placement(App.Vector(-1163,-425,1100), App.Rotation(90,0,90), App.Vector(0,0,0)), [0.8, 0.8, 0.8, 0.8], columnMaterial])
     plotProperties.append(["_Column2", 694.0, 2450.0, App.Placement(App.Vector(-816,-735,1225),App.Rotation(App.Vector(1,0,0),90)), [0.8, 0.8, 0.8, 0.8], columnMaterial])
     plotProperties.append(["_Column3", 620.0, 2450.0, App.Placement(App.Vector(-487,-425,1225), App.Rotation(90,0,90), App.Vector(0,0,0)), [0.8, 0.8, 0.8, 0.8], columnMaterial])
+
+    plotProperties.append(["_LivRoom1", 1500.0, 440.0, App.Placement(App.Vector(2047,-340,800), App.Rotation(0,0,0), App.Vector(0,0,0)), [2, 0, 0, 0],cabMaterial])
+    plotProperties.append(["_LivRoom2", 600.0, 320.0, App.Placement(App.Vector(1597,-281,1200), App.Rotation(0,0,0), App.Vector(0,0,0)), [2, 0, 0, 0],cabMaterial])
+    plotProperties.append(["_LivRoom3", 600.0, 320.0, App.Placement(App.Vector(2497,-281,1200), App.Rotation(0,0,0), App.Vector(0,0,0)), [2, 0, 0, 0],cabMaterial])
+
     #TODO:Add window plots back
 
     for plotProp in plotProperties:
@@ -690,7 +702,7 @@ def createLivingRoomCorpuses():
                        {'name':'LivCab4_Up_Fusion',   'x':2047,      'y':-331,       'z':1700,     'xR':0, 'yR':1, 'zR':0, 'R':0},
                        {'name':'LivCab5_Up_Fusion',   'x':2547,      'y':-331,       'z':1700,     'xR':0, 'yR':1, 'zR':0, 'R':0},
                        {'name':'LivCab6_Up_Fusion',   'x':3047,      'y':-331,       'z':1700,     'xR':0, 'yR':1, 'zR':0, 'R':0},
-    placementMatrix = [ {'name':'LivCab8_Fusion',      'x':2047,      'y':-281,       'z':818,     'xR':0, 'yR':1, 'zR':0, 'R':0}]
+                       {'name':'LivCab8_Fusion',      'x':2047,      'y':-281,       'z':818,     'xR':0, 'yR':1, 'zR':0, 'R':0}]
 
     placeObjects(placementMatrix)
 
@@ -751,9 +763,9 @@ def processAllSpreadSheetsByMaterial():
 #createBaseCorpuses(860.0)
 #createPlots(900)
 #createVitodens()
-#createBackForPlots(600.0)
+createBackForPlots(600.0)
 #createUpCorpuses(950.0, 300.0)
-createLivingRoomCorpuses()
+#createLivingRoomCorpuses()
 #processAllSpreadSheetsByMaterial()
 
 #execfile('/home/nm/Dev/FreeCadScripts/createBaseCorpus.py')
