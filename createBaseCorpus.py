@@ -146,7 +146,7 @@ def createBoard(cabinetName, bodyName, row):
             createRectInSketch(cantSketchName, width, rowDict['BoardThickness'], conList)
             createPadFromSketch(bodyName, cantSketchName, rowDict[cant])
             
-def createCabinet(name, width, height, depth, addOns, legHeight=baseLegHeight, visibleBack = False, isBase = True, isHavingBack = True, shiftBlend = 0.0, groupName = "", material=cabMaterial):
+def createCabinet(name, width, height, depth, addOns, legHeight=baseLegHeight, visibleBack = False, isBase = True, isHavingBack = True, shiftBlend = 0.0, groupName = "", material=cabMaterial, haveWholeBlend=False):
 
     objects = []
 
@@ -193,7 +193,7 @@ def createCabinet(name, width, height, depth, addOns, legHeight=baseLegHeight, v
     App.activeDocument().getObject(bodyName).Placement=App.Placement(App.Vector(width/2,0,calcHeight/2+boardThickness), App.Rotation(90,0,-90), App.Vector(0,0,0))
     App.ActiveDocument.recompute()
  
-    if isBase:
+    if isBase and not haveWholeBlend:
         #create front blend
         bodyName = name + "_FrontBlend";
         createBody(bodyName, objects)
@@ -228,7 +228,7 @@ def createCabinet(name, width, height, depth, addOns, legHeight=baseLegHeight, v
         sprRec = [bodyName + '_Sketch', calcWidth, calcHeight, boardThickness, cants[0], cants[1], cants[2], cants[3], 'W', material]
         row = writeRecordInSpreadsheet(name + "_Spreadsheet", sprRec)
         createBoard(name, bodyName, row)
-        App.activeDocument().getObject(bodyName).Placement=App.Placement(App.Vector(0,0, height-boardThickness-shiftBlend), App.Rotation(0,0,0), App.Vector(0,0,0))
+        App.activeDocument().getObject(bodyName).Placement=App.Placement(App.Vector(0,0, height-boardThickness-shiftBlend-(legHeight if isBase else 0)), App.Rotation(0,0,0), App.Vector(0,0,0))
         App.ActiveDocument.recompute()
     
     if isHavingBack:  
@@ -325,7 +325,10 @@ def createCabinet(name, width, height, depth, addOns, legHeight=baseLegHeight, v
     if groupName != "":
         App.ActiveDocument.getObject(groupName).addObject(App.ActiveDocument.getObject(name+"_Fusion"))
 
-def createDrawerSlider(name, sliderName, width, isLeft):
+def createDrawerSlider(name, sliderName, width, depth, isLeft):
+
+    sliderDepth = (int(depth/50.0))*50.0
+ 
     #create spreadsheet column names
     App.activeDocument().addObject('Spreadsheet::Sheet', name + sliderName + "_Spreadsheet")
     spreadSheetHeaders = ['Name', 'Width', 'Height', 'BoardThickness', 'WCantFront', 'WCantBack', 'HCantLeft', 'HCantRight', 'ByFlader']
@@ -335,7 +338,7 @@ def createDrawerSlider(name, sliderName, width, isLeft):
     createBody(bodyName, [])
     cants = [0, 0, 0, 0]
     calcWidth = 42.0
-    calcHeight = 500.0
+    calcHeight = sliderDepth
     sprRec = [bodyName + '_Sketch', calcWidth, calcHeight, 42.0, cants[0], cants[1], cants[2], cants[3], 0]
     row = writeRecordInSpreadsheet(name + sliderName + "_Spreadsheet", sprRec)
     createBoard(name + sliderName, name + sliderName + "Body", row)
@@ -344,7 +347,7 @@ def createDrawerSlider(name, sliderName, width, isLeft):
     conList = []
     conList.append(Sketcher.Constraint('Distance',-1,1,0,250.0))
     conList.append(Sketcher.Constraint('Distance',-1,1,3,19.0) if isLeft else Sketcher.Constraint('Distance',-1,1,1,19.0))
-    createRectInSketch(bodyName + "_Pad1_Sketch", 21, 500, conList)
+    createRectInSketch(bodyName + "_Pad1_Sketch", 21, sliderDepth, conList)
     createPocketFromSketch(bodyName, bodyName + "_Pad1_Sketch", 32.0)
     Gui.activeDocument().hide(bodyName + "Pad1_Sketch")
     Gui.activeDocument().hide(bodyName + "_Sketch_Pad")
@@ -353,7 +356,7 @@ def createDrawerSlider(name, sliderName, width, isLeft):
     conList = []
     conList.append(Sketcher.Constraint('Distance',-1,1,0,250.0))
     conList.append(Sketcher.Constraint('Distance',-1,1,1,21.0) if isLeft else Sketcher.Constraint('Distance',-1,1,3,21.0))
-    createRectInSketch(bodyName + "_Pad2_Sketch", 19, 500, conList)
+    createRectInSketch(bodyName + "_Pad2_Sketch", 19, sliderDepth, conList)
     createPocketFromSketch(bodyName, bodyName + "_Pad2_Sketch", 20.0)
     Gui.activeDocument().hide(bodyName + "_Pad2_Sketch")
     Gui.activeDocument().hide(bodyName + "_Pad1_Sketch")
@@ -366,8 +369,8 @@ def createDrawerSlider(name, sliderName, width, isLeft):
 
 def createDrawer(material, name, width, height, depth, visibleBack):
 
-    createDrawerSlider(name, "LeftSlider", width, True);
-    createDrawerSlider(name, "RightSlider", width, False);
+    createDrawerSlider(name, "LeftSlider", width, (depth-sCantT-(boardThickness if visibleBack else cardboardThickness)-5), True);
+    createDrawerSlider(name, "RightSlider", width, (depth-sCantT-(boardThickness if visibleBack else cardboardThickness)-5), False);
     objects = [name + "LeftSliderBody", name + "RightSliderBody"]
 
     #create spreadsheet column names
@@ -658,17 +661,40 @@ def createVitodens():
 
 def createLivingRoomCorpuses():
     #creating up corpuses
-    livingRoomObjects = []
 
-    addOns = []
-    #addOns = [["Shelf1", 264.0, depth-3-0.8, [0.8, 0, 0, 0], 0, 0.4, 350.0, False],
-    #          ["Door1", 297.0, height-253-3, [2, 2, 2, 2], 0, 0, 0, True]]
-    createCabinet('WallnutTropic', 'LivingRoomCab1', 450.0, 1800.0, 450.0, addOns, 100.0, False, livingRoomObjects, True)
-    App.ActiveDocument.getObject('LivingRoomCab1_Fusion').Placement = App.Placement(App.Vector(504.0,-346.0,0),App.Rotation(App.Vector(0,0,0),0))
+    App.ActiveDocument.addObject("App::DocumentObjectGroup","LivingCabinets")
 
-    App.ActiveDocument.addObject("App::DocumentObjectGroup","LivingRoomCabinets")
-    for obj in livingRoomObjects:
-        App.ActiveDocument.getObject("LivingRoomCabinets").addObject(App.ActiveDocument.getObject(obj+"_Fusion"))
+    createCabinet('LivCab1', 500.0, 2200.0, 420.0, {'shelves':5, 'doors' : 1, 'doorsWallLeft' : True}, groupName='LivingCabinets', haveWholeBlend=True)
+    createCabinet('LivCab2', 500.0, 1800.0, 420.0, {'shelves':4, 'doors' : 1}, groupName='LivingCabinets', haveWholeBlend=True)
+    createCabinet('LivCab3', 500.0, 900.0, 420.0, {'drawers' : 4}, groupName='LivingCabinets')
+    createCabinet('LivCab4', 500.0, 900.0, 420.0, {'drawers' : 2}, groupName='LivingCabinets')
+    createCabinet('LivCab5', 500.0, 900.0, 420.0, {'drawers' : 4}, groupName='LivingCabinets')
+    createCabinet('LivCab6', 500.0, 1800.0, 420.0, {'shelves':4, 'doors' : 1}, groupName='LivingCabinets', haveWholeBlend=True)
+    createCabinet('LivCab7', 500.0, 2200.0, 420.0, {'shelves':5, 'doors' : 1}, groupName='LivingCabinets', haveWholeBlend=True)
+    createCabinet('LivCab2_Up', 500.0, 400.0, 420.0, {'doors' : 1}, groupName='LivingCabinets', isBase=False)
+    createCabinet('LivCab3_Up', 500.0, 400.0, 420.0, {'doors' : 1}, groupName='LivingCabinets', isBase=False)
+    createCabinet('LivCab4_Up', 500.0, 400.0, 420.0, {'doors' : 1}, groupName='LivingCabinets', isBase=False)
+    createCabinet('LivCab5_Up', 500.0, 400.0, 420.0, {'doors' : 1}, groupName='LivingCabinets', isBase=False)
+    createCabinet('LivCab6_Up', 500.0, 400.0, 420.0, {'doors' : 1}, groupName='LivingCabinets', isBase=False)
+    createCabinet('LivCab8', 300.0, 882.0, 320.0, {'doors' : 1}, groupName='LivingCabinets', isBase=False)
+
+    placementMatrix = [{'name':'LivCab1_Fusion',      'x':547,      'y':-331,       'z':0,        'xR':0, 'yR':1, 'zR':0, 'R':0},
+                       {'name':'LivCab2_Fusion',      'x':1047,      'y':-331,       'z':0,        'xR':0, 'yR':1, 'zR':0, 'R':0},
+                       {'name':'LivCab3_Fusion',      'x':1547,      'y':-331,       'z':0,        'xR':0, 'yR':1, 'zR':0, 'R':0},
+                       {'name':'LivCab4_Fusion',      'x':2047,      'y':-331,       'z':0,        'xR':0, 'yR':1, 'zR':0, 'R':0},
+                       {'name':'LivCab5_Fusion',      'x':2547,      'y':-331,       'z':0,        'xR':0, 'yR':1, 'zR':0, 'R':0},
+                       {'name':'LivCab6_Fusion',      'x':3047,      'y':-331,       'z':0,        'xR':0, 'yR':1, 'zR':0, 'R':0},
+                       {'name':'LivCab7_Fusion',      'x':3547,      'y':-331,       'z':0,        'xR':0, 'yR':1, 'zR':0, 'R':0},
+                       {'name':'LivCab2_Up_Fusion',   'x':1047,      'y':-331,       'z':1700,     'xR':0, 'yR':1, 'zR':0, 'R':0},
+                       {'name':'LivCab3_Up_Fusion',   'x':1547,      'y':-331,       'z':1700,     'xR':0, 'yR':1, 'zR':0, 'R':0},
+                       {'name':'LivCab4_Up_Fusion',   'x':2047,      'y':-331,       'z':1700,     'xR':0, 'yR':1, 'zR':0, 'R':0},
+                       {'name':'LivCab5_Up_Fusion',   'x':2547,      'y':-331,       'z':1700,     'xR':0, 'yR':1, 'zR':0, 'R':0},
+                       {'name':'LivCab6_Up_Fusion',   'x':3047,      'y':-331,       'z':1700,     'xR':0, 'yR':1, 'zR':0, 'R':0},
+    placementMatrix = [ {'name':'LivCab8_Fusion',      'x':2047,      'y':-281,       'z':818,     'xR':0, 'yR':1, 'zR':0, 'R':0}]
+
+    placeObjects(placementMatrix)
+
+
 
 def processAllSpreadSheetsByMaterial():
     finalDict = dict()
@@ -725,9 +751,9 @@ def processAllSpreadSheetsByMaterial():
 #createBaseCorpuses(860.0)
 #createPlots(900)
 #createVitodens()
-createBackForPlots(600.0)
+#createBackForPlots(600.0)
 #createUpCorpuses(950.0, 300.0)
-#createLivingRoomCorpuses()
+createLivingRoomCorpuses()
 #processAllSpreadSheetsByMaterial()
 
 #execfile('/home/nm/Dev/FreeCadScripts/createBaseCorpus.py')
