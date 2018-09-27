@@ -311,7 +311,9 @@ def createCabinet(name, width, height, depth, addOns, legHeight=baseLegHeight, v
         for curDrawer in range(1, drawersCount+1):
             createDrawer(cabMaterial,name + "_Drawer" + str(curDrawer), width, drawerHeight, depth, visibleBack)
             objects.append(name + "_Drawer" + str(curDrawer) + "_Fusion")
-            App.activeDocument().getObject(name + "_Drawer" + str(curDrawer) + "_Fusion").Placement=App.Placement(App.Vector(0,-14,spaceBetweenDoors/2+(curDrawer-1)*drawerHeight), App.Rotation(0,0,0), App.Vector(0,0,0)) 
+            yA = -14 if visibleBack else -5.3;
+            zA = spaceBetweenDoors/2+(curDrawer-1)*drawerHeight
+            App.activeDocument().getObject(name + "_Drawer" + str(curDrawer) + "_Fusion").Placement=App.Placement(App.Vector(0,yA,zA), App.Rotation(0,0,0), App.Vector(0,0,0)) 
 
     App.activeDocument().addObject("Part::MultiFuse",name + "_Fusion")
     objectsFreeCad = []
@@ -763,9 +765,9 @@ def processAllSpreadSheetsByMaterial():
 #createBaseCorpuses(860.0)
 #createPlots(900)
 #createVitodens()
-createBackForPlots(600.0)
+#createBackForPlots(600.0)
 #createUpCorpuses(950.0, 300.0)
-#createLivingRoomCorpuses()
+createLivingRoomCorpuses()
 #processAllSpreadSheetsByMaterial()
 
 #execfile('/home/nm/Dev/FreeCadScripts/createBaseCorpus.py')
