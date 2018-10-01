@@ -710,6 +710,37 @@ def createLivingRoomCorpuses():
 
     placeObjects(placementMatrix)
 
+def createSmallRoomCorpuses():
+    App.ActiveDocument.addObject("App::DocumentObjectGroup","SmallRoomCabinets")
+
+    createCabinet('SRCab1', 990.0, 700.0, 590.0, {'drawers':3, 'doorsWallLeft' : True, 'doorsWallRight' : True}, groupName='SmallRoomCabinets')
+    createCabinet('SRCab2', 990.0, 1300.0, 590.0, {'doors':2, 'doorsWallLeft' : True, 'doorsWallRight' : True}, groupName='SmallRoomCabinets', isBase=False)
+    createCabinet('SRCab3', 990.0, 530.0, 590.0, {'doors':2, 'shelves':1, 'doorsWallLeft' : True, 'doorsWallRight' : True}, groupName='SmallRoomCabinets', haveWholeBlend=True, isBase=False)
+
+    placementMatrix = [{'name':'SRCab1_Fusion',      'x':-500,       'y':-311,       'z':100,        'xR':0, 'yR':1, 'zR':0, 'R':0},
+                       {'name':'SRCab2_Fusion',      'x':-500,       'y':-311,       'z':700,        'xR':0, 'yR':1, 'zR':0, 'R':0},
+                       {'name':'SRCab3_Fusion',      'x':-500,       'y':-311,       'z':2000,       'xR':0, 'yR':1, 'zR':0, 'R':0}]
+
+    placeObjects(placementMatrix)
+
+    downObjects = []
+    #create spreadsheet column names
+    App.activeDocument().addObject('Spreadsheet::Sheet', "SR_Spreadsheet")
+    downObjects.append("SR_Spreadsheet")
+    spreadSheetHeaders = ['Name', 'Width', 'Height', 'BoardThickness', 'WCantFront', 'WCantBack', 'HCantLeft', 'HCantRight', 'ByFlader', 'Material']
+    writeRecordInSpreadsheet("SR_Spreadsheet", spreadSheetHeaders)
+
+    downProperties = []
+    downProperties.append(["_Down1", 990.0, 100.0, App.Placement(App.Vector(-500,-586,50),App.Rotation(App.Vector(1,0,0),90)), [0.8, 0.8, 0.8, 0.8], cabMaterial])
+
+    for downProp in downProperties:
+        createPlotBack(downProp[5],"SR", downProp[0], downProp[1], downProp[2], downObjects, downProp[4], 18)
+        App.activeDocument().getObject("SR"+downProp[0]).Placement=downProp[3]
+    App.ActiveDocument.recompute()
+
+    for obj in downObjects:
+        App.ActiveDocument.getObject("SmallRoomCabinets").addObject(App.ActiveDocument.getObject(obj))
+
 
 
 def processAllSpreadSheetsByMaterial():
@@ -763,13 +794,25 @@ def processAllSpreadSheetsByMaterial():
             row = [x['Name'], length, width, x['Count'], longEdgeCount, shortEdgeCount, edgeThickness, canRotate, x['Material']]
             writeRecordInSpreadsheet(mat + "_Spreadsheet", row)
                     
-
+######################################
+# Kitchen and Living room
+######################################
 #createBaseCorpuses(860.0)
 #createPlots(900)
 #createVitodens()
 #createBackForPlots(600.0)
 #createUpCorpuses(950.0, 300.0)
-createLivingRoomCorpuses()
+#createLivingRoomCorpuses()
+
+#######################################
+# Small room
+#######################################
+createSmallRoomCorpuses()
+
+#######################################
+#Final Processing
+#######################################
 #processAllSpreadSheetsByMaterial()
+
 
 #execfile('/home/nm/Dev/FreeCadScripts/createBaseCorpus.py')
