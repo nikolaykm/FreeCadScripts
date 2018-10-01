@@ -742,6 +742,45 @@ def createSmallRoomCorpuses():
         App.ActiveDocument.getObject("SmallRoomCabinets").addObject(App.ActiveDocument.getObject(obj))
 
 
+def createCorridorCorpuses():
+    App.ActiveDocument.addObject("App::DocumentObjectGroup","CorridorCabinets")
+
+    createCabinet('SRCab1', 915.0, 700.0, 500.0, {'drawers':3, 'doorsWallRight' : True}, groupName='CorridorCabinets')
+    createCabinet('SRCab2', 915.0, 1300.0, 500.0, {'doors':2,  'doorsWallRight' : True}, groupName='CorridorCabinets', isBase=False)
+    createCabinet('SRCab3', 915.0, 530.0, 500.0, {'doors':2, 'shelves':1, 'doorsWallRight' : True}, groupName='CorridorCabinets', haveWholeBlend=True, isBase=False)
+
+    createCabinet('SRCab4', 915.0, 700.0, 500.0, {'drawers':3, 'doorsWallLeft' : True}, groupName='CorridorCabinets')
+    createCabinet('SRCab5', 915.0, 1300.0, 500.0, {'doors':2, 'doorsWallLeft' : True}, groupName='CorridorCabinets', isBase=False)
+    createCabinet('SRCab6', 915.0, 530.0, 500.0, {'doors':2, 'shelves':1, 'doorsWallLeft' : True}, groupName='CorridorCabinets', haveWholeBlend=True, isBase=False)
+
+
+    placementMatrix = [{'name':'SRCab1_Fusion',      'x':-257,       'y':463,       'z':100,        'xR':0, 'yR':0, 'zR':1, 'R':270},
+                       {'name':'SRCab2_Fusion',      'x':-257,       'y':463,       'z':700,        'xR':0, 'yR':0, 'zR':1, 'R':270},
+                       {'name':'SRCab3_Fusion',      'x':-257,       'y':463,       'z':2000,       'xR':0, 'yR':0, 'zR':1, 'R':270},
+                       {'name':'SRCab4_Fusion',      'x':-257,       'y':1378,       'z':100,        'xR':0, 'yR':0, 'zR':1, 'R':270},
+                       {'name':'SRCab5_Fusion',      'x':-257,       'y':1378,       'z':700,        'xR':0, 'yR':0, 'zR':1, 'R':270},
+                       {'name':'SRCab6_Fusion',      'x':-257,       'y':1378,       'z':2000,       'xR':0, 'yR':0, 'zR':1, 'R':270}]
+
+    placeObjects(placementMatrix)
+
+    downObjects = []
+    #create spreadsheet column names
+    App.activeDocument().addObject('Spreadsheet::Sheet', "SR_Spreadsheet")
+    downObjects.append("SR_Spreadsheet")
+    spreadSheetHeaders = ['Name', 'Width', 'Height', 'BoardThickness', 'WCantFront', 'WCantBack', 'HCantLeft', 'HCantRight', 'ByFlader', 'Material']
+    writeRecordInSpreadsheet("SR_Spreadsheet", spreadSheetHeaders)
+
+    downProperties = []
+    downProperties.append(["_Down1", 1830.0, 100.0, App.Placement(App.Vector(-500,921,50),App.Rotation(App.Vector(0.58,0.58,0.58),120)), [0.8, 0.8, 0.8, 0.8], cabMaterial])
+
+    for downProp in downProperties:
+        createPlotBack(downProp[5],"SR", downProp[0], downProp[1], downProp[2], downObjects, downProp[4], 18)
+        App.activeDocument().getObject("SR"+downProp[0]).Placement=downProp[3]
+    App.ActiveDocument.recompute()
+
+    for obj in downObjects:
+        App.ActiveDocument.getObject("CorridorCabinets").addObject(App.ActiveDocument.getObject(obj))
+
 
 def processAllSpreadSheetsByMaterial():
     finalDict = dict()
@@ -807,7 +846,12 @@ def processAllSpreadSheetsByMaterial():
 #######################################
 # Small room
 #######################################
-createSmallRoomCorpuses()
+#createSmallRoomCorpuses()
+
+#######################################
+# Corridor
+#######################################
+createCorridorCorpuses()
 
 #######################################
 #Final Processing
