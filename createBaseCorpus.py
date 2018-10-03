@@ -9,6 +9,9 @@ baseLegHeight = 100.0
 spaceBetweenDoors = 3.0
 drawerSliderHole = 10.0
 drawerSliderHoleToBottom = 12.0
+colorsMap = {cabMaterial :       (1.0, 0.0, 0.0), 
+             plotsBackMaterial : (0.0, 1.0, 0.0), 
+             columnMaterial :    (0.0, 0.0, 1.0)}
 
 def writeRecordInSpreadsheet(spreadsheetName, recArr):
     #find next empty row
@@ -146,7 +149,7 @@ def createBoard(cabinetName, bodyName, row):
             createRectInSketch(cantSketchName, width, rowDict['BoardThickness'], conList)
             createPadFromSketch(bodyName, cantSketchName, rowDict[cant])
             
-def createCabinet(name, width, height, depth, addOns, legHeight=baseLegHeight, visibleBack = False, isBase = True, isHavingBack = True, shiftBlend = 0.0, groupName = "", material=cabMaterial, haveWholeBlend=False):
+def createCabinet(name, width, height, depth, addOns, legHeight=baseLegHeight, visibleBack = False, isBase = True, isHavingBack = True, shiftBlend = 0.0, groupName = "", material=cabMaterial, doorsMaterial=cabMaterial, haveWholeBlend=False):
 
     objects = []
 
@@ -298,7 +301,7 @@ def createCabinet(name, width, height, depth, addOns, legHeight=baseLegHeight, v
         cants = addOn[3]
         calcWidth = addOn[1] - cants[2] - cants[3]
         calcHeight = addOn[2] - cants[0] - cants[1]
-        sprRec = [bodyName + '_Sketch', calcWidth, calcHeight, boardThickness, cants[0], cants[1], cants[2], cants[3], 'H' if addOn[7] else 'W', material]
+        sprRec = [bodyName + '_Sketch', calcWidth, calcHeight, boardThickness, cants[0], cants[1], cants[2], cants[3], 'H' if addOn[7] else 'W', doorsMaterial]
         row = writeRecordInSpreadsheet(name + "_Spreadsheet", sprRec)
         createBoard(name, bodyName, row)
         App.activeDocument().getObject(bodyName).Placement=App.Placement(App.Vector(addOn[4],(-baseHeight/2-baseCants[0]-2) if addOn[7] else addOn[5], ((height/2 - (legHeight+spaceBetweenDoors/2 if isBase else 0)/2) if addOn[7] else 0) + addOn[6]), App.Rotation(0,0,(90 if addOn[7] else 0)), App.Vector(0,0,0))
@@ -309,7 +312,7 @@ def createCabinet(name, width, height, depth, addOns, legHeight=baseLegHeight, v
         drawersCount = addOns['drawers']
         drawerHeight = (height - (legHeight if isBase else 0) - spaceBetweenDoors/2)/drawersCount
         for curDrawer in range(1, drawersCount+1):
-            createDrawer(cabMaterial,name + "_Drawer" + str(curDrawer), width, drawerHeight, depth, visibleBack)
+            createDrawer(name + "_Drawer" + str(curDrawer), width, drawerHeight, depth, visibleBack, material, doorsMaterial)
             objects.append(name + "_Drawer" + str(curDrawer) + "_Fusion")
             yA = -14 if visibleBack else -5.3;
             zA = spaceBetweenDoors/2+(curDrawer-1)*drawerHeight
@@ -369,7 +372,7 @@ def createDrawerSlider(name, sliderName, width, depth, isLeft):
     App.activeDocument().recompute()
 
 
-def createDrawer(material, name, width, height, depth, visibleBack):
+def createDrawer(name, width, height, depth, visibleBack, material, doorsMaterial):
 
     createDrawerSlider(name, "LeftSlider", width, (depth-sCantT-(boardThickness if visibleBack else cardboardThickness)-5), True);
     createDrawerSlider(name, "RightSlider", width, (depth-sCantT-(boardThickness if visibleBack else cardboardThickness)-5), False);
@@ -387,7 +390,7 @@ def createDrawer(material, name, width, height, depth, visibleBack):
     cants = [lCantT, lCantT, lCantT, lCantT]
     calcWidth = width-cants[2]-cants[3]-3;
     calcHeight = height-cants[0]-cants[1]-3
-    sprRec = [bodyName + '_Sketch', calcWidth, calcHeight, boardThickness, cants[0], cants[1], cants[2], cants[3], 'H', material]
+    sprRec = [bodyName + '_Sketch', calcWidth, calcHeight, boardThickness, cants[0], cants[1], cants[2], cants[3], 'H', doorsMaterial]
     row = writeRecordInSpreadsheet(name + "_Spreadsheet", sprRec)
     createBoard(name, bodyName, row)
     zeroZ = (calcHeight+cants[0]+cants[1])/2
@@ -846,12 +849,12 @@ def processAllSpreadSheetsByMaterial():
 #######################################
 # Small room
 #######################################
-#createSmallRoomCorpuses()
+createSmallRoomCorpuses()
 
 #######################################
 # Corridor
 #######################################
-createCorridorCorpuses()
+#createCorridorCorpuses()
 
 #######################################
 #Final Processing
