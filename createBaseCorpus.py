@@ -54,7 +54,12 @@ def getRowFromSpreadsheet(spreadsheetName, row):
 
 def placeObjects(placementMatrix):
     for p in placementMatrix:
-         App.ActiveDocument.getObject(p['name']).Placement = App.Placement(App.Vector(p['x'],p['y'],p['z']),App.Rotation(App.Vector(p['xR'],p['yR'],p['zR']),p['R']))
+         if ('xR' in p) and ('yR' in p) and ('zR' in p) and ('R' in p):
+             App.ActiveDocument.getObject(p['name']).Placement = App.Placement(App.Vector(p['x'],p['y'],p['z']),App.Rotation(App.Vector(p['xR'],p['yR'],p['zR']),p['R']))
+         elif 'vec' in p:
+             vec = p['vec']
+             App.ActiveDocument.getObject(p['name']).Placement = App.Placement(App.Vector(vec[0],vec[1],vec[2]),App.Rotation(vec[3],vec[4],vec[5]), App.Vector(0, 0, 0))
+
 
 def createBody(bodyName, objects):
     App.activeDocument().addObject('PartDesign::Body', bodyName)
@@ -613,38 +618,64 @@ def createBackForPlots(height):
     spreadSheetHeaders = ['Name', 'Width', 'Height', 'BoardThickness', 'WCantFront', 'WCantBack', 'HCantLeft', 'HCantRight', 'ByFlader', 'Material']
     writeRecordInSpreadsheet(name + "_Spreadsheet", spreadSheetHeaders)
 
-    plotProperties = []
-    plotProperties.append(["_Right1", 2100.0, height, App.Placement(App.Vector(-2216,-115,1200),App.Rotation(App.Vector(1,0,0),90)), [0.8, 0.8, 0.8, 0.8], plotsBackMaterial])
-    plotProperties.append(["_Right2", 200.0, 450.0, App.Placement(App.Vector(-3245,-233,1125), App.Rotation(90,0,90), App.Vector(0,0,0)), [0.8, 0.8, 0.8, 0.8], cabMaterial])
-    plotProperties.append(["_Right3", 700.0, 100.0, App.Placement(App.Vector(-3577.6,-333,949.4),App.Rotation(App.Vector(1,0,0),90)), [0.8, 2, 0.8, 2], cabMaterial])
-    plotProperties.append(["_Right4", 695.5, 345.5, App.Placement(App.Vector(-3576.25,-333,1175.75),App.Rotation(App.Vector(1,0,0),90)), [2, 2, 2, 2], cabMaterial])
-    plotProperties.append(["_Right5", 200.0, 450.0, App.Placement(App.Vector(-3927,-233,1125), App.Rotation(90,0,90), App.Vector(0,0,0)), [0.8, 0.8, 0.8, 0.8], cabMaterial])
-    plotProperties.append(["_Front1", 70.0, height, App.Placement(App.Vector(-3945,-2110,1200), App.Rotation(90,0,90), App.Vector(0,0,0)), [0.8, 0.8, 0.8, 0.8], plotsBackMaterial])
-    plotProperties.append(["_Front2", 1320.0, 115.0, App.Placement(App.Vector(-3945,-1415,957), App.Rotation(90,0,90), App.Vector(0,0,0)), [0.8, 0.8, 0.8, 0.8], plotsBackMaterial])
-    plotProperties.append(["_Front3", 620.0, height, App.Placement(App.Vector(-3945,-445,1200), App.Rotation(90,0,90), App.Vector(0,0,0)), [0.8, 0.8, 0.8, 0.8], plotsBackMaterial])
-    plotProperties.append(["_Left1", 1072.0, height, App.Placement(App.Vector(-3391,-2127,1200),App.Rotation(App.Vector(1,0,0),90)), [0.8, 0.8, 0.8, 0.8], plotsBackMaterial])
-    plotProperties.append(["_Left2", 203.0, height, App.Placement(App.Vector(-2855,-2229,1200), App.Rotation(90,0,90), App.Vector(0,0,0)), [0, 0, 0.8, 0.8], plotsBackMaterial])
-    plotProperties.append(["_Left3", 1541.0, height, App.Placement(App.Vector(-2066.5,-2312,1200),App.Rotation(App.Vector(1,0,0),90)), [0, 0, 0, 0], plotsBackMaterial])
-    plotProperties.append(["_Left4", 203.0, height, App.Placement(App.Vector(-1296,-2229,1200), App.Rotation(90,0,90), App.Vector(0,0,0)), [0, 0, 2, 2], cabMaterial])
-    plotProperties.append(["_Left5", 1577.0, 202.5, App.Placement(App.Vector(-2066.5,-2228.8,1500),App.Rotation(App.Vector(1,0,0),0)), [2, 2, 2, 2], plotsBackMaterial])
-    plotProperties.append(["_Right1_Down", 2310.0, 100.0, App.Placement(App.Vector(-2321,-617,50),App.Rotation(App.Vector(1,0,0),90)), [0.8, 0.8, 0.8, 0.8], cabMaterial])
-    plotProperties.append(["_Front1_Down", 1173.0, 100.0, App.Placement(App.Vector(-3430,-1221,50), App.Rotation(90,0,90), App.Vector(0,0,0)), [0.8, 0.8, 0.8, 0.8], cabMaterial])
-    plotProperties.append(["_Left1_Down", 2210.0, 100.0, App.Placement(App.Vector(-2401,-1808,50),App.Rotation(App.Vector(1,0,0),90)), [0.8, 0.8, 0.8, 0.8], cabMaterial])
-    plotProperties.append(["_Left2_Down", 560.0, 100.0, App.Placement(App.Vector(-1296,-2043,50), App.Rotation(90,0,90), App.Vector(0,0,0)), [0.8, 0.8, 0.8, 0.8], cabMaterial])
+    pp = []
+    pp.append(["_Right1",      2100.0, height, [0.8, 0.8, 0.8, 0.8], plotsBackMaterial])
+    pp.append(["_Right2",      200.0,  450.0,  [0.8, 0.8, 0.8, 0.8], cabMaterial])
+    pp.append(["_Right3",      700.0,  100.0,  [0.8, 2, 0.8, 2],     cabMaterial])
+    pp.append(["_Right4",      695.5,  345.5,  [2, 2, 2, 2],         cabMaterial])
+    pp.append(["_Right5",      200.0,  450.0,  [0.8, 0.8, 0.8, 0.8], cabMaterial])
+    pp.append(["_Front1",      70.0,   height, [0.8, 0.8, 0.8, 0.8], plotsBackMaterial])
+    pp.append(["_Front2",      1320.0, 115.0,  [0.8, 0.8, 0.8, 0.8], plotsBackMaterial])
+    pp.append(["_Front3",      620.0,  height, [0.8, 0.8, 0.8, 0.8], plotsBackMaterial])
+    pp.append(["_Front4",      200.0,  465.0,  [0.8, 0.8, 0.8, 0.8], plotsBackMaterial])
+    pp.append(["_Front5",      200.0,  465.0,  [0.8, 0.8, 0.8, 0.8], plotsBackMaterial])
+    pp.append(["_Left1",       1072.0, height, [0.8, 0.8, 0.8, 0.8], plotsBackMaterial])
+    pp.append(["_Left2",       203.0,  height, [0, 0, 0.8, 0.8],     plotsBackMaterial])
+    pp.append(["_Left3",       1541.0, height, [0, 0, 0, 0],         plotsBackMaterial])
+    pp.append(["_Left4",       203.0,  height, [0, 0, 2, 2],         cabMaterial])
+    pp.append(["_Left5",       1577.0, 202.5,  [2, 2, 2, 2],         plotsBackMaterial])
+    pp.append(["_Right1_Down", 2310.0, 100.0,  [0.8, 0.8, 0.8, 0.8], cabMaterial])
+    pp.append(["_Front1_Down", 1173.0, 100.0,  [0.8, 0.8, 0.8, 0.8], cabMaterial])
+    pp.append(["_Left1_Down",  2210.0, 100.0,  [0.8, 0.8, 0.8, 0.8], cabMaterial])
+    pp.append(["_Left2_Down",  560.0,  100.0,  [0.8, 0.8, 0.8, 0.8], cabMaterial])
 
-    plotProperties.append(["_Column1", 620.0, 2200.0, App.Placement(App.Vector(-1163,-425,1100), App.Rotation(90,0,90), App.Vector(0,0,0)), [0.8, 0.8, 0.8, 0.8], columnMaterial])
-    plotProperties.append(["_Column2", 694.0, 2450.0, App.Placement(App.Vector(-816,-735,1225),App.Rotation(App.Vector(1,0,0),90)), [0.8, 0.8, 0.8, 0.8], columnMaterial])
-    plotProperties.append(["_Column3", 620.0, 2450.0, App.Placement(App.Vector(-487,-425,1225), App.Rotation(90,0,90), App.Vector(0,0,0)), [0.8, 0.8, 0.8, 0.8], columnMaterial])
+    pp.append(["_Column1",     620.0,  2200.0, [0.8, 0.8, 0.8, 0.8], columnMaterial])
+    pp.append(["_Column2",     694.0,  2450.0, [0.8, 0.8, 0.8, 0.8], columnMaterial])
+    pp.append(["_Column3",     620.0,  2450.0, [0.8, 0.8, 0.8, 0.8], columnMaterial])
 
-    plotProperties.append(["_LivRoom1", 1500.0, 470.0, App.Placement(App.Vector(2051,-349,900), App.Rotation(0,0,0), App.Vector(0,0,0)), [2, 0, 0, 0],cabMaterial])
-    plotProperties.append(["_LivRoom2", 1500.0, 300.0, App.Placement(App.Vector(2051,-264,1100), App.Rotation(0,0,0), App.Vector(0,0,0)), [2, 0, 0, 0],cabMaterial])
-    plotProperties.append(["_LivRoom3", 1500.0, 300.0, App.Placement(App.Vector(2051,-264,1500), App.Rotation(0,0,0), App.Vector(0,0,0)), [2, 0, 0, 0],cabMaterial])
+    pp.append(["_LivRoom1",    1500.0, 470.0,  [2, 0, 0, 0],         cabMaterial])
+    pp.append(["_LivRoom2",    1500.0, 300.0,  [2, 0, 0, 0],         cabMaterial])
+    pp.append(["_LivRoom3",    1500.0, 300.0,  [2, 0, 0, 0],         cabMaterial])
 
-    #TODO:Add window plots back
+    placementMatrix = [{'name':name+'_Right1',      'vec' : (-2216,    -115,  1200,    0,  0, 90)},
+                       {'name':name+'_Right2',      'vec' : (-3245,    -233,  1125,    90, 0, 90)},
+                       {'name':name+'_Right3',      'vec' : (-3577.6,  -333,  949.4,   0,  0, 90)},
+                       {'name':name+'_Right4',      'vec' : (-3576.25, -333,  1175.75, 0,  0, 90)},
+                       {'name':name+'_Right5',      'vec' : (-3927,    -233,  1125,    90, 0, 90)},
+                       {'name':name+'_Front1',      'vec' : (-3945,    -2110, 1200,    90, 0, 90)},
+                       {'name':name+'_Front2',      'vec' : (-3945,    -1415, 957,     90, 0, 90)},
+                       {'name':name+'_Front3',      'vec' : (-3945,    -445,  1200,    90, 0, 90)}, 
+                       {'name':name+'_Front4',      'vec' : (-4027,    -2057, 1267,    0,  0, 90)},
+                       {'name':name+'_Front5',      'vec' : (-4027,    -755,  1267,    0,  0, 90)},
+                       {'name':name+'_Left1',       'vec' : (-3391,    -2127, 1200,    0,  0, 90)},
+                       {'name':name+'_Left2',       'vec' : (-2855,    -2229, 1200,    90, 0, 90)},
+                       {'name':name+'_Left3',       'vec' : (-2066.5,  -2312, 1200,    0,  0, 90)},
+                       {'name':name+'_Left4',       'vec' : (-1296,    -2229, 1200,    90, 0, 90)},
+                       {'name':name+'_Left5',       'vec' : (-2066.5,  -2228, 1500,    0,  0, 0 )},
+                       {'name':name+"_Right1_Down", 'vec':  (-2321,    -617,  50,      0,  0, 90)},
+                       {'name':name+"_Front1_Down", 'vec':  (-3430,    -1221, 50,      90, 0, 90)},
+                       {'name':name+"_Left1_Down",  'vec':  (-2401,    -1808, 50,      0,  0, 90)},
+                       {'name':name+"_Left2_Down",  'vec':  (-1296,    -2043, 50,      90, 0, 90)},
+                       {'name':name+"_Column1",     'vec':  (-1163,    -425,  1100,    90, 0, 90)},
+                       {'name':name+"_Column2",     'vec':  (-816,     -735,  1225,    0,  0, 90)},
+                       {'name':name+"_Column3",     'vec':  (-487,     -425,  1225,    90, 0, 90)},
+                       {'name':name+"_LivRoom1",    'vec':  (2051,     -349,  900,     0,  0, 0)},
+                       {'name':name+"_LivRoom2",    'vec':  (2051,     -264,  1100,    0,  0, 0)},
+                       {'name':name+"_LivRoom3",    'vec':  (2051,     -264,  1500,    0,  0, 0)}]
 
-    for plotProp in plotProperties:
-        createPlotBack(plotProp[5],name, plotProp[0], plotProp[1], plotProp[2], plotObjects, plotProp[4], 18)
-        App.activeDocument().getObject(name+plotProp[0]).Placement=plotProp[3]
+    for plotProp in pp:
+        createPlotBack(plotProp[4],name, plotProp[0], plotProp[1], plotProp[2], plotObjects, plotProp[3], 18)
+    placeObjects(placementMatrix)
     App.ActiveDocument.recompute()
 
     App.ActiveDocument.addObject("App::DocumentObjectGroup","PlotsBacks")
@@ -842,14 +873,14 @@ def processAllSpreadSheetsByMaterial():
 #createBaseCorpuses(860.0)
 #createPlots(900)
 #createVitodens()
-#createBackForPlots(600.0)
+createBackForPlots(600.0)
 #createUpCorpuses(950.0, 300.0)
 #createLivingRoomCorpuses()
 
 #######################################
 # Small room
 #######################################
-createSmallRoomCorpuses()
+#createSmallRoomCorpuses()
 
 #######################################
 # Corridor
