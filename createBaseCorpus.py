@@ -907,7 +907,7 @@ def processAllSpreadSheetsByMaterial():
 #createColumnBoards()
 #createUpCorpuses(950.0, 300.0)
 #createLivingRoomCorpuses()
-createLivingRoomShelves()
+#createLivingRoomShelves()
 
 #######################################
 # Small room
@@ -922,7 +922,7 @@ createLivingRoomShelves()
 #######################################
 #Final Processing
 #######################################
-#processAllSpreadSheetsByMaterial()
+processAllSpreadSheetsByMaterial()
 
 
 #execfile('/home/nm/Dev/FreeCadScripts/createBaseCorpus.py')
