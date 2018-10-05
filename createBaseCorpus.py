@@ -52,13 +52,13 @@ def getRowFromSpreadsheet(spreadsheetName, row):
 
     return resultDict
 
-def placeObjects(placementMatrix):
+def placeObjects(placementMatrix, namePrefix = ""):
     for p in placementMatrix:
          if ('xR' in p) and ('yR' in p) and ('zR' in p) and ('R' in p):
-             App.ActiveDocument.getObject(p['name']).Placement = App.Placement(App.Vector(p['x'],p['y'],p['z']),App.Rotation(App.Vector(p['xR'],p['yR'],p['zR']),p['R']))
+             App.ActiveDocument.getObject(namePrefix + p['name']).Placement = App.Placement(App.Vector(p['x'],p['y'],p['z']),App.Rotation(App.Vector(p['xR'],p['yR'],p['zR']),p['R']))
          elif 'vec' in p:
              vec = p['vec']
-             App.ActiveDocument.getObject(p['name']).Placement = App.Placement(App.Vector(vec[0],vec[1],vec[2]),App.Rotation(vec[3],vec[4],vec[5]), App.Vector(0, 0, 0))
+             App.ActiveDocument.getObject(namePrefix + p['name']).Placement = App.Placement(App.Vector(vec[0],vec[1],vec[2]),App.Rotation(vec[3],vec[4],vec[5]), App.Vector(0, 0, 0))
 
 
 def createBody(bodyName, objects):
@@ -607,23 +607,32 @@ def createPlots(height):
     for obj in plotObjects:
         App.ActiveDocument.getObject("Plots").addObject(App.ActiveDocument.getObject(obj))
 
-def createBackForPlots(height):
-    #create backs for plots
-    name = "PlotsBacks"
+def createBoards(name, boardsList, placementMatrix):
     plotObjects = []
-
     #create spreadsheet column names
     App.activeDocument().addObject('Spreadsheet::Sheet', name + "_Spreadsheet")
     plotObjects.append(name + "_Spreadsheet")
     spreadSheetHeaders = ['Name', 'Width', 'Height', 'BoardThickness', 'WCantFront', 'WCantBack', 'HCantLeft', 'HCantRight', 'ByFlader', 'Material']
     writeRecordInSpreadsheet(name + "_Spreadsheet", spreadSheetHeaders)
 
+    for plotProp in boardsList:
+        createPlotBack(plotProp[4],name, plotProp[0], plotProp[1], plotProp[2], plotObjects, plotProp[3], 18)
+
+    placeObjects(placementMatrix, name)
+
+    App.ActiveDocument.recompute()
+
+    App.ActiveDocument.addObject("App::DocumentObjectGroup",name)
+    for obj in plotObjects:
+        App.ActiveDocument.getObject(name).addObject(App.ActiveDocument.getObject(obj))
+
+
+
+def createBackForPlots(height):
+    #create backs for plots
+
     pp = []
     pp.append(["_Right1",      2100.0, height, [0.8, 0.8, 0.8, 0.8], plotsBackMaterial])
-    pp.append(["_Right2",      200.0,  450.0,  [0.8, 0.8, 0.8, 0.8], cabMaterial])
-    pp.append(["_Right3",      700.0,  100.0,  [0.8, 2, 0.8, 2],     cabMaterial])
-    pp.append(["_Right4",      695.5,  345.5,  [2, 2, 2, 2],         cabMaterial])
-    pp.append(["_Right5",      200.0,  450.0,  [0.8, 0.8, 0.8, 0.8], cabMaterial])
     pp.append(["_Front1",      70.0,   height, [0.8, 0.8, 0.8, 0.8], plotsBackMaterial])
     pp.append(["_Front2",      1320.0, 115.0,  [0.8, 0.8, 0.8, 0.8], plotsBackMaterial])
     pp.append(["_Front3",      620.0,  height, [0.8, 0.8, 0.8, 0.8], plotsBackMaterial])
@@ -632,57 +641,76 @@ def createBackForPlots(height):
     pp.append(["_Left1",       1072.0, height, [0.8, 0.8, 0.8, 0.8], plotsBackMaterial])
     pp.append(["_Left2",       203.0,  height, [0, 0, 0.8, 0.8],     plotsBackMaterial])
     pp.append(["_Left3",       1541.0, height, [0, 0, 0, 0],         plotsBackMaterial])
-    pp.append(["_Left4",       203.0,  height, [0, 0, 2, 2],         cabMaterial])
+    pp.append(["_Left4",       203.0,  height, [0, 0, 2, 2],         plotsBackMaterial])
     pp.append(["_Left5",       1577.0, 202.5,  [2, 2, 2, 2],         plotsBackMaterial])
+
+    placementMatrix = [{'name':'_Right1',      'vec' : (-2216,    -115,  1200,    0,  0, 90)},
+                       {'name':'_Front1',      'vec' : (-3945,    -2110, 1200,    90, 0, 90)},
+                       {'name':'_Front2',      'vec' : (-3945,    -1415, 957,     90, 0, 90)},
+                       {'name':'_Front3',      'vec' : (-3945,    -445,  1200,    90, 0, 90)}, 
+                       {'name':'_Front4',      'vec' : (-4027,    -2057, 1267,    0,  0, 90)},
+                       {'name':'_Front5',      'vec' : (-4027,    -755,  1267,    0,  0, 90)},
+                       {'name':'_Left1',       'vec' : (-3391,    -2127, 1200,    0,  0, 90)},
+                       {'name':'_Left2',       'vec' : (-2855,    -2229, 1200,    90, 0, 90)},
+                       {'name':'_Left3',       'vec' : (-2066.5,  -2312, 1200,    0,  0, 90)},
+                       {'name':'_Left4',       'vec' : (-1296,    -2229, 1200,    90, 0, 90)},
+                       {'name':'_Left5',       'vec' : (-2066.5,  -2228, 1500,    0,  0, 0 )}]
+
+    createBoards("PlotsBacks", pp, placementMatrix)
+
+def createVitodensDownCabinet():
+    pp = []
+    pp.append(["_RightBoard",  200.0,  450.0,  [0.8, 0.8, 0.8, 0.8], cabMaterial])
+    pp.append(["_DownPlank",   700.0,  100.0,  [0.8, 2, 0.8, 2],     cabMaterial])
+    pp.append(["_Door",        695.5,  345.5,  [2, 2, 2, 2],         cabMaterial])
+    pp.append(["_LeftBoard",   200.0,  450.0,  [0.8, 0.8, 0.8, 0.8], cabMaterial])
+
+    placementMatrix = [{'name':'_RightBoard', 'vec' : (-3245,    -233,  1125,    90, 0, 90)},
+                       {'name':'_DownPlank', 'vec' : (-3577.6,  -333,  949.4,   0,  0, 90)},
+                       {'name':'_Door', 'vec' : (-3576.25, -333,  1175.75, 0,  0, 90)},
+                       {'name':'_LeftBoard', 'vec' : (-3927,    -233,  1125,    90, 0, 90)}]
+
+    createBoards("VitodensDownCab", pp, placementMatrix)
+
+def createKitchenDownPlanks():
+    pp = []
     pp.append(["_Right1_Down", 2310.0, 100.0,  [0.8, 0.8, 0.8, 0.8], cabMaterial])
     pp.append(["_Front1_Down", 1173.0, 100.0,  [0.8, 0.8, 0.8, 0.8], cabMaterial])
     pp.append(["_Left1_Down",  2210.0, 100.0,  [0.8, 0.8, 0.8, 0.8], cabMaterial])
     pp.append(["_Left2_Down",  560.0,  100.0,  [0.8, 0.8, 0.8, 0.8], cabMaterial])
 
+    placementMatrix = [{'name':"_Right1_Down", 'vec':  (-2321,    -617,  50,      0,  0, 90)},
+                       {'name':"_Front1_Down", 'vec':  (-3430,    -1221, 50,      90, 0, 90)},
+                       {'name':"_Left1_Down",  'vec':  (-2401,    -1808, 50,      0,  0, 90)},
+                       {'name':"_Left2_Down",  'vec':  (-1296,    -2043, 50,      90, 0, 90)}]
+
+    createBoards("KitchenDownPlanks", pp, placementMatrix)
+
+def createColumnBoards():
+
+    pp = []
     pp.append(["_Column1",     620.0,  2200.0, [0.8, 0.8, 0.8, 0.8], columnMaterial])
     pp.append(["_Column2",     694.0,  2450.0, [0.8, 0.8, 0.8, 0.8], columnMaterial])
     pp.append(["_Column3",     620.0,  2450.0, [0.8, 0.8, 0.8, 0.8], columnMaterial])
 
+    placementMatrix = [{'name':"_Column1",     'vec':  (-1163,    -425,  1100,    90, 0, 90)},
+                       {'name':"_Column2",     'vec':  (-816,     -735,  1225,    0,  0, 90)},
+                       {'name':"_Column3",     'vec':  (-487,     -425,  1225,    90, 0, 90)}]
+
+    createBoards("KitchenColumn", pp, placementMatrix)
+
+def createLivingRoomShelves():
+    
+    pp = []
     pp.append(["_LivRoom1",    1500.0, 470.0,  [2, 0, 0, 0],         cabMaterial])
     pp.append(["_LivRoom2",    1500.0, 300.0,  [2, 0, 0, 0],         cabMaterial])
     pp.append(["_LivRoom3",    1500.0, 300.0,  [2, 0, 0, 0],         cabMaterial])
 
-    placementMatrix = [{'name':name+'_Right1',      'vec' : (-2216,    -115,  1200,    0,  0, 90)},
-                       {'name':name+'_Right2',      'vec' : (-3245,    -233,  1125,    90, 0, 90)},
-                       {'name':name+'_Right3',      'vec' : (-3577.6,  -333,  949.4,   0,  0, 90)},
-                       {'name':name+'_Right4',      'vec' : (-3576.25, -333,  1175.75, 0,  0, 90)},
-                       {'name':name+'_Right5',      'vec' : (-3927,    -233,  1125,    90, 0, 90)},
-                       {'name':name+'_Front1',      'vec' : (-3945,    -2110, 1200,    90, 0, 90)},
-                       {'name':name+'_Front2',      'vec' : (-3945,    -1415, 957,     90, 0, 90)},
-                       {'name':name+'_Front3',      'vec' : (-3945,    -445,  1200,    90, 0, 90)}, 
-                       {'name':name+'_Front4',      'vec' : (-4027,    -2057, 1267,    0,  0, 90)},
-                       {'name':name+'_Front5',      'vec' : (-4027,    -755,  1267,    0,  0, 90)},
-                       {'name':name+'_Left1',       'vec' : (-3391,    -2127, 1200,    0,  0, 90)},
-                       {'name':name+'_Left2',       'vec' : (-2855,    -2229, 1200,    90, 0, 90)},
-                       {'name':name+'_Left3',       'vec' : (-2066.5,  -2312, 1200,    0,  0, 90)},
-                       {'name':name+'_Left4',       'vec' : (-1296,    -2229, 1200,    90, 0, 90)},
-                       {'name':name+'_Left5',       'vec' : (-2066.5,  -2228, 1500,    0,  0, 0 )},
-                       {'name':name+"_Right1_Down", 'vec':  (-2321,    -617,  50,      0,  0, 90)},
-                       {'name':name+"_Front1_Down", 'vec':  (-3430,    -1221, 50,      90, 0, 90)},
-                       {'name':name+"_Left1_Down",  'vec':  (-2401,    -1808, 50,      0,  0, 90)},
-                       {'name':name+"_Left2_Down",  'vec':  (-1296,    -2043, 50,      90, 0, 90)},
-                       {'name':name+"_Column1",     'vec':  (-1163,    -425,  1100,    90, 0, 90)},
-                       {'name':name+"_Column2",     'vec':  (-816,     -735,  1225,    0,  0, 90)},
-                       {'name':name+"_Column3",     'vec':  (-487,     -425,  1225,    90, 0, 90)},
-                       {'name':name+"_LivRoom1",    'vec':  (2051,     -349,  900,     0,  0, 0)},
-                       {'name':name+"_LivRoom2",    'vec':  (2051,     -264,  1100,    0,  0, 0)},
-                       {'name':name+"_LivRoom3",    'vec':  (2051,     -264,  1500,    0,  0, 0)}]
+    placementMatrix = [{'name':"_LivRoom1",    'vec':  (2051,     -349,  900,     0,  0, 0)},
+                       {'name':"_LivRoom2",    'vec':  (2051,     -264,  1100,    0,  0, 0)},
+                       {'name':"_LivRoom3",    'vec':  (2051,     -264,  1500,    0,  0, 0)}]
 
-    for plotProp in pp:
-        createPlotBack(plotProp[4],name, plotProp[0], plotProp[1], plotProp[2], plotObjects, plotProp[3], 18)
-    placeObjects(placementMatrix)
-    App.ActiveDocument.recompute()
-
-    App.ActiveDocument.addObject("App::DocumentObjectGroup","PlotsBacks")
-    for obj in plotObjects:
-        App.ActiveDocument.getObject("PlotsBacks").addObject(App.ActiveDocument.getObject(obj))
-
-
+    createBoards("LivingShelves", pp, placementMatrix)
 
 #create Vitodens 111-W with fux
 def createVitodens():
@@ -873,9 +901,13 @@ def processAllSpreadSheetsByMaterial():
 #createBaseCorpuses(860.0)
 #createPlots(900)
 #createVitodens()
-createBackForPlots(600.0)
+#createBackForPlots(600.0)
+#createVitodensDownCabinet()
+#createKitchenDownPlanks()
+#createColumnBoards()
 #createUpCorpuses(950.0, 300.0)
 #createLivingRoomCorpuses()
+createLivingRoomShelves()
 
 #######################################
 # Small room
