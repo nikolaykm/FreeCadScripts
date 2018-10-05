@@ -631,18 +631,24 @@ def createBoards(name, boardsList, placementMatrix):
 def createBackForPlots(height):
     #create backs for plots
 
+    s = sCantT
+
     pp = []
-    pp.append(["_Right1",      2100.0, height, [0.8, 0.8, 0.8, 0.8], plotsBackMaterial])
-    pp.append(["_Front1",      70.0,   height, [0.8, 0.8, 0.8, 0.8], plotsBackMaterial])
-    pp.append(["_Front2",      1320.0, 115.0,  [0.8, 0.8, 0.8, 0.8], plotsBackMaterial])
-    pp.append(["_Front3",      620.0,  height, [0.8, 0.8, 0.8, 0.8], plotsBackMaterial])
-    pp.append(["_Front4",      200.0,  465.0,  [0.8, 0.8, 0.8, 0.8], plotsBackMaterial])
-    pp.append(["_Front5",      200.0,  465.0,  [0.8, 0.8, 0.8, 0.8], plotsBackMaterial])
-    pp.append(["_Left1",       1072.0, height, [0.8, 0.8, 0.8, 0.8], plotsBackMaterial])
-    pp.append(["_Left2",       203.0,  height, [0, 0, 0.8, 0.8],     plotsBackMaterial])
-    pp.append(["_Left3",       1541.0, height, [0, 0, 0, 0],         plotsBackMaterial])
-    pp.append(["_Left4",       203.0,  height, [0, 0, 2, 2],         plotsBackMaterial])
-    pp.append(["_Left5",       1577.0, 202.5,  [2, 2, 2, 2],         plotsBackMaterial])
+    pp.append(["_Right1", 2100.0, height,    [0, 0, 0, 0], plotsBackMaterial])
+    pp.append(["_Front1", 70.0,   height,    [0, s, 0, 0], plotsBackMaterial])
+    pp.append(["_Front2", 1320.0, 115.0,     [0, 0, 0, 0], plotsBackMaterial])
+    pp.append(["_Front3", 620.0,  height,    [0, s, 0, 0], plotsBackMaterial])
+    pp.append(["_Front4", 200.0,  465.0,     [0, s, s, 0], plotsBackMaterial])
+    pp.append(["_Front5", 200.0,  465.0,     [0, s, s, 0], plotsBackMaterial])
+    pp.append(["_Left1",  1072.0, height,    [s, 0, 0, 0], plotsBackMaterial])
+    pp.append(["_Left2",  203.0,  height,    [0, 0, 0, s], plotsBackMaterial])
+    pp.append(["_Left3",  1541.0, height,    [0, 0, 0, 0], plotsBackMaterial])
+    pp.append(["_Left4",  203.0,  height,    [0, 0, 0, s], plotsBackMaterial])
+    pp.append(["_Left5",  1577.0, 202.5,     [0, s, s, s], plotsBackMaterial])
+    pp.append(["_Left2D", 167.0,  height-18, [0, 0, 0, s], plotsBackMaterial])
+    pp.append(["_Left4D", 167.0,  height-18, [0, 0, 0, s], plotsBackMaterial])
+    pp.append(["_Left5D", 1541.0, 166.0,     [0, s, 0, 0], plotsBackMaterial])
+
 
     placementMatrix = [{'name':'_Right1',      'vec' : (-2216,    -115,  1200,    0,  0, 90)},
                        {'name':'_Front1',      'vec' : (-3945,    -2110, 1200,    90, 0, 90)},
@@ -652,9 +658,12 @@ def createBackForPlots(height):
                        {'name':'_Front5',      'vec' : (-4027,    -755,  1267,    0,  0, 90)},
                        {'name':'_Left1',       'vec' : (-3391,    -2127, 1200,    0,  0, 90)},
                        {'name':'_Left2',       'vec' : (-2855,    -2229, 1200,    90, 0, 90)},
-                       {'name':'_Left3',       'vec' : (-2066.5,  -2312, 1200,    0,  0, 90)},
+                       {'name':'_Left3',       'vec' : (-2066.5,  -2294, 1200,    0,  0, 90)},
                        {'name':'_Left4',       'vec' : (-1296,    -2229, 1200,    90, 0, 90)},
-                       {'name':'_Left5',       'vec' : (-2066.5,  -2228, 1500,    0,  0, 0 )}]
+                       {'name':'_Left5',       'vec' : (-2066.5,  -2228.5, 1500,    0,  0, 0 )},
+                       {'name':'_Left2D',      'vec' : (-2837,    -2211, 1191,    90, 0, 90)},
+                       {'name':'_Left4D',      'vec' : (-1314,    -2211, 1191,    90, 0, 90)},
+                       {'name':'_Left5D',      'vec' : (-2066.5,  -2210.5, 1482,    0,  0, 0 )}]
 
     createBoards("PlotsBacks", pp, placementMatrix)
 
@@ -901,7 +910,7 @@ def processAllSpreadSheetsByMaterial():
 #createBaseCorpuses(860.0)
 #createPlots(900)
 #createVitodens()
-#createBackForPlots(600.0)
+createBackForPlots(600.0)
 #createVitodensDownCabinet()
 #createKitchenDownPlanks()
 #createColumnBoards()
@@ -922,7 +931,7 @@ def processAllSpreadSheetsByMaterial():
 #######################################
 #Final Processing
 #######################################
-processAllSpreadSheetsByMaterial()
+#processAllSpreadSheetsByMaterial()
 
 
 #execfile('/home/nm/Dev/FreeCadScripts/createBaseCorpus.py')
