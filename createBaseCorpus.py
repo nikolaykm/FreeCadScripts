@@ -708,6 +708,16 @@ def createColumnBoards():
 
     createBoards("KitchenColumn", pp, placementMatrix)
 
+def createAdditionalBoards():
+    pp = []
+    pp.append(["_VitoCabAdd1", 477.0,  950.0, [0.8, 0.8, 0.8, 0.8], cabMaterial])
+    pp.append(["_WindowBack",  1541.0, 600.0, [0,   0,   0,   0],   cabMaterial])
+
+    placementMatrix = [{'name':"_VitoCabAdd1", 'vec':  (-3945,    -371.4, 1975, 90, 0, 90)},
+                       {'name':'_WindowBack',  'vec' : (-2066.5,  -2312,  1200,  0, 0, 90)}]
+    
+    createBoards("KitchenAddons", pp, placementMatrix)
+
 def createLivingRoomShelves():
     
     pp = []
@@ -910,10 +920,11 @@ def processAllSpreadSheetsByMaterial():
 #createBaseCorpuses(860.0)
 #createPlots(900)
 #createVitodens()
-createBackForPlots(600.0)
+#createBackForPlots(600.0)
 #createVitodensDownCabinet()
 #createKitchenDownPlanks()
 #createColumnBoards()
+createAdditionalBoards()
 #createUpCorpuses(950.0, 300.0)
 #createLivingRoomCorpuses()
 #createLivingRoomShelves()
