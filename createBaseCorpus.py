@@ -126,9 +126,9 @@ def createPocketFromSketch(bodyName, sketchName, zL):
     App.activeDocument().getObject(pocketName).Length = zL
     App.ActiveDocument.recompute()
 
-def createBoard(cabinetName, bodyName, row):
+def createBoardFromSheetRow(objName, bodyName, row):
 
-    rowDict = getRowFromSpreadsheet(cabinetName + "_Spreadsheet", row)
+    rowDict = getRowFromSpreadsheet(objName + "_Spreadsheet", row)
     sketchName = rowDict['Name']
     xL = rowDict['Width']
     yL = rowDict['Height']
@@ -153,115 +153,150 @@ def createBoard(cabinetName, bodyName, row):
             conList.append(Sketcher.Constraint('DistanceX',0,1,-1,1,width/2))
             createRectInSketch(cantSketchName, width, rowDict['BoardThickness'], conList)
             createPadFromSketch(bodyName, cantSketchName, rowDict[cant])
+
+def createBoard(material, objName, boardName, width, height, objBoards, cants, boardThickness, fladder):
+    bodyName = objName + boardName
+    createBody(bodyName, objBoards)
+    calcWidth = width - cants[2] - cants[3]
+    calcHeight = height - cants[0] - cants[1]
+    sprRec = [bodyName + '_Sketch', calcWidth, calcHeight, boardThickness, cants[0], cants[1], cants[2], cants[3], fladder, material]
+    row = writeRecordInSpreadsheet(objName + "_Spreadsheet", sprRec)
+    createBoardFromSheetRow(objName, bodyName, row)
+
+def createBoards(name, boardsList, placementMatrix, groupByName=False):
+    plotObjects = []
+    #create spreadsheet column names
+    App.activeDocument().addObject('Spreadsheet::Sheet', name + "_Spreadsheet")
+    plotObjects.append(name + "_Spreadsheet")
+    spreadSheetHeaders = ['Name', 'Width', 'Height', 'BoardThickness', 'WCantFront', 'WCantBack', 'HCantLeft', 'HCantRight', 'ByFlader', 'Material']
+    writeRecordInSpreadsheet(name + "_Spreadsheet", spreadSheetHeaders)
+
+    for plotProp in boardsList:
+        createBoard(plotProp[4],name, plotProp[0], plotProp[1], plotProp[2], plotObjects, plotProp[3], 18 if len(plotProp) == 6 else plotProp[6], plotProp[5])
+
+    placeObjects(placementMatrix, name)
+
+    App.ActiveDocument.recompute()
+
+    if groupByName:
+        App.ActiveDocument.addObject("App::DocumentObjectGroup",name)
+        for obj in plotObjects:
+            App.ActiveDocument.getObject(name).addObject(App.ActiveDocument.getObject(obj))
+
             
 def createCabinet(name, width, height, depth, addOns, legHeight=baseLegHeight, visibleBack = False, isBase = True, isHavingBack = True, shiftBlend = 0.0, groupName = "", material=cabMaterial, doorsMaterial=cabMaterial, haveWholeBlend=False):
 
     objects = []
 
-    #create spreadsheet column names
-    App.activeDocument().addObject('Spreadsheet::Sheet', name + "_Spreadsheet")
-    objects.append(name + "_Spreadsheet")
-    spreadSheetHeaders = ['Name', 'Width', 'Height', 'BoardThickness', 'WCantFront', 'WCantBack', 'HCantLeft', 'HCantRight', 'ByFlader', 'Material']
-    writeRecordInSpreadsheet(name + "_Spreadsheet", spreadSheetHeaders)
+    pp = []
+    placementMatrix = []
     
     #create base
-    bodyName = name + "_Base"
-    createBody(bodyName, objects)
     cants = [sCantT, sCantT if visibleBack else 0, sCantT, sCantT]
     baseCants = cants
-    calcWidth = width-cants[2]-cants[3];
-    calcHeight = depth-cants[0]-cants[1]-(0 if visibleBack else cardboardThickness)
-    baseWidth = calcWidth
-    baseHeight = calcHeight
-    sprRec = [bodyName + '_Sketch', calcWidth, calcHeight, boardThickness, cants[0], cants[1], cants[2], cants[3], 'W', material]
-    row = writeRecordInSpreadsheet(name + "_Spreadsheet", sprRec)
-    createBoard(name, bodyName, row)
+    baseWidth = calcWidth = width;
+    baseHeight = calcHeight = depth-(0 if visibleBack else cardboardThickness)
+    pp.append(["_Base", calcWidth, calcHeight, cants, material, "W"])
+    placementMatrix.append({'name':'_Base', 'vec' : (0, 0, 0, 0, 0, 0)})
 
     #create left side
-    bodyName = name + "_LeftSide"
-    createBody(bodyName, objects)
     cants = [0, 0 if isBase else sCantT, sCantT, sCantT if visibleBack else 0]
-    calcWidth = depth-cants[2]-cants[3]-(0 if visibleBack else cardboardThickness)
-    calcHeight = height-cants[0]-cants[1]-boardThickness-(legHeight if isBase else 0)
-    sprRec = [bodyName + '_Sketch', calcWidth, calcHeight, boardThickness, cants[0], cants[1], cants[2], cants[3], 'H', material]
-    row = writeRecordInSpreadsheet(name + "_Spreadsheet", sprRec)
-    createBoard(name, bodyName, row)
-    App.activeDocument().getObject(bodyName).Placement=App.Placement(App.Vector(-width/2,0,calcHeight/2+boardThickness), App.Rotation(90,0,90), App.Vector(0,0,0))
-    App.ActiveDocument.recompute()
+    calcWidth = depth-(0 if visibleBack else cardboardThickness)
+    calcHeight = height-boardThickness-(legHeight if isBase else 0)
+    pp.append(["_LeftSide", calcWidth, calcHeight, cants, material, "H"])
+    placementMatrix.append({'name':'_LeftSide', 'vec' : (-width/2, 0, calcHeight/2+boardThickness, 90, 0, 90)})
 
     #create right side
-    bodyName = name + "_RightSide"
-    createBody(bodyName, objects)
     cants = [0 if isBase else sCantT, 0, sCantT, sCantT if visibleBack else 0]
-    calcWidth = depth-cants[2]-cants[3]-(0 if visibleBack else cardboardThickness)
-    calcHeight = height-cants[0]-cants[1]-boardThickness-(legHeight if isBase else 0)
-    sprRec = [bodyName + '_Sketch', calcWidth, calcHeight, boardThickness, cants[0], cants[1], cants[2], cants[3], 'H', material]
-    row = writeRecordInSpreadsheet(name + "_Spreadsheet", sprRec)
-    createBoard(name, bodyName, row)
-    App.activeDocument().getObject(bodyName).Placement=App.Placement(App.Vector(width/2,0,calcHeight/2+boardThickness), App.Rotation(90,0,-90), App.Vector(0,0,0))
-    App.ActiveDocument.recompute()
+    calcWidth = depth-(0 if visibleBack else cardboardThickness)
+    calcHeight = height-boardThickness-(legHeight if isBase else 0)
+    pp.append(["_RightSide", calcWidth, calcHeight, cants, material, "H"])
+    placementMatrix.append({'name':'_RightSide', 'vec' : (width/2, 0, calcHeight/2+boardThickness, 90, 0, -90)})
  
     if isBase and not haveWholeBlend:
         #create front blend
-        bodyName = name + "_FrontBlend";
-        createBody(bodyName, objects)
         cants = [sCantT, 0, 0, 0]
-        calcWidth = width-cants[2]-cants[3]-2*boardThickness;
+        calcWidth = width-2*boardThickness;
         calcHeight = 100
-        sprRec = [bodyName + '_Sketch', calcWidth, calcHeight, boardThickness, cants[0], cants[1], cants[2], cants[3], '-', material]
-        row = writeRecordInSpreadsheet(name + "_Spreadsheet", sprRec)
-        createBoard(name, bodyName, row)
-        App.activeDocument().getObject(bodyName).Placement=App.Placement(App.Vector(0,-baseHeight/2+calcHeight/2, height-legHeight-boardThickness), App.Rotation(0,0,0), App.Vector(0,0,0))
-        App.ActiveDocument.recompute()
+        pp.append(["_FrontBlend", calcWidth, calcHeight, cants, material, "-"])
+        placementMatrix.append({'name':'_FrontBlend', 'vec' : (0, -baseHeight/2+calcHeight/2, height-legHeight-boardThickness, 0, 0, 0)})
 
         #create back blend
-        bodyName = name + "_BackBlend";
-        createBody(bodyName, objects)
         cants = [0, sCantT if visibleBack else 0, 0, 0]
-        calcWidth = width-cants[2]-cants[3]-2*boardThickness;
+        calcWidth = width-2*boardThickness;
         calcHeight = 100
-        sprRec = [bodyName + '_Sketch', calcWidth, calcHeight, boardThickness, cants[0], cants[1], cants[2], cants[3], '-', material]
-        row = writeRecordInSpreadsheet(name + "_Spreadsheet", sprRec)
-        createBoard(name, bodyName, row)
-        App.activeDocument().getObject(bodyName).Placement=App.Placement(App.Vector(0,baseHeight/2-calcHeight/2, height-legHeight-boardThickness), App.Rotation(0,0,0), App.Vector(0,0,0))
-        App.ActiveDocument.recompute()
+        pp.append(["_BackBlend", calcWidth, calcHeight, cants, material, "-"])
+        placementMatrix.append({'name':'_BackBlend', 'vec' : (0, baseHeight/2-calcHeight/2, height-legHeight-boardThickness, 0, 0, 0)})
 
     else:
         #create whole blend
-        bodyName = name + "_WholeBlend";
-        createBody(bodyName, objects)
-        cants = [sCantT, 0, 0, 0]
-        calcWidth = width-cants[2]-cants[3]-2*boardThickness;
+        cants = [sCantT, sCantT if visibleBack else 0, 0, 0]
+        calcWidth = width-2*boardThickness;
         calcHeight = baseHeight
-        sprRec = [bodyName + '_Sketch', calcWidth, calcHeight, boardThickness, cants[0], cants[1], cants[2], cants[3], 'W', material]
-        row = writeRecordInSpreadsheet(name + "_Spreadsheet", sprRec)
-        createBoard(name, bodyName, row)
-        App.activeDocument().getObject(bodyName).Placement=App.Placement(App.Vector(0,0, height-boardThickness-shiftBlend-(legHeight if isBase else 0)), App.Rotation(0,0,0), App.Vector(0,0,0))
-        App.ActiveDocument.recompute()
-    
+        pp.append(["_WholeBlend", calcWidth, calcHeight, cants, material, "W"])
+        placementMatrix.append({'name':'_WholeBlend', 'vec' : (0, 0, height-boardThickness-shiftBlend-(legHeight if isBase else 0), 0, 0, 0)})
+
     if isHavingBack:  
-        bodyName = name + "_Back";
-        createBody(bodyName, objects)
         cants = [0, 0, 0, 0]
 
         if not visibleBack:
             #create back from cardboard
             calcWidth = width - 3;
             calcHeight = height-(legHeight if isBase else 0)-3
-            sprRec = [bodyName + '_Sketch', calcWidth, calcHeight, cardboardThickness, cants[0], cants[1], cants[2], cants[3], 'H', material+"_card"]
-            row = writeRecordInSpreadsheet(name + "_Spreadsheet", sprRec)
-            createBoard(name, bodyName, row)
-            App.activeDocument().getObject(bodyName).Placement=App.Placement(App.Vector(0,baseHeight/2+cardboardThickness,height/2-(legHeight if isBase else 0)/2), App.Rotation(0,0,90), App.Vector(0,0,0))
-            App.ActiveDocument.recompute()
+            pp.append(["_Back", calcWidth, calcHeight, cants, material+"_card", "H", cardboardThickness])
+            placementMatrix.append({'name':'_Back', 'vec' : (0, baseHeight/2+cardboardThickness, height/2-(legHeight if isBase else 0)/2, 0, 0, 90)});
+
         else:
             #create back from normal board
-            calcWidth = width-cants[2]-cants[3]-2*boardThickness;
-            calcHeight = height-(legHeight if isBase else 0)-cants[0]-cants[1]-2*boardThickness
-            sprRec = [bodyName + '_Sketch', calcWidth, calcHeight, boardThickness, cants[0], cants[1], cants[2], cants[3], 'H', material]
-            row = writeRecordInSpreadsheet(name + "_Spreadsheet", sprRec)
-            createBoard(name, bodyName, row)
-            App.activeDocument().getObject(bodyName).Placement=App.Placement(App.Vector(0,baseHeight/2+baseCants[1],height/2-(legHeight if isBase else 0)/2), App.Rotation(0,0,90), App.Vector(0,0,0))
-            App.ActiveDocument.recompute()
+            calcWidth = width-2*boardThickness;
+            calcHeight = height-(legHeight if isBase else 0)-2*boardThickness
+            pp.append(["_Back", calcWidth, calcHeight, cants, material, "H"])
+            placementMatrix.append({'name':'_Back', 'vec' : (0, baseHeight/2+baseCants[1], height/2-(legHeight if isBase else 0)/2, 0, 0, 90)})
+
+    if 'list' not in addOns:
+        addOns['list'] = []
+
+    if 'doors' in addOns:
+        doorsCount = addOns['doors']
+        calcWidth = width/doorsCount - spaceBetweenDoors - (spaceBetweenDoors/(2*doorsCount) if 'doorsWallRight' in addOns else 0) - (spaceBetweenDoors/(2*doorsCount) if 'doorsWallLeft' in addOns else 0)
+        calcHeight = height-(legHeight+spaceBetweenDoors/2 if isBase else 0)-spaceBetweenDoors
+        for curDoor in range(0, doorsCount):
+            xPos = calcWidth*curDoor + calcWidth/2 - width/2 + spaceBetweenDoors/2
+            if curDoor == 0 and 'doorsWallLeft' in addOns: xPos = xPos + spaceBetweenDoors/2
+            if curDoor != 0: xPos = xPos + spaceBetweenDoors
+            addOns['list'].append(["_Door" + str(curDoor+1), calcWidth, calcHeight, [lCantT, lCantT, lCantT, lCantT], xPos, 0, 0, True])
+
+    if 'shelves' in addOns:
+        shelvesCount = addOns['shelves']
+        calcWidth = width - 2*boardThickness
+        calcHeight = depth - (boardThickness if visibleBack else cardboardThickness) - sCantT
+        for curShelf in range(1, shelvesCount+1):
+            yPos = (sCantT - boardThickness/2) if visibleBack else sCantT/2
+            xPos = ((height-(legHeight if isBase else 0))/(shelvesCount+1))*curShelf
+            addOns['list'].append(["_Shelf" + str(curShelf), calcWidth, calcHeight, [sCantT, 0, 0, 0], 0, yPos, xPos, False])
+
+    #create addOns
+    for addOn in addOns['list']:
+        cants = addOn[3]
+        calcWidth = addOn[1] - cants[2] - cants[3]
+        calcHeight = addOn[2] - cants[0] - cants[1]
+        pp.append([addOn[0], calcWidth, calcHeight, cants, doorsMaterial if addOn[7] else material, 'H' if addOn[7] else 'W'])
+        placementMatrix.append({'name':addOn[0], 'vec' : (addOn[4],(-baseHeight/2-baseCants[0]-2) if addOn[7] else addOn[5], ((height/2 - (legHeight+spaceBetweenDoors/2 if isBase else 0)/2) if addOn[7] else 0) + addOn[6], 0, 0, (90 if addOn[7] else 0))});
+
+    createBoards(name, pp, placementMatrix)
+    for ppItem in pp:
+        objects.append(name + ppItem[0])
+
+    #create drawers
+    if 'drawers' in addOns:
+        drawersCount = addOns['drawers']
+        drawerHeight = (height - (legHeight if isBase else 0) - spaceBetweenDoors/2)/drawersCount
+        for curDrawer in range(1, drawersCount+1):
+            createDrawer(name + "_Drawer" + str(curDrawer), width, drawerHeight, depth, visibleBack, material, doorsMaterial)
+            objects.append(name + "_Drawer" + str(curDrawer) + "_Fusion")
+            yA = -14 if visibleBack else -5.3;
+            zA = spaceBetweenDoors/2+(curDrawer-1)*drawerHeight
+            App.activeDocument().getObject(name + "_Drawer" + str(curDrawer) + "_Fusion").Placement=App.Placement(App.Vector(0,yA,zA), App.Rotation(0,0,0), App.Vector(0,0,0)) 
 
     if isBase:
         # create legs
@@ -276,52 +311,6 @@ def createCabinet(name, width, height, depth, addOns, legHeight=baseLegHeight, v
             legDepth = (depth/3)*signH
             App.activeDocument().getObject(bodyName).Placement=App.Placement(App.Vector(legWidth,legDepth,0), App.Rotation(0,0,180), App.Vector(0,0,0))
             App.ActiveDocument.recompute()
-
-    if 'list' not in addOns:
-        addOns['list'] = []
-
-    if 'doors' in addOns:
-        doorsCount = addOns['doors']
-        calcWidth = width/doorsCount - spaceBetweenDoors - (spaceBetweenDoors/(2*doorsCount) if 'doorsWallRight' in addOns else 0) - (spaceBetweenDoors/(2*doorsCount) if 'doorsWallLeft' in addOns else 0)
-        calcHeight = height-(legHeight+spaceBetweenDoors/2 if isBase else 0)-spaceBetweenDoors
-        for curDoor in range(0, doorsCount):
-            xPos = calcWidth*curDoor + calcWidth/2 - width/2 + spaceBetweenDoors/2
-            if curDoor == 0 and 'doorsWallLeft' in addOns: xPos = xPos + spaceBetweenDoors/2
-            if curDoor != 0: xPos = xPos + spaceBetweenDoors
-            addOns['list'].append(["Door" + str(curDoor+1), calcWidth, calcHeight, [lCantT, lCantT, lCantT, lCantT], xPos, 0, 0, True])
-
-    if 'shelves' in addOns:
-        shelvesCount = addOns['shelves']
-        calcWidth = width - 2*boardThickness
-        calcHeight = depth - (boardThickness if visibleBack else cardboardThickness) - sCantT
-        for curShelf in range(1, shelvesCount+1):
-            yPos = (sCantT - boardThickness/2) if visibleBack else sCantT/2
-            xPos = ((height-(legHeight if isBase else 0))/(shelvesCount+1))*curShelf
-            addOns['list'].append(["Shelf" + str(curShelf), calcWidth, calcHeight, [sCantT, 0, 0, 0], 0, yPos, xPos, False])
-
-    #create addOns
-    for addOn in addOns['list']:
-        bodyName = name + addOn[0]
-        createBody(bodyName, objects)
-        cants = addOn[3]
-        calcWidth = addOn[1] - cants[2] - cants[3]
-        calcHeight = addOn[2] - cants[0] - cants[1]
-        sprRec = [bodyName + '_Sketch', calcWidth, calcHeight, boardThickness, cants[0], cants[1], cants[2], cants[3], 'H' if addOn[7] else 'W', doorsMaterial]
-        row = writeRecordInSpreadsheet(name + "_Spreadsheet", sprRec)
-        createBoard(name, bodyName, row)
-        App.activeDocument().getObject(bodyName).Placement=App.Placement(App.Vector(addOn[4],(-baseHeight/2-baseCants[0]-2) if addOn[7] else addOn[5], ((height/2 - (legHeight+spaceBetweenDoors/2 if isBase else 0)/2) if addOn[7] else 0) + addOn[6]), App.Rotation(0,0,(90 if addOn[7] else 0)), App.Vector(0,0,0))
-        App.ActiveDocument.recompute()
-
-    #create drawers
-    if 'drawers' in addOns:
-        drawersCount = addOns['drawers']
-        drawerHeight = (height - (legHeight if isBase else 0) - spaceBetweenDoors/2)/drawersCount
-        for curDrawer in range(1, drawersCount+1):
-            createDrawer(name + "_Drawer" + str(curDrawer), width, drawerHeight, depth, visibleBack, material, doorsMaterial)
-            objects.append(name + "_Drawer" + str(curDrawer) + "_Fusion")
-            yA = -14 if visibleBack else -5.3;
-            zA = spaceBetweenDoors/2+(curDrawer-1)*drawerHeight
-            App.activeDocument().getObject(name + "_Drawer" + str(curDrawer) + "_Fusion").Placement=App.Placement(App.Vector(0,yA,zA), App.Rotation(0,0,0), App.Vector(0,0,0)) 
 
     App.activeDocument().addObject("Part::MultiFuse",name + "_Fusion")
     objectsFreeCad = []
@@ -351,7 +340,7 @@ def createDrawerSlider(name, sliderName, width, depth, isLeft):
     calcHeight = sliderDepth
     sprRec = [bodyName + '_Sketch', calcWidth, calcHeight, 42.0, cants[0], cants[1], cants[2], cants[3], 0]
     row = writeRecordInSpreadsheet(name + sliderName + "_Spreadsheet", sprRec)
-    createBoard(name + sliderName, name + sliderName + "Body", row)
+    createBoardFromSheetRow(name + sliderName, name + sliderName + "Body", row)
 
     createSketch(bodyName + "_Pad1_Sketch", bodyName, bodyName + "_Sketch_Pad", "Face6")
     conList = []
@@ -397,7 +386,7 @@ def createDrawer(name, width, height, depth, visibleBack, material, doorsMateria
     calcHeight = height-cants[0]-cants[1]-3
     sprRec = [bodyName + '_Sketch', calcWidth, calcHeight, boardThickness, cants[0], cants[1], cants[2], cants[3], 'H', doorsMaterial]
     row = writeRecordInSpreadsheet(name + "_Spreadsheet", sprRec)
-    createBoard(name, bodyName, row)
+    createBoardFromSheetRow(name, bodyName, row)
     zeroZ = (calcHeight+cants[0]+cants[1])/2
     App.activeDocument().getObject(bodyName).Placement=App.Placement(App.Vector(0,-(depth-sCantT-(boardThickness if visibleBack else cardboardThickness)-5)/2, zeroZ), App.Rotation(0,0,90), App.Vector(0,0,0))
     App.ActiveDocument.recompute()
@@ -410,7 +399,7 @@ def createDrawer(name, width, height, depth, visibleBack, material, doorsMateria
     calcHeight = height-cants[0]-cants[1]-2*30 - drawerSliderHole - cardboardThickness
     sprRec = [bodyName + '_Sketch', calcWidth, calcHeight, boardThickness, cants[0], cants[1], cants[2], cants[3], 'W', material]
     row = writeRecordInSpreadsheet(name + "_Spreadsheet", sprRec)
-    createBoard(name, bodyName, row)
+    createBoardFromSheetRow(name, bodyName, row)
     zeroZ = (calcHeight+cants[0]+cants[1])/2
     App.activeDocument().getObject(bodyName).Placement=App.Placement(App.Vector(0,-(depth-sCantT-3*(boardThickness if visibleBack else cardboardThickness)-5)/2, zeroZ+drawerSliderHole+cardboardThickness+drawerSliderHoleToBottom+cardboardThickness+boardThickness), App.Rotation(0,0,90), App.Vector(0,0,0))
     App.ActiveDocument.recompute()
@@ -423,7 +412,7 @@ def createDrawer(name, width, height, depth, visibleBack, material, doorsMateria
     calcHeight = height-cants[0]-cants[1]-2*30
     sprRec = [bodyName + '_Sketch', calcWidth, calcHeight, boardThickness, cants[0], cants[1], cants[2], cants[3], 'W', material]
     row = writeRecordInSpreadsheet(name + "_Spreadsheet", sprRec)
-    createBoard(name, bodyName, row)
+    createBoardFromSheetRow(name, bodyName, row)
     zeroZ = (calcHeight+cants[0]+cants[1])/2
     App.activeDocument().getObject(bodyName).Placement=App.Placement(App.Vector(-width/2+boardThickness+5,0,zeroZ+drawerSliderHoleToBottom+cardboardThickness+boardThickness), App.Rotation(90,0,90), App.Vector(0,0,0))
     App.ActiveDocument.recompute()
@@ -436,7 +425,7 @@ def createDrawer(name, width, height, depth, visibleBack, material, doorsMateria
     calcHeight = height-cants[0]-cants[1]-2*30
     sprRec = [bodyName + '_Sketch', calcWidth, calcHeight, boardThickness, cants[0], cants[1], cants[2], cants[3], 'W', material]
     row = writeRecordInSpreadsheet(name + "_Spreadsheet", sprRec)
-    createBoard(name, bodyName, row)
+    createBoardFromSheetRow(name, bodyName, row)
     zeroZ = (calcHeight+cants[0]+cants[1])/2
     App.activeDocument().getObject(bodyName).Placement=App.Placement(App.Vector(width/2-boardThickness-5,0,zeroZ+drawerSliderHoleToBottom+cardboardThickness+boardThickness), App.Rotation(90,0,-90), App.Vector(0,0,0))
     App.ActiveDocument.recompute()
@@ -449,7 +438,7 @@ def createDrawer(name, width, height, depth, visibleBack, material, doorsMateria
     calcHeight = height-cants[0]-cants[1]-2*30 - drawerSliderHole - cardboardThickness
     sprRec = [bodyName + '_Sketch', calcWidth, calcHeight, boardThickness, cants[0], cants[1], cants[2], cants[3], 'W', material]
     row = writeRecordInSpreadsheet(name + "_Spreadsheet", sprRec)
-    createBoard(name, bodyName, row)
+    createBoardFromSheetRow(name, bodyName, row)
     zeroZ = (calcHeight+cants[0]+cants[1])/2
     App.activeDocument().getObject(bodyName).Placement=App.Placement(App.Vector(0,(depth+sCantT-(boardThickness if visibleBack else cardboardThickness)-5)/2, zeroZ+drawerSliderHole+cardboardThickness+drawerSliderHoleToBottom+cardboardThickness+boardThickness), App.Rotation(0,0,90), App.Vector(0,0,0))
     App.ActiveDocument.recompute()
@@ -462,7 +451,7 @@ def createDrawer(name, width, height, depth, visibleBack, material, doorsMateria
     calcHeight = depth-cants[2]-cants[3]-(boardThickness if visibleBack else cardboardThickness)-5
     sprRec = [bodyName + '_Sketch', calcWidth, calcHeight, cardboardThickness, cants[0], cants[1], cants[2], cants[3], 'H', material+"_card"]
     row = writeRecordInSpreadsheet(name + "_Spreadsheet", sprRec)
-    createBoard(name, bodyName, row)
+    createBoardFromSheetRow(name, bodyName, row)
     zeroZ = 0
     App.activeDocument().getObject(bodyName).Placement=App.Placement(App.Vector(0,0,zeroZ+drawerSliderHole+drawerSliderHoleToBottom+cardboardThickness+boardThickness), App.Rotation(0,0,0), App.Vector(0,0,0))
     App.ActiveDocument.recompute()
@@ -487,7 +476,7 @@ def createPlot(material, name, plotName, width, plotObjects):
     calcHeight = 600
     sprRec = [bodyName + '_Sketch', calcWidth, calcHeight, 40, cants[0], cants[1], cants[2], cants[3], 'W', material]
     row = writeRecordInSpreadsheet(name + "_Spreadsheet", sprRec)
-    createBoard(name, bodyName, row)
+    createBoardFromSheetRow(name, bodyName, row)
 
     App.activeDocument().getObject(name + plotName).newObject("PartDesign::Fillet",name + plotName + "Fillet")
     App.activeDocument().getObject(name + plotName + "Fillet").Base = (App.ActiveDocument.getObject(name + plotName + "_Sketch_Pad"),["Face3"])
@@ -495,16 +484,6 @@ def createPlot(material, name, plotName, width, plotObjects):
     Gui.activeDocument().hide(name + plotName + "_Sketch")
     Gui.activeDocument().hide(name + plotName + "_Sketch_Pad")
     App.activeDocument().recompute()
-
-def createPlotBack(material, name, plotBackName, width, height, plotBackObjects, cants, boardThickness):
-    bodyName = name + plotBackName
-    createBody(bodyName, plotBackObjects)
-    calcWidth = width - cants[2] - cants[3]
-    calcHeight = height - cants[0] - cants[1]
-    sprRec = [bodyName + '_Sketch', calcWidth, calcHeight, boardThickness, cants[0], cants[1], cants[2], cants[3], 'W', material]
-    row = writeRecordInSpreadsheet(name + "_Spreadsheet", sprRec)
-    createBoard(name, bodyName, row)
-
 
 def createBaseCorpuses(height):
     #creating base corpuses
@@ -607,47 +586,26 @@ def createPlots(height):
     for obj in plotObjects:
         App.ActiveDocument.getObject("Plots").addObject(App.ActiveDocument.getObject(obj))
 
-def createBoards(name, boardsList, placementMatrix):
-    plotObjects = []
-    #create spreadsheet column names
-    App.activeDocument().addObject('Spreadsheet::Sheet', name + "_Spreadsheet")
-    plotObjects.append(name + "_Spreadsheet")
-    spreadSheetHeaders = ['Name', 'Width', 'Height', 'BoardThickness', 'WCantFront', 'WCantBack', 'HCantLeft', 'HCantRight', 'ByFlader', 'Material']
-    writeRecordInSpreadsheet(name + "_Spreadsheet", spreadSheetHeaders)
-
-    for plotProp in boardsList:
-        createPlotBack(plotProp[4],name, plotProp[0], plotProp[1], plotProp[2], plotObjects, plotProp[3], 18)
-
-    placeObjects(placementMatrix, name)
-
-    App.ActiveDocument.recompute()
-
-    App.ActiveDocument.addObject("App::DocumentObjectGroup",name)
-    for obj in plotObjects:
-        App.ActiveDocument.getObject(name).addObject(App.ActiveDocument.getObject(obj))
-
-
-
 def createBackForPlots(height):
     #create backs for plots
 
     s = sCantT
 
     pp = []
-    pp.append(["_Right1", 2100.0, height,    [0, 0, 0, 0], plotsBackMaterial])
-    pp.append(["_Front1", 70.0,   height,    [0, s, 0, 0], plotsBackMaterial])
-    pp.append(["_Front2", 1320.0, 115.0,     [0, 0, 0, 0], plotsBackMaterial])
-    pp.append(["_Front3", 620.0,  height,    [0, s, 0, 0], plotsBackMaterial])
-    pp.append(["_Front4", 200.0,  465.0,     [0, s, s, 0], plotsBackMaterial])
-    pp.append(["_Front5", 200.0,  465.0,     [0, s, s, 0], plotsBackMaterial])
-    pp.append(["_Left1",  1072.0, height,    [s, 0, 0, 0], plotsBackMaterial])
-    pp.append(["_Left2",  203.0,  height,    [0, 0, 0, s], plotsBackMaterial])
-    pp.append(["_Left3",  1541.0, height,    [0, 0, 0, 0], plotsBackMaterial])
-    pp.append(["_Left4",  203.0,  height,    [0, 0, 0, s], plotsBackMaterial])
-    pp.append(["_Left5",  1577.0, 202.5,     [0, s, s, s], plotsBackMaterial])
-    pp.append(["_Left2D", 167.0,  height-18, [0, 0, 0, s], plotsBackMaterial])
-    pp.append(["_Left4D", 167.0,  height-18, [0, 0, 0, s], plotsBackMaterial])
-    pp.append(["_Left5D", 1541.0, 166.0,     [0, s, 0, 0], plotsBackMaterial])
+    pp.append(["_Right1", 2100.0, height,    [0, 0, 0, 0], plotsBackMaterial, "W"])
+    pp.append(["_Front1", 70.0,   height,    [0, s, 0, 0], plotsBackMaterial, "W"])
+    pp.append(["_Front2", 1320.0, 115.0,     [0, 0, 0, 0], plotsBackMaterial, "W"])
+    pp.append(["_Front3", 620.0,  height,    [0, s, 0, 0], plotsBackMaterial, "W"])
+    pp.append(["_Front4", 200.0,  465.0,     [0, s, s, 0], plotsBackMaterial, "W"])
+    pp.append(["_Front5", 200.0,  465.0,     [0, s, s, 0], plotsBackMaterial, "W"])
+    pp.append(["_Left1",  1072.0, height,    [s, 0, 0, 0], plotsBackMaterial, "W"])
+    pp.append(["_Left2",  203.0,  height,    [0, 0, 0, s], plotsBackMaterial, "W"])
+    pp.append(["_Left3",  1541.0, height,    [0, 0, 0, 0], plotsBackMaterial, "W"])
+    pp.append(["_Left4",  203.0,  height,    [0, 0, 0, s], plotsBackMaterial, "W"])
+    pp.append(["_Left5",  1577.0, 202.5,     [0, s, s, s], plotsBackMaterial, "W"])
+    pp.append(["_Left2D", 167.0,  height-18, [0, 0, 0, s], plotsBackMaterial, "W"])
+    pp.append(["_Left4D", 167.0,  height-18, [0, 0, 0, s], plotsBackMaterial, "W"])
+    pp.append(["_Left5D", 1541.0, 166.0,     [0, s, 0, 0], plotsBackMaterial, "W"])
 
 
     placementMatrix = [{'name':'_Right1',      'vec' : (-2216,    -115,  1200,    0,  0, 90)},
@@ -669,10 +627,10 @@ def createBackForPlots(height):
 
 def createVitodensDownCabinet():
     pp = []
-    pp.append(["_RightBoard",  200.0,  450.0,  [0.8, 0.8, 0.8, 0.8], cabMaterial])
-    pp.append(["_DownPlank",   700.0,  100.0,  [0.8, 2, 0.8, 2],     cabMaterial])
-    pp.append(["_Door",        695.5,  345.5,  [2, 2, 2, 2],         cabMaterial])
-    pp.append(["_LeftBoard",   200.0,  450.0,  [0.8, 0.8, 0.8, 0.8], cabMaterial])
+    pp.append(["_RightBoard",  200.0,  450.0,  [0.8, 0.8, 0.8, 0.8], cabMaterial, "H"])
+    pp.append(["_DownPlank",   700.0,  100.0,  [0.8, 2, 0.8, 2],     cabMaterial, "H"])
+    pp.append(["_Door",        695.5,  345.5,  [2, 2, 2, 2],         cabMaterial, "H"])
+    pp.append(["_LeftBoard",   200.0,  450.0,  [0.8, 0.8, 0.8, 0.8], cabMaterial, "H"])
 
     placementMatrix = [{'name':'_RightBoard', 'vec' : (-3245,    -233,  1125,    90, 0, 90)},
                        {'name':'_DownPlank', 'vec' : (-3577.6,  -333,  949.4,   0,  0, 90)},
@@ -683,10 +641,10 @@ def createVitodensDownCabinet():
 
 def createKitchenDownPlanks():
     pp = []
-    pp.append(["_Right1_Down", 2310.0, 100.0,  [0.8, 0.8, 0.8, 0.8], cabMaterial])
-    pp.append(["_Front1_Down", 1173.0, 100.0,  [0.8, 0.8, 0.8, 0.8], cabMaterial])
-    pp.append(["_Left1_Down",  2210.0, 100.0,  [0.8, 0.8, 0.8, 0.8], cabMaterial])
-    pp.append(["_Left2_Down",  560.0,  100.0,  [0.8, 0.8, 0.8, 0.8], cabMaterial])
+    pp.append(["_Right1_Down", 2310.0, 100.0,  [0.8, 0.8, 0.8, 0.8], cabMaterial, "W"])
+    pp.append(["_Front1_Down", 1173.0, 100.0,  [0.8, 0.8, 0.8, 0.8], cabMaterial, "W"])
+    pp.append(["_Left1_Down",  2210.0, 100.0,  [0.8, 0.8, 0.8, 0.8], cabMaterial, "W"])
+    pp.append(["_Left2_Down",  560.0,  100.0,  [0.8, 0.8, 0.8, 0.8], cabMaterial, "W"])
 
     placementMatrix = [{'name':"_Right1_Down", 'vec':  (-2321,    -617,  50,      0,  0, 90)},
                        {'name':"_Front1_Down", 'vec':  (-3430,    -1221, 50,      90, 0, 90)},
@@ -698,9 +656,9 @@ def createKitchenDownPlanks():
 def createColumnBoards():
 
     pp = []
-    pp.append(["_Column1",     620.0,  2200.0, [0.8, 0.8, 0.8, 0.8], columnMaterial])
-    pp.append(["_Column2",     694.0,  2450.0, [0.8, 0.8, 0.8, 0.8], columnMaterial])
-    pp.append(["_Column3",     620.0,  2450.0, [0.8, 0.8, 0.8, 0.8], columnMaterial])
+    pp.append(["_Column1",     620.0,  2200.0, [0.8, 0.8, 0.8, 0.8], columnMaterial, "H"])
+    pp.append(["_Column2",     694.0,  2450.0, [0.8, 0.8, 0.8, 0.8], columnMaterial, "H"])
+    pp.append(["_Column3",     620.0,  2450.0, [0.8, 0.8, 0.8, 0.8], columnMaterial, "H"])
 
     placementMatrix = [{'name':"_Column1",     'vec':  (-1163,    -425,  1100,    90, 0, 90)},
                        {'name':"_Column2",     'vec':  (-816,     -735,  1225,    0,  0, 90)},
@@ -710,13 +668,13 @@ def createColumnBoards():
 
 def createAdditionalBoards():
     pp = []
-    pp.append(["_VitoCabAdd1", 477.0,  950.0, [0.8,   0.8, 0.8, 0.8], cabMaterial])
-    pp.append(["_WindowBack",  1541.0, 600.0, [0,     0,   0,   0],   cabMaterial])
-    pp.append(["_DishDoor",    597.0,  757.0, [2,     2,   2,   2],   cabMaterial])
-    pp.append(["_DishUp1",     600.0,  100.0, [0,     0,   0,   0],   cabMaterial])
-    pp.append(["_DishUp2",     600.0,  100.0, [0,     0,   0,   0],   cabMaterial])
-    pp.append(["_DishUp3",     600.0,  100.0, [0.8,   0,   0,   0], cabMaterial])
-    pp.append(["_DishUp4",     600.0,  100.0, [0.8,   0,   0,   0], cabMaterial])
+    pp.append(["_VitoCabAdd1", 477.0,  950.0, [0.8,   0.8, 0.8, 0.8], cabMaterial, "-"])
+    pp.append(["_WindowBack",  1541.0, 600.0, [0,     0,   0,   0],   cabMaterial, "H"])
+    pp.append(["_DishDoor",    597.0,  757.0, [2,     2,   2,   2],   cabMaterial, "H"])
+    pp.append(["_DishUp1",     600.0,  100.0, [0,     0,   0,   0],   cabMaterial, "-"])
+    pp.append(["_DishUp2",     600.0,  100.0, [0,     0,   0,   0],   cabMaterial, "-"])
+    pp.append(["_DishUp3",     600.0,  100.0, [0.8,   0,   0,   0], cabMaterial, "-"])
+    pp.append(["_DishUp4",     600.0,  100.0, [0.8,   0,   0,   0], cabMaterial, "-"])
 
     placementMatrix = [{'name':"_VitoCabAdd1", 'vec':  (-3945,    -371.4, 1975, 90, 0, 90)},
                        {'name':'_WindowBack',  'vec' : (-2066.5,  -2312,  1200, 0, 0, 90)},
@@ -730,14 +688,14 @@ def createAdditionalBoards():
 
 def createShelvesAroundKitchenWindow():
     pp = []
-    pp.append(["_Shelves1",    250.0,  950.0, [0.8,   0.8,   0.8,   0.8], cabMaterial])
-    pp.append(["_Shelves2",    232.0,  950.0, [0.8,   0.8,   0.8,   0.8], cabMaterial])
-    pp.append(["_Shelves3",    232.0,  232.0, [0,     0,     0,     0],   cabMaterial])
-    pp.append(["_Shelves4",    232.0,  232.0, [0,     0,     0,     0],   cabMaterial])
-    pp.append(["_Shelves5",    232.0,  232.0, [0,     0,     0,     0],   cabMaterial])
-    pp.append(["_Shelves6",    232.0,  232.0, [0,     0,     0,     0],   cabMaterial])
-    pp.append(["_Shelves7",    232.0,  232.0, [0,     0,     0,     0],   cabMaterial])
-    pp.append(["_Shelves8",    232.0,  232.0, [0,     0,     0,     0],   cabMaterial])
+    pp.append(["_Shelves1",    250.0,  950.0, [0.8,   0.8,   0.8,   0.8], cabMaterial, "H"])
+    pp.append(["_Shelves2",    232.0,  950.0, [0.8,   0.8,   0.8,   0.8], cabMaterial, "H"])
+    pp.append(["_Shelves3",    232.0,  232.0, [0,     0,     0,     0],   cabMaterial, "-"])
+    pp.append(["_Shelves4",    232.0,  232.0, [0,     0,     0,     0],   cabMaterial, "-"])
+    pp.append(["_Shelves5",    232.0,  232.0, [0,     0,     0,     0],   cabMaterial, "-"])
+    pp.append(["_Shelves6",    232.0,  232.0, [0,     0,     0,     0],   cabMaterial, "-"])
+    pp.append(["_Shelves7",    232.0,  232.0, [0,     0,     0,     0],   cabMaterial, "-"])
+    pp.append(["_Shelves8",    232.0,  232.0, [0,     0,     0,     0],   cabMaterial, "-"])
 
 
     placementMatrix = [{'name':"_Shelves1", 'vec':  (-3478,    -2020.0, 1975, 90, 0, 90)}, 
@@ -755,9 +713,9 @@ def createShelvesAroundKitchenWindow():
 def createLivingRoomShelves():
     
     pp = []
-    pp.append(["_LivRoom1",    1500.0, 470.0,  [2, 0, 0, 0],         cabMaterial])
-    pp.append(["_LivRoom2",    1500.0, 300.0,  [2, 0, 0, 0],         cabMaterial])
-    pp.append(["_LivRoom3",    1500.0, 300.0,  [2, 0, 0, 0],         cabMaterial])
+    pp.append(["_LivRoom1",    1500.0, 470.0,  [2, 0, 0, 0],         cabMaterial, "W"])
+    pp.append(["_LivRoom2",    1500.0, 300.0,  [2, 0, 0, 0],         cabMaterial, "W"])
+    pp.append(["_LivRoom3",    1500.0, 300.0,  [2, 0, 0, 0],         cabMaterial, "W"])
 
     placementMatrix = [{'name':"_LivRoom1",    'vec':  (2051,     -349,  900,     0,  0, 0)},
                        {'name':"_LivRoom2",    'vec':  (2051,     -264,  1100,    0,  0, 0)},
@@ -780,7 +738,7 @@ def createVitodens():
     calcHeight = 480.0
     sprRec = [bodyName + '_Sketch', calcWidth, calcHeight, 1000.0, cants[0], cants[1], cants[2], cants[3], 0]
     row = writeRecordInSpreadsheet("Vitodens_Spreadsheet", sprRec)
-    createBoard("Vitodens", "Vitodens_111W", row)
+    createBoardFromSheetRow("Vitodens", "Vitodens_111W", row)
 
     App.activeDocument().getObject("Vitodens_111W").Placement = App.Placement(App.Vector(-3585,-355,1400), App.Rotation(0,0,0), App.Vector(0,0,0))
 
@@ -849,7 +807,7 @@ def createSmallRoomCorpuses():
     downProperties.append(["_Down1", 990.0, 100.0, App.Placement(App.Vector(-500,-586,50),App.Rotation(App.Vector(1,0,0),90)), [0.8, 0.8, 0.8, 0.8], cabMaterial])
 
     for downProp in downProperties:
-        createPlotBack(downProp[5],"SR", downProp[0], downProp[1], downProp[2], downObjects, downProp[4], 18)
+        createBoard(downProp[5],"SR", downProp[0], downProp[1], downProp[2], downObjects, downProp[4], 18, "W")
         App.activeDocument().getObject("SR"+downProp[0]).Placement=downProp[3]
     App.ActiveDocument.recompute()
 
@@ -889,7 +847,7 @@ def createCorridorCorpuses():
     downProperties.append(["_Down1", 1830.0, 100.0, App.Placement(App.Vector(-500,921,50),App.Rotation(App.Vector(0.58,0.58,0.58),120)), [0.8, 0.8, 0.8, 0.8], cabMaterial])
 
     for downProp in downProperties:
-        createPlotBack(downProp[5],"SR", downProp[0], downProp[1], downProp[2], downObjects, downProp[4], 18)
+        createBoard(downProp[5],"SR", downProp[0], downProp[1], downProp[2], downObjects, downProp[4], 18, "W")
         App.activeDocument().getObject("SR"+downProp[0]).Placement=downProp[3]
     App.ActiveDocument.recompute()
 
@@ -959,7 +917,7 @@ def processAllSpreadSheetsByMaterial():
 #createKitchenDownPlanks()
 #createColumnBoards()
 #createAdditionalBoards()
-createShelvesAroundKitchenWindow()
+#createShelvesAroundKitchenWindow()
 #createUpCorpuses(950.0, 300.0)
 #createLivingRoomCorpuses()
 #createLivingRoomShelves()
@@ -978,6 +936,8 @@ createShelvesAroundKitchenWindow()
 #Final Processing
 #######################################
 #processAllSpreadSheetsByMaterial()
+
+createCabinet("TestCab", 600.0, 860.0, 550.0, {'doors' : 1, 'shelves' : 2})
 
 
 #execfile('/home/nm/Dev/FreeCadScripts/createBaseCorpus.py')
