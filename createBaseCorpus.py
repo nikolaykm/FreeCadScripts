@@ -556,7 +556,7 @@ def createUpCorpuses(height, depth):
 
     createCabinet('Cab1Up', 1160.0, height, depth, {'shelves' : 2, 'doors' : 2, 'doorsWallRight' : True}, isBase=False, groupName='UpCabinets')
     createCabinet('Cab2Up', 700.0, height+150, 480.0, {'doors' : 1, 'doorsWallRight' : True}, isBase=False, isHavingBack=False, groupName='UpCabinets')
-    createCabinet('Cab3Up', 600.0, height, 250.0, {'shelves' : 2, 'doors' : 1}, isBase=False, groupName='UpCabinets')
+    createCabinet('Cab3Up', 600.0, height, 253.0, {'shelves' : 2, 'doors' : 1}, isBase=False, groupName='UpCabinets')
 
     placementMatrix = [{'name':'BottlesUp_Fusion',	'x':-1316,      'y':-266,       'z':2197,        'xR':0, 'yR':1, 'zR':0, 'R':180},
                        {'name':'OvenUp_Fusion',		'x':-1766,      'y':-266,       'z':2450,        'xR':0, 'yR':1, 'zR':0, 'R':180},
@@ -710,13 +710,47 @@ def createColumnBoards():
 
 def createAdditionalBoards():
     pp = []
-    pp.append(["_VitoCabAdd1", 477.0,  950.0, [0.8, 0.8, 0.8, 0.8], cabMaterial])
-    pp.append(["_WindowBack",  1541.0, 600.0, [0,   0,   0,   0],   cabMaterial])
+    pp.append(["_VitoCabAdd1", 477.0,  950.0, [0.8,   0.8, 0.8, 0.8], cabMaterial])
+    pp.append(["_WindowBack",  1541.0, 600.0, [0,     0,   0,   0],   cabMaterial])
+    pp.append(["_DishDoor",    597.0,  757.0, [2,     2,   2,   2],   cabMaterial])
+    pp.append(["_DishUp1",     600.0,  100.0, [0,     0,   0,   0],   cabMaterial])
+    pp.append(["_DishUp2",     600.0,  100.0, [0,     0,   0,   0],   cabMaterial])
+    pp.append(["_DishUp3",     600.0,  100.0, [0.8,   0,   0,   0], cabMaterial])
+    pp.append(["_DishUp4",     600.0,  100.0, [0.8,   0,   0,   0], cabMaterial])
 
     placementMatrix = [{'name':"_VitoCabAdd1", 'vec':  (-3945,    -371.4, 1975, 90, 0, 90)},
-                       {'name':'_WindowBack',  'vec' : (-2066.5,  -2312,  1200,  0, 0, 90)}]
+                       {'name':'_WindowBack',  'vec' : (-2066.5,  -2312,  1200, 0, 0, 90)},
+                       {'name':'_DishDoor',    'vec' : (-2366.0,  -683,   479,  0, 0, 90)},
+                       {'name':'_DishUp1',     'vec' : (-2366.0,  -234,   824,  0, 0, 0)},
+                       {'name':'_DishUp2',     'vec' : (-2366.0,  -234,   842,  0, 0, 0)},
+                       {'name':'_DishUp3',     'vec' : (-2366.0,  -630,   824,  0, 0, 0)},
+                       {'name':'_DishUp4',     'vec' : (-2366.0,  -630,   842,  0, 0, 0)}]
     
     createBoards("KitchenAddons", pp, placementMatrix)
+
+def createShelvesAroundKitchenWindow():
+    pp = []
+    pp.append(["_Shelves1",    250.0,  950.0, [0.8,   0.8,   0.8,   0.8], cabMaterial])
+    pp.append(["_Shelves2",    232.0,  950.0, [0.8,   0.8,   0.8,   0.8], cabMaterial])
+    pp.append(["_Shelves3",    232.0,  232.0, [0,     0,     0,     0],   cabMaterial])
+    pp.append(["_Shelves4",    232.0,  232.0, [0,     0,     0,     0],   cabMaterial])
+    pp.append(["_Shelves5",    232.0,  232.0, [0,     0,     0,     0],   cabMaterial])
+    pp.append(["_Shelves6",    232.0,  232.0, [0,     0,     0,     0],   cabMaterial])
+    pp.append(["_Shelves7",    232.0,  232.0, [0,     0,     0,     0],   cabMaterial])
+    pp.append(["_Shelves8",    232.0,  232.0, [0,     0,     0,     0],   cabMaterial])
+
+
+    placementMatrix = [{'name':"_Shelves1", 'vec':  (-3478,    -2020.0, 1975, 90, 0, 90)}, 
+                       {'name':"_Shelves2", 'vec':  (-3594,    -2127.0, 1975, 0, 0, 90)},
+                       {'name':"_Shelves3", 'vec':  (-3594,    -2011.0, 1500, 0, 0, 0)},
+                       {'name':"_Shelves4", 'vec':  (-3594,    -2011.0, 1700, 0, 0, 0)},
+                       {'name':"_Shelves5", 'vec':  (-3594,    -2011.0, 1900, 0, 0, 0)},
+                       {'name':"_Shelves6", 'vec':  (-3594,    -2011.0, 2100, 0, 0, 0)},
+                       {'name':"_Shelves7", 'vec':  (-3594,    -2011.0, 2300, 0, 0, 0)},
+                       {'name':"_Shelves8", 'vec':  (-3594,    -2011.0, 2450, 0, 0, 0)}]
+
+    createBoards("ShelvesKitchenWindow", pp, placementMatrix)
+
 
 def createLivingRoomShelves():
     
@@ -924,7 +958,8 @@ def processAllSpreadSheetsByMaterial():
 #createVitodensDownCabinet()
 #createKitchenDownPlanks()
 #createColumnBoards()
-createAdditionalBoards()
+#createAdditionalBoards()
+createShelvesAroundKitchenWindow()
 #createUpCorpuses(950.0, 300.0)
 #createLivingRoomCorpuses()
 #createLivingRoomShelves()
