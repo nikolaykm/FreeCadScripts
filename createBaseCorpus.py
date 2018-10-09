@@ -94,9 +94,13 @@ def createRectInSketch(sketchName, xL, yL, extraConList):
     App.activeDocument().getObject(sketchName).addConstraint(conList)
     App.ActiveDocument.recompute()
 
-def createCircleInSketch(sketchName, radius):
+def createCircleInSketch(sketchName, radius, distX=None, distY=None):
     App.activeDocument().getObject(sketchName).addGeometry(Part.Circle(App.Vector(0,0,0),App.Vector(0,0,1),radius),False)
-    App.activeDocument().getObject(sketchName).addConstraint(Sketcher.Constraint('Coincident',0,3,-1,1))
+    if distX == None and distY == None:
+        App.activeDocument().getObject(sketchName).addConstraint(Sketcher.Constraint('Coincident',0,3,-1,1))
+    else:
+        App.activeDocument().getObject(sketchName).addConstraint(Sketcher.Constraint('DistanceX',-2,1,0,3,distX))
+        App.activeDocument().getObject(sketchName).addConstraint(Sketcher.Constraint('DistanceY',-1,1,0,3,distY))
 
 def createLeg(cabinetName, bodyName, radius, legHeight, objects):
     createBody(bodyName, objects)
@@ -166,6 +170,29 @@ def createBoardFromSheetRow(objName, bodyName, row):
             conList.append(Sketcher.Constraint('DistanceX',0,1,-1,1,width/2))
             createRectInSketch(cantSketchName, width, rowDict['BoardThickness'], conList)
             createPadFromSketch(bodyName, cantSketchName, rowDict[cant])
+
+    holesCount = rowDict['Holes'] if 'Holes' in rowDict else 0
+    holesSide = rowDict['HolesSide'] if 'HolesSide' in rowDict else '-'
+    print str(holesCount) + "-" + str(holesSide)
+
+    startDistX = -xL/2 + 30.0
+    startDistY = -yL/2 + 30.0
+    print str(startDistX) + "-" + str(startDistY)
+    stepDist = max(xL,yL)/holesCount if holesSide == 'L' else min(xL, yL)/2
+    for holeC in range(0, int(holesCount)):
+        holeSketchName = sketchName + "_Hole" + str(holeC)
+        createSketch(holeSketchName, bodyName, sketchName + "_Pad", 'Face5')
+        distX = 0
+        distY = 0
+        if (holesSide == 'L' and yL>xL) or (holesSide == 'S' and yl<xL):
+            distX = startDistX 
+            distY = startDistY + holeC*stepDist
+        elif (holesSide == 'L' and yL<xL) or (holesSide == 'S' and yL>xL):
+            distX = startDistX + holeC*stepDist
+            distY = startDistY
+        createCircleInSketch(holeSketchName, 18.0, distX, distY)
+        createPocketFromSketch(bodyName, holeSketchName, 15.0)
+        App.ActiveDocument.recompute()
 
 def createBoard(material, objName, boardName, width, height, objBoards, cants, boardThickness, fladder, holesCount=0, holesSide='-'):
     bodyName = objName + boardName
@@ -288,7 +315,9 @@ def createCabinet(name, width, height, depth, addOns, visibleBack = False, isBas
             xPos = calcWidth*curDoor + calcWidth/2 - width/2 + spaceBetweenDoors/2
             if curDoor == 0 and 'doorsWallLeft' in addOns: xPos = xPos + spaceBetweenDoors/2
             if curDoor != 0: xPos = xPos + spaceBetweenDoors
-            addOns['list'].append(["_Door" + str(curDoor+1), calcWidth, calcHeight, [lCantT, lCantT, lCantT, lCantT], xPos, 0, 0, True])
+            doorsHoles = addOns['doorsHoles'] if 'doorsHoles' in addOns else 0
+            doorsHolesSide = addOns['doorsHolesSide'] if 'doorsHolesSide' in addOns else '-'
+            addOns['list'].append(["_Door" + str(curDoor+1), calcWidth, calcHeight, [lCantT, lCantT, lCantT, lCantT], xPos, 0, 0, True, doorsHoles, doorsHolesSide])
 
     if 'shelves' in addOns:
         shelvesCount = addOns['shelves']
@@ -301,7 +330,9 @@ def createCabinet(name, width, height, depth, addOns, visibleBack = False, isBas
 
     #create addOns
     for addOn in addOns['list']:
-        pp.append([addOn[0], addOn[1], addOn[2], addOn[3], doorsMaterial if addOn[7] else material, 'H' if addOn[7] else 'W', boardThickness])
+        doorsHoles = addOn[8] if len(addOn) >= 9 else 0
+        doorsHolesSide = addOn[9] if len(addOn) >= 10 else '-'
+        pp.append([addOn[0], addOn[1], addOn[2], addOn[3], doorsMaterial if addOn[7] else material, 'H' if addOn[7] else 'W', boardThickness, doorsHoles, doorsHolesSide])
         placementMatrix.append({'name':addOn[0], 'vec' : (addOn[4],(-baseHeight/2-baseCants[0]-2) if addOn[7] else addOn[5], ((height/2 - (baseLegHeight+spaceBetweenDoors/2 if isBase else 0)/2) if addOn[7] else 0) + addOn[6], 0, 0, (90 if addOn[7] else 0))});
 
     createBoards(name, pp, placementMatrix)
@@ -460,24 +491,24 @@ def createBaseCorpuses(height):
     createCabinet('Bottles', 300.0, height, 560.0, {'doors': 1, 'doorsWallRight': True}, groupName="BaseCabinets")
 
     addOns = {'list' : [["Shelf1", 564.0, 526.2, [0.8, 0, 0, 0], 0, -15.40, 122.0, False], 
-                        ["Door1", 597.0, 137.0, [2, 2, 2, 2], 0, 0, -309.5, True]]}
+                        ["Door1", 597.0, 137.0, [2, 2, 2, 2], 0, 0, -309.5, True, 2, 'L']]}
     createCabinet('Oven', 600.0, height, 560.0, addOns, groupName="BaseCabinets")
 
     addOns = {'shelves' : 1, 'list' : [["Plank1", 100.0, height-103.0, [0,0,0,0], -557, 0, 0, True],
               ["Plank2", 197.0, height-103.0, [2,2,0,2], -90, 0, 0, True], 
-              ["Door1", 597.0, height-103.0, [2,2,2,2], 310, 0, 0, True]]}
+              ["Door1", 597.0, height-103.0, [2,2,2,2], 310, 0, 0, True, 2, 'L']]}
     createCabinet('Cab1', 1220.0, height, 500.0, addOns, groupName="BaseCabinets")
 
-    createCabinet('Cab2', 442.0, height, 510.0, {'doors' : 1, 'doorsWallRight' : True, 'shelves': 1}, groupName="BaseCabinets")
-    createCabinet('Sink', 600.0, height, 560.0, {'doors' : 1, 'doorsWallLeft' : True}, groupName="BaseCabinets")
+    createCabinet('Cab2', 442.0, height, 510.0, {'doors' : 1, 'doorsWallRight' : True, 'shelves': 1, 'doorsHoles' : 2, 'doorsHolesSide': 'L'}, groupName="BaseCabinets")
+    createCabinet('Sink', 600.0, height, 560.0, {'doors' : 1, 'doorsWallLeft' : True, 'doorsHoles' : 2, 'doorsHolesSide': 'L'}, groupName="BaseCabinets")
 
     addOns = {'shelves' : 1, 'list':[["Plank1", 100.0, height-103.0, [0,0,0,0], 492, 0, 0, True],
               ["Plank2", 197.0, height-103.0, [2,2,2,0], 7.5, 0, 0, True], 
-              ["Door1", 450.0, height-103.0, [2,2,2,2], -318.5, 0, 0, True]]}
+              ["Door1", 450.0, height-103.0, [2,2,2,2], -318.5, 0, 0, True, 2, 'L']]}
     createCabinet('Cab3', 1090.0, height, 370.0, addOns, groupName="BaseCabinets")
  
     createCabinet('Cab4', 600.0, height, 560.0, {'drawers' : 4}, visibleBack=True, groupName="BaseCabinets")
-    createCabinet('Cab5', 968.0, height, 560.0, {'shelves' : 1, 'doors' : 2}, visibleBack=True, groupName="BaseCabinets")
+    createCabinet('Cab5', 968.0, height, 560.0, {'shelves' : 1, 'doors' : 2, 'doorsHoles' : 2, 'doorsHolesSide': 'L'}, visibleBack=True, groupName="BaseCabinets")
 
     placementMatrix = [{'name':'Bottles_Fusion','x':-1316, 	'y':-402,	'z':100,	'xR':0,	'yR':0, 'zR':1, 'R':0},
                        {'name':'Oven_Fusion',	'x':-1766, 	'y':-402, 	'z':100,	'xR':0,	'yR':0, 'zR':1, 'R':0},
