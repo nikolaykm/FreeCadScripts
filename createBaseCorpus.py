@@ -722,11 +722,23 @@ def createLivingRoomShelves():
     pp.append(["_LivRoom2",    1500.0, 300.0,  [2, 0, 0, 0],         cabMaterial, "W"])
     pp.append(["_LivRoom3",    1500.0, 300.0,  [2, 0, 0, 0],         cabMaterial, "W"])
 
-    placementMatrix = [{'name':"_LivRoom1",    'vec':  (2051,     -349,  900,     0,  0, 0)},
-                       {'name':"_LivRoom2",    'vec':  (2051,     -264,  1100,    0,  0, 0)},
-                       {'name':"_LivRoom3",    'vec':  (2051,     -264,  1500,    0,  0, 0)}]
+    pp.append(["_ShelvesR1",    318.0,  2100.0,  [0.8,   0.8,   0.8,   0.8], cabMaterial, "H"])
+    pp.append(["_ShelvesR2",    300.0,  2100.0,  [0.8,   0.8,   0.8,   0.8], cabMaterial, "H"])
+    pp.append(["_ShelvesR3",    300.0,  300.0,   [0,     0,     0,     0],   cabMaterial, "-"])
+    pp.append(["_ShelvesR4",    300.0,  300.0,   [0,     0,     0,     0],   cabMaterial, "-"])
+    pp.append(["_ShelvesR5",    300.0,  300.0,   [0,     0,     0,     0],   cabMaterial, "-"])
 
-    createBoards("LivingShelves", pp, placementMatrix)
+
+    placementMatrix = [{'name':"_LivRoom1",    'vec':  (2051,     -349,   900,     0,  0, 0)},
+                       {'name':"_LivRoom2",    'vec':  (2051,     -264,   1100,    0,  0, 0)},
+                       {'name':"_LivRoom3",    'vec':  (2051,     -264,   1500,    0,  0, 0)},
+                       {'name':"_ShelvesR1",   'vec':  (3801,     -274.0, 1150,     90, 0, 90)},
+                       {'name':"_ShelvesR2",   'vec':  (3969,     -115.0, 1150,     0, 0, 90)},
+                       {'name':"_ShelvesR3",   'vec':  (3969,     -283.0, 500,     0, 0, 0)},
+                       {'name':"_ShelvesR4",   'vec':  (3969,     -283.0, 1000,    0, 0, 0)},
+                       {'name':"_ShelvesR5",   'vec':  (3969,     -283.0, 1500,    0, 0, 0)}]
+
+    createBoards("LivingShelves", pp, placementMatrix, groupByName=True)
 
 #create Vitodens 111-W with fux
 def createVitodens():
@@ -763,11 +775,11 @@ def createLivingRoomCorpuses():
     createCabinet('LivCab5', 500.0, 900.0, 450.0, {'drawers' : 4}, groupName='LivingCabinets')
     createCabinet('LivCab6', 500.0, 1800.0, 450.0, {'shelves':4, 'doors' : 1}, groupName='LivingCabinets', haveWholeBlend=True)
     createCabinet('LivCab7', 500.0, 2200.0, 450.0, {'shelves':5, 'doors' : 1}, groupName='LivingCabinets', haveWholeBlend=True)
-    createCabinet('LivCab2_Up', 500.0, 400.0, 450.0, {'doors' : 2, 'shelves':1}, groupName='LivingCabinets', isBase=False)
-    createCabinet('LivCab3_Up', 500.0, 400.0, 450.0, {'doors' : 2, 'shelves':1}, groupName='LivingCabinets', isBase=False)
-    createCabinet('LivCab4_Up', 500.0, 400.0, 450.0, {'doors' : 2, 'shelves':1}, groupName='LivingCabinets', isBase=False)
-    createCabinet('LivCab5_Up', 500.0, 400.0, 450.0, {'doors' : 2, 'shelves':1}, groupName='LivingCabinets', isBase=False)
-    createCabinet('LivCab6_Up', 500.0, 400.0, 450.0, {'doors' : 2, 'shelves':1}, groupName='LivingCabinets', isBase=False)
+    createCabinet('LivCab2_Up', 500.0, 400.0, 450.0, {'doors' : 1, 'shelves':1}, groupName='LivingCabinets', isBase=False)
+    createCabinet('LivCab3_Up', 500.0, 400.0, 450.0, {'doors' : 1, 'shelves':1}, groupName='LivingCabinets', isBase=False)
+    createCabinet('LivCab4_Up', 500.0, 400.0, 450.0, {'doors' : 1, 'shelves':1}, groupName='LivingCabinets', isBase=False)
+    createCabinet('LivCab5_Up', 500.0, 400.0, 450.0, {'doors' : 1, 'shelves':1}, groupName='LivingCabinets', isBase=False)
+    createCabinet('LivCab6_Up', 500.0, 400.0, 450.0, {'doors' : 1, 'shelves':1}, groupName='LivingCabinets', isBase=False)
     createCabinet('LivCab8', 300.0, 882.0, 300.0, {}, groupName='LivingCabinets', isBase=False, visibleBack=True)
     createCabinet('LivCab9', 770.0, 300.0, 300.0, {'doors' : 2, 'shelves':1, 'doorsWallLeft' : True}, groupName='LivingCabinets', isBase=False)
 
@@ -900,9 +912,9 @@ def processAllSpreadSheetsByMaterial():
 #createColumnBoards()
 #createAdditionalBoards()
 #createShelvesAroundKitchenWindow()
-createUpCorpuses(950.0, 300.0)
+#createUpCorpuses(950.0, 300.0)
 #createLivingRoomCorpuses()
-#createLivingRoomShelves()
+createLivingRoomShelves()
 
 #######################################
 # Small room
