@@ -526,6 +526,8 @@ def createUpCorpuses(height, depth):
 
     App.ActiveDocument.addObject("App::DocumentObjectGroup","UpCabinets")
 
+    createCabinet('Cab0Up', 123.0, 253.0, depth, {'doors' : 1}, isBase=False, groupName='UpCabinets')
+
     createCabinet('BottlesUp', 300.0, height-253.0, depth, {'shelves':1, 'doors' : 1, 'doorsWallLeft' : True}, isBase=False, groupName='UpCabinets')
 
     addOns = {'shelves':1, 'list': [["Door1", 597.0, height-40-3, [2, 2, 2, 2], 0, 0, 0, True]] }
@@ -535,7 +537,8 @@ def createUpCorpuses(height, depth):
     createCabinet('Cab2Up', 700.0, height+150, 480.0, {'doors' : 1, 'doorsWallRight' : True}, isBase=False, isHavingBack=False, groupName='UpCabinets')
     createCabinet('Cab3Up', 600.0, height, 253.0, {'shelves' : 2, 'doors' : 1}, isBase=False, groupName='UpCabinets')
 
-    placementMatrix = [{'name':'BottlesUp_Fusion',	'x':-1316,      'y':-266,       'z':2197,        'xR':0, 'yR':1, 'zR':0, 'R':180},
+    placementMatrix = [{'name':'Cab0Up_Fusion',         'x':-1404,      'y':-266,       'z':2450,        'xR':0, 'yR':1, 'zR':0, 'R':180},
+                       {'name':'BottlesUp_Fusion',	'x':-1316,      'y':-266,       'z':2197,        'xR':0, 'yR':1, 'zR':0, 'R':180},
                        {'name':'OvenUp_Fusion',		'x':-1766,      'y':-266,       'z':2450,        'xR':0, 'yR':1, 'zR':0, 'R':180},
                        {'name':'Cab1Up_Fusion',         'x':-2646,      'y':-266,       'z':2450,        'xR':0, 'yR':1, 'zR':0, 'R':180},
                        {'name':'Cab2Up_Fusion',         'x':-3577,      'y':-371,       'z':2450,        'xR':0, 'yR':1, 'zR':0, 'R':180},
@@ -896,8 +899,8 @@ def processAllSpreadSheetsByMaterial():
 #createKitchenDownPlanks()
 #createColumnBoards()
 #createAdditionalBoards()
-createShelvesAroundKitchenWindow()
-#createUpCorpuses(950.0, 300.0)
+#createShelvesAroundKitchenWindow()
+createUpCorpuses(950.0, 300.0)
 #createLivingRoomCorpuses()
 #createLivingRoomShelves()
 
