@@ -885,6 +885,17 @@ def createSmallRoomCabinetsUnderTV():
     App.ActiveDocument.getObject("SmallRoomCabinets").addObject(App.ActiveDocument.getObject("SR_Down2"))
     App.ActiveDocument.getObject("SmallRoomCabinets").addObject(App.ActiveDocument.getObject("SR_Down3"))
 
+def createSmallRoomDesk():
+    App.ActiveDocument.addObject("App::DocumentObjectGroup","SmallRoomDesk")
+    createCabinet('SRDeskDrawers', 450.0, 712.0, 550.0, {'drawers' : 4}, groupName='SmallRoomDesk', isBase=False)
+    createCabinet('SRDeskLeft', 550.0, 712.0, 450.0, {'door':1, 'shelves' : 1}, groupName='SmallRoomDesk', isBase=False)
+
+    placementMatrix = [{'name':'SRDeskDrawers_Fusion',  'x':-787,       'y':-1425,       'z':0,        'xR':0, 'yR':0, 'zR':1, 'R':-180},
+                       {'name':'SRDeskLeft_Fusion',     'x':-787,       'y':-2225,       'z':0,        'xR':0, 'yR':0, 'zR':1, 'R':-90}]
+
+    placeObjects(placementMatrix)
+
+
 def createCorridorCorpuses():
     App.ActiveDocument.addObject("App::DocumentObjectGroup","CorridorCabinets")
 
@@ -985,7 +996,8 @@ def processAllSpreadSheetsByMaterial():
 # Small room
 #######################################
 #createSmallRoomWardrobe()
-createSmallRoomCabinetsUnderTV()
+#createSmallRoomCabinetsUnderTV()
+createSmallRoomDesk()
 
 #######################################
 # Corridor
