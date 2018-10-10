@@ -887,14 +887,19 @@ def createSmallRoomCabinetsUnderTV():
 
 def createSmallRoomDesk():
     App.ActiveDocument.addObject("App::DocumentObjectGroup","SmallRoomDesk")
-    createCabinet('SRDeskDrawers', 450.0, 712.0, 550.0, {'drawers' : 4}, groupName='SmallRoomDesk', isBase=False)
-    createCabinet('SRDeskLeft', 550.0, 712.0, 450.0, {'door':1, 'shelves' : 1}, groupName='SmallRoomDesk', isBase=False)
+    createCabinet('SRDeskDrawers', 450.0, 712.0, 530.0, {'drawers' : 4}, groupName='SmallRoomDesk', isBase=False)
+    createCabinet('SRDeskLeft', 550.0, 712.0, 450.0, {'doors':1, 'shelves' : 1}, groupName='SmallRoomDesk', isBase=False)
 
-    placementMatrix = [{'name':'SRDeskDrawers_Fusion',  'x':-787,       'y':-1425,       'z':0,        'xR':0, 'yR':0, 'zR':1, 'R':-180},
-                       {'name':'SRDeskLeft_Fusion',     'x':-787,       'y':-2225,       'z':0,        'xR':0, 'yR':0, 'zR':1, 'R':-90}]
+    placementMatrix = [{'name':'SRDeskDrawers_Fusion',  'x':-1676,      'y':-4073,       'z':0,        'xR':0, 'yR':0, 'zR':1, 'R':-180},
+                       {'name':'SRDeskLeft_Fusion',     'x':-228,       'y':-4063,       'z':0,        'xR':0, 'yR':0, 'zR':1, 'R':-90}]
 
     placeObjects(placementMatrix)
 
+    pp = [["_Plot", 1900.0, 550.0, [0.8, 0.8, 0.8, 0.8], cabMaterial, "W"]]
+    placementMatrix = [{'name':"_Plot", 'vec':  (-951,-4064, 712, 0, 0, 0)}]
+    createBoards("SRDesk", pp, placementMatrix)
+
+    App.ActiveDocument.getObject("SmallRoomDesk").addObject(App.ActiveDocument.getObject("SR_Plot"))
 
 def createCorridorCorpuses():
     App.ActiveDocument.addObject("App::DocumentObjectGroup","CorridorCabinets")
