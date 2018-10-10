@@ -173,7 +173,6 @@ def createBoardFromSheetRow(objName, bodyName, row):
 
     holesCount = rowDict['Holes'] if 'Holes' in rowDict else 0
     holesSide = rowDict['HolesSide'] if 'HolesSide' in rowDict else '-'
-    print str(holesCount) + "-" + str(holesSide)
 
     startDistX = -xL/2 + 30.0
     startDistY = -yL/2 + 30.0
@@ -741,6 +740,42 @@ def createLivingRoomShelves():
 
     createBoards("LivingShelves", pp, placementMatrix, groupByName=True)
 
+def createSofaShelves():
+    pp = []
+    pp.append(["_Bottom", 1000.0, 140.0,  [0.8, 0.8, 0.8, 0.8], cabMaterial, "W"])
+    pp.append(["_Up",     1000.0, 140.0,  [0.8, 0.8, 0.8, 0.8], cabMaterial, "W"])
+    pp.append(["_Left",   1564.0, 140.0,  [0.8, 0.8, 0.8, 0.8], cabMaterial, "W"])
+    pp.append(["_Right",  1564.0, 140.0,  [0.8, 0.8, 0.8, 0.8], cabMaterial, "W"])
+    pp.append(["_Shelf1",  964.0, 140.0,  [0.8, 0.8,   0,   0], cabMaterial, "W"])
+    pp.append(["_Shelf2",  964.0, 140.0,  [0.8, 0.8,   0,   0], cabMaterial, "W"])
+    pp.append(["_Shelf3",  964.0, 140.0,  [0.8, 0.8,   0,   0], cabMaterial, "W"])
+    pp.append(["_Shelf4",  964.0, 140.0,  [0.8, 0.8,   0,   0], cabMaterial, "W"])
+    pp.append(["_ShelfV1", 140.0, 299.0,  [  0,   0, 0.8, 0.8], cabMaterial, "H"])
+    pp.append(["_ShelfV2", 140.0, 299.0,  [  0,   0, 0.8, 0.8], cabMaterial, "H"])
+    pp.append(["_ShelfV3", 140.0, 299.0,  [  0,   0, 0.8, 0.8], cabMaterial, "H"])
+    pp.append(["_ShelfV4", 140.0, 299.0,  [  0,   0, 0.8, 0.8], cabMaterial, "H"])
+    pp.append(["_ShelfV5", 140.0, 299.0,  [  0,   0, 0.8, 0.8], cabMaterial, "H"])
+    pp.append(["_ShelfV6", 140.0, 299.0,  [  0,   0, 0.8, 0.8], cabMaterial, "H"])
+
+    placementMatrix = [{'name':"_Bottom",   'vec':  (0,    0, 0,      0, 0, 0)},
+                       {'name':"_Up",       'vec':  (0,    0, 1582,   0, 0, 0)},
+                       {'name':"_Left",     'vec':  (-500, 0, 800,    0, 90, 0)},
+                       {'name':"_Right",    'vec':  (482,  0, 800,    0, 90, 0)},
+                       {'name':"_Shelf1",   'vec':  (0,    0, 317,    0, 0, 0)},
+                       {'name':"_Shelf2",   'vec':  (0,    0, 634,    0, 0, 0)},
+                       {'name':"_Shelf3",   'vec':  (0,    0, 951,    0, 0, 0)},
+                       {'name':"_Shelf4",   'vec':  (0,    0, 1268,   0, 0, 0)},
+                       {'name':"_ShelfV1",  'vec':  (-200, 0, 484.5,  90, 0, 90)},
+                       {'name':"_ShelfV2",  'vec':  (0,    0, 484.5,  90, 0, 90)},
+                       {'name':"_ShelfV3",  'vec':  (200,  0, 484.5,  90, 0, 90)},
+                       {'name':"_ShelfV4",  'vec':  (-200, 0, 1118.5, 90, 0, 90)},
+                       {'name':"_ShelfV5",  'vec':  (0,    0, 1118.5, 90, 0, 90)},
+                       {'name':"_ShelfV6",  'vec':  (200,  0, 1118.5, 90, 0, 90)}]
+
+
+    createBoards("SofaShelves", pp, placementMatrix, groupByName=True)
+    
+
 #create Vitodens 111-W with fux
 def createVitodens():
 
@@ -915,7 +950,8 @@ def processAllSpreadSheetsByMaterial():
 #createShelvesAroundKitchenWindow()
 #createUpCorpuses(950.0, 300.0)
 #createLivingRoomCorpuses()
-createLivingRoomShelves()
+#createLivingRoomShelves()
+createSofaShelves()
 
 #######################################
 # Small room
