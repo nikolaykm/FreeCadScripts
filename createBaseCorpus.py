@@ -899,33 +899,76 @@ def createSmallRoomDesk():
     App.ActiveDocument.getObject("SmallRoomDesk").addObject(App.ActiveDocument.getObject("SRDesk_Spreadsheet"))
     App.ActiveDocument.getObject("SmallRoomDesk").addObject(App.ActiveDocument.getObject("SRDesk_Plot"))
 
-def createCorridorCorpuses():
-    App.ActiveDocument.addObject("App::DocumentObjectGroup","CorridorCabinets")
+def createCorridorWardrobe():
+    App.ActiveDocument.addObject("App::DocumentObjectGroup","CorridorWD")
 
-    createCabinet('CorCab1', 915.0, 700.0, 500.0, {'drawers':3, 'doorsWallRight' : True}, groupName='CorridorCabinets')
-    createCabinet('CorCab2', 915.0, 1300.0, 500.0, {'doors':2,  'doorsWallRight' : True}, groupName='CorridorCabinets', isBase=False)
-    createCabinet('CorCab3', 915.0, 530.0, 500.0, {'doors':2, 'shelves':1, 'doorsWallRight' : True}, groupName='CorridorCabinets', haveWholeBlend=True, isBase=False)
+    createCabinet('CorWD1', 915.0, 700.0, 500.0, {'drawers':3, 'doorsWallRight' : True}, groupName='CorridorWD', legHeight=50.0)
+    createCabinet('CorWD2', 915.0, 1300.0, 500.0, {'doors':2,  'doorsWallRight' : True}, groupName='CorridorWD', isBase=False)
+    createCabinet('CorWD3', 915.0, 530.0, 500.0, {'doors':2, 'shelves':1, 'doorsWallRight' : True}, groupName='CorridorWD', haveWholeBlend=True, isBase=False)
 
-    createCabinet('CorCab4', 915.0, 700.0, 500.0, {'drawers':3, 'doorsWallLeft' : True}, groupName='CorridorCabinets')
-    createCabinet('CorCab5', 915.0, 1300.0, 500.0, {'doors':2, 'doorsWallLeft' : True}, groupName='CorridorCabinets', isBase=False)
-    createCabinet('CorCab6', 915.0, 530.0, 500.0, {'doors':2, 'shelves':1, 'doorsWallLeft' : True}, groupName='CorridorCabinets', haveWholeBlend=True, isBase=False)
+    createCabinet('CorWD4', 915.0, 700.0, 500.0, {'drawers':3, 'doorsWallLeft' : True}, groupName='CorridorWD', legHeight=50.0)
+    createCabinet('CorWD5', 915.0, 1300.0, 500.0, {'doors':2, 'doorsWallLeft' : True}, groupName='CorridorWD', isBase=False)
+    createCabinet('CorWD6', 915.0, 530.0, 500.0, {'doors':2, 'shelves':1, 'doorsWallLeft' : True}, groupName='CorridorWD', haveWholeBlend=True, isBase=False)
 
 
-    placementMatrix = [{'name':'CorCab1_Fusion',      'x':-257,       'y':463,       'z':100,        'xR':0, 'yR':0, 'zR':1, 'R':270},
-                       {'name':'CorCab2_Fusion',      'x':-257,       'y':463,       'z':700,        'xR':0, 'yR':0, 'zR':1, 'R':270},
-                       {'name':'CorCab3_Fusion',      'x':-257,       'y':463,       'z':2000,       'xR':0, 'yR':0, 'zR':1, 'R':270},
-                       {'name':'CorCab4_Fusion',      'x':-257,       'y':1378,       'z':100,        'xR':0, 'yR':0, 'zR':1, 'R':270},
-                       {'name':'CorCab5_Fusion',      'x':-257,       'y':1378,       'z':700,        'xR':0, 'yR':0, 'zR':1, 'R':270},
-                       {'name':'CorCab6_Fusion',      'x':-257,       'y':1378,       'z':2000,       'xR':0, 'yR':0, 'zR':1, 'R':270}]
+    placementMatrix = [{'name':'CorWD1_Fusion',      'x':-257,       'y':463,       'z':50,        'xR':0, 'yR':0, 'zR':1, 'R':270},
+                       {'name':'CorWD2_Fusion',      'x':-257,       'y':463,       'z':700,        'xR':0, 'yR':0, 'zR':1, 'R':270},
+                       {'name':'CorWD3_Fusion',      'x':-257,       'y':463,       'z':2000,       'xR':0, 'yR':0, 'zR':1, 'R':270},
+                       {'name':'CorWD4_Fusion',      'x':-257,       'y':1378,       'z':50,        'xR':0, 'yR':0, 'zR':1, 'R':270},
+                       {'name':'CorWD5_Fusion',      'x':-257,       'y':1378,       'z':700,        'xR':0, 'yR':0, 'zR':1, 'R':270},
+                       {'name':'CorWD6_Fusion',      'x':-257,       'y':1378,       'z':2000,       'xR':0, 'yR':0, 'zR':1, 'R':270}]
 
     placeObjects(placementMatrix)
 
-    pp = [["_Down1", 1830.0, 100.0, [0.8, 0.8, 0.8, 0.8], cabMaterial, "H"]]
-    placementMatrix = [{'name':"_Down1", 'vec':  (-500, 921, 50, 90, 90, 90)}]
-    createBoards("Cor", pp, placementMatrix)
+    pp = [["_Down1", 1830.0, 50.0, [0.8, 0.8, 0.8, 0.8], cabMaterial, "H"]]
+    placementMatrix = [{'name':"_Down1", 'vec':  (-500, 921, 25, 90, 90, 90)}]
+    createBoards("CorWD", pp, placementMatrix)
 
-    App.ActiveDocument.getObject("SmallRoomCabinets").addObject(App.ActiveDocument.getObject("Cor_Spreadsheet"))
-    App.ActiveDocument.getObject("SmallRoomCabinets").addObject(App.ActiveDocument.getObject("Cor_Down1"))
+    App.ActiveDocument.getObject("SmallRoomCabinets").addObject(App.ActiveDocument.getObject("CorWD_Spreadsheet"))
+    App.ActiveDocument.getObject("SmallRoomCabinets").addObject(App.ActiveDocument.getObject("CorWD_Down1"))
+
+def createPortmanto():
+    App.ActiveDocument.addObject("App::DocumentObjectGroup","CorridorPortmanto")
+
+    createCabinet('CorBoots', 700.0, 1628.0, 300.0, {}, groupName='CorridorPortmanto', legHeight=50.0, haveWholeBlend=True)
+
+    placementMatrix = [{'name':'CorBoots_Fusion',      'x':-432,       'y':2786,       'z':50,        'xR':0, 'yR':0, 'zR':1, 'R':270}]
+
+    placeObjects(placementMatrix)
+
+    pp = [["_Back",   600.0, 2000.0, [2, 2, 2, 2], cabMaterial, "H"],
+          ["_Shelf1", 600.0, 264.0,  [2, 0, 2, 2], cabMaterial, "W"],
+          ["_Shelf2", 600.0, 264.0,  [2, 0, 2, 2], cabMaterial, "W"],
+          ["_Front1", 150.0, 2000.0, [2, 2, 2, 2], cabMaterial, "H"],
+          ["_Front2", 150.0, 264.0,  [0, 0, 2, 2], cabMaterial, "H"],
+          ["_Front3", 150.0, 264.0,  [0, 0, 2, 2], cabMaterial, "H"],
+          ["_BDoor1", 658.0, 380.0,  [0.8, 0.8, 0.8, 0.8], cabMaterial, "H"],
+          ["_BDoor2", 658.0, 380.0,  [0.8, 0.8, 0.8, 0.8], cabMaterial, "H"],
+          ["_BDoor3", 658.0, 380.0,  [0.8, 0.8, 0.8, 0.8], cabMaterial, "H"],
+          ["_BDoor4", 658.0, 380.0,  [0.8, 0.8, 0.8, 0.8], cabMaterial, "H"]
+]
+
+    placementMatrix = [{'name':"_Back",   'vec':  (-280, 2136, 1000, -90, 0, 90)},
+                       {'name':"_Shelf1", 'vec':  (-429, 2136, 400,  -90, 0, 0)},
+                       {'name':"_Shelf2", 'vec':  (-429, 2136, 1600, -90, 0, 0)},
+                       {'name':"_Front1", 'vec':  (-562, 2136, 1000, -90, 0, 90)},
+                       {'name':"_Front2", 'vec':  (-429, 2136, 1982, -90, 0, 0)},
+                       {'name':"_Front3", 'vec':  (-429, 2136, 325,  -90, 90, 0)},
+                       {'name':"_BDoor1", 'vec':  (-562, 2786, 263, -90, 0, 90)},
+                       {'name':"_BDoor2", 'vec':  (-562, 2786, 648, -90, 0, 90)},
+                       {'name':"_BDoor3", 'vec':  (-562, 2786, 1033, -90, 0, 90)},
+                       {'name':"_BDoor4", 'vec':  (-562, 2786, 1418, -90, 0, 90)}]
+
+    createBoards("CorPor", pp, placementMatrix)
+
+    App.ActiveDocument.getObject("CorridorPortmanto").addObject(App.ActiveDocument.getObject("CorPor_Spreadsheet"))
+    App.ActiveDocument.getObject("CorridorPortmanto").addObject(App.ActiveDocument.getObject("CorPor_Back"))
+    App.ActiveDocument.getObject("CorridorPortmanto").addObject(App.ActiveDocument.getObject("CorPor_Shelf1"))
+    App.ActiveDocument.getObject("CorridorPortmanto").addObject(App.ActiveDocument.getObject("CorPor_Shelf2"))
+    App.ActiveDocument.getObject("CorridorPortmanto").addObject(App.ActiveDocument.getObject("CorPor_Front1"))
+    App.ActiveDocument.getObject("CorridorPortmanto").addObject(App.ActiveDocument.getObject("CorPor_Front2"))
+    App.ActiveDocument.getObject("CorridorPortmanto").addObject(App.ActiveDocument.getObject("CorPor_Front3"))
+
 
 def processAllSpreadSheetsByMaterial():
     finalDict = dict()
@@ -1005,7 +1048,8 @@ def processAllSpreadSheetsByMaterial():
 #######################################
 # Corridor
 #######################################
-#createCorridorCorpuses()
+#createCorridorWardrobe()
+createPortmanto()
 
 #######################################
 #Final Processing

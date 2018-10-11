@@ -1,0 +1,106 @@
+<COLLADA xmlns="http://www.collada.org/2005/11/COLLADASchema" version="1.4.1">
+  <asset>
+    <contributor/>
+    <created>2018-10-11T16:19:26.385986</created>
+    <modified>2018-10-11T16:19:26.386024</modified>
+    <unit name="meter" meter="1.0"/>
+    <up_axis>Z_UP</up_axis>
+  </asset>
+  <library_effects>
+    <effect name="effect_CorPor_Back" id="effect_CorPor_Back">
+      <profile_COMMON>
+        <technique sid="common">
+          <phong>
+            <emission>
+              <color>0.0 0.0 0.0 1.0</color>
+            </emission>
+            <ambient>
+              <color>0.0 0.0 0.0 1.0</color>
+            </ambient>
+            <diffuse>
+              <color>0.800000011921 0.800000011921 0.800000011921 1.0</color>
+            </diffuse>
+            <specular>
+              <color>1 1 1 1.0</color>
+            </specular>
+            <shininess>
+              <float>0.0</float>
+            </shininess>
+            <reflective>
+              <color>0.0 0.0 0.0 1.0</color>
+            </reflective>
+            <reflectivity>
+              <float>0.0</float>
+            </reflectivity>
+            <transparent>
+              <color>0.0 0.0 0.0 1.0</color>
+            </transparent>
+            <transparency>
+              <float>1.0</float>
+            </transparency>
+          </phong>
+        </technique>
+        <extra>
+          <technique profile="GOOGLEEARTH">
+            <double_sided>0</double_sided>
+          </technique>
+        </extra>
+      </profile_COMMON>
+    </effect>
+  </library_effects>
+  <library_geometries>
+    <geometry id="geometry0" name="CorPor_Back">
+      <mesh>
+        <source id="cubenormals-array0">
+          <float_array count="132" id="cubenormals-array0-array">0 1 0 0 1 0 0 0 -1 -0 -0 -1 0 0 1 0 -0 1 -1 0 0 -1 0 0 -1 0 0 -1 0 0 0 -1 0 0 -1 0 0 -0 -1 0 0 -1 0 -0 1 0 0 1 0 0 1 0 0 1 0 0 -1 0 0 -1 -0 1 0 0 1 0 -1 0 -0 -1 -0 0 0 0 -1 0 0 -1 0 0 -1 0 0 -1 0 0 1 -0 0 1 0 0 1 0 0 1 1 0 0 1 -0 0 0 -1 0 0 -1 0 0 1 0 0 1 0 0 -1 0 0 -1 0 1 -0 0 1 0 0 1 0 -0 1 0 0</float_array>
+          <technique_common>
+            <accessor count="44" source="#cubenormals-array0-array" stride="3">
+              <param type="float" name="X"/>
+              <param type="float" name="Y"/>
+              <param type="float" name="Z"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <source id="cubeverts-array0">
+          <float_array count="72" id="cubeverts-array0-array">-0.578 3.134 1.018 -0.578 3.134 1 -0.58 3.134 1 -0.58 3.134 1.018 -0.578 1.138 1 -0.58 1.138 1 -0.58 1.138 1.018 -0.578 1.138 1.018 -0.578 3.136 1.018 -0.578 3.136 1 0.018 3.134 1 0.018 1.138 1 0.018 1.138 1.018 0.018 3.134 1.018 0.018 3.136 1.018 0.018 3.136 1 -0.578 1.136 1 -0.578 1.136 1.018 0.02 1.138 1 0.02 3.134 1 0.018 1.136 1 0.02 3.134 1.018 0.02 1.138 1.018 0.018 1.136 1.018</float_array>
+          <technique_common>
+            <accessor count="24" source="#cubeverts-array0-array" stride="3">
+              <param type="float" name="X"/>
+              <param type="float" name="Y"/>
+              <param type="float" name="Z"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <vertices id="cubeverts-array0-vertices">
+          <input source="#cubeverts-array0" semantic="POSITION"/>
+        </vertices>
+        <triangles count="44" material="ref_CorPor_Back">
+          <input source="#cubenormals-array0" semantic="NORMAL" offset="1"/>
+          <input source="#cubeverts-array0-vertices" semantic="VERTEX" offset="0"/>
+          <p>0 0 1 0 2 0 0 1 2 1 3 1 2 2 4 2 5 2 1 3 4 3 2 3 6 4 0 4 3 4 7 5 0 5 6 5 1 6 0 6 8 6 1 7 8 7 9 7 5 8 6 8 2 8 2 9 6 9 3 9 4 10 7 10 6 10 4 11 6 11 5 11 10 12 11 12 4 12 1 13 10 13 4 13 12 14 13 14 7 14 13 15 0 15 7 15 0 16 13 16 14 16 0 17 14 17 8 17 10 18 1 18 9 18 10 19 9 19 15 19 8 20 14 20 9 20 14 21 15 21 9 21 7 22 4 22 16 22 7 23 16 23 17 23 18 24 10 24 19 24 11 25 10 25 18 25 4 26 11 26 20 26 4 27 20 27 16 27 21 28 12 28 22 28 13 29 12 29 21 29 12 30 7 30 17 30 12 31 17 31 23 31 13 32 10 32 15 32 13 33 15 33 14 33 16 34 20 34 17 34 20 35 23 35 17 35 10 36 13 36 21 36 10 37 21 37 19 37 12 38 11 38 18 38 12 39 18 39 22 39 22 40 18 40 21 40 21 41 18 41 19 41 11 42 12 42 23 42 11 43 23 43 20 43</p>
+        </triangles>
+      </mesh>
+    </geometry>
+  </library_geometries>
+  <library_materials>
+    <material name="CorPor_Back" id="mat_CorPor_Back">
+      <instance_effect url="#effect_CorPor_Back"/>
+    </material>
+  </library_materials>
+  <library_visual_scenes>
+    <visual_scene id="myscene">
+      <node name="node0" id="node0">
+        <instance_geometry url="#geometry0">
+          <bind_material>
+            <technique_common>
+              <instance_material symbol="ref_CorPor_Back" target="#mat_CorPor_Back"/>
+            </technique_common>
+          </bind_material>
+        </instance_geometry>
+      </node>
+    </visual_scene>
+  </library_visual_scenes>
+  <scene>
+    <instance_visual_scene url="#myscene"/>
+  </scene>
+</COLLADA>
