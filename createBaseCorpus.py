@@ -309,7 +309,7 @@ def createCabinet(name, width, height, depth, addOns, visibleBack = False, isBas
     if 'doors' in addOns:
         doorsCount = addOns['doors']
         calcWidth = width/doorsCount - spaceBetweenDoors - (spaceBetweenDoors/(2*doorsCount) if 'doorsWallRight' in addOns else 0) - (spaceBetweenDoors/(2*doorsCount) if 'doorsWallLeft' in addOns else 0)
-        calcHeight = height-(legHeight+spaceBetweenDoors/2 if isBase else 0)-spaceBetweenDoors
+        calcHeight = height-((legHeight+2) if isBase else 0)-spaceBetweenDoors
         for curDoor in range(0, doorsCount):
             xPos = calcWidth*curDoor + calcWidth/2 - width/2 + spaceBetweenDoors/2
             if curDoor == 0 and 'doorsWallLeft' in addOns: xPos = xPos + spaceBetweenDoors/2
@@ -324,15 +324,18 @@ def createCabinet(name, width, height, depth, addOns, visibleBack = False, isBas
         calcHeight = depth - (boardThickness if visibleBack else cardboardThickness) - sCantT
         for curShelf in range(1, shelvesCount+1):
             yPos = (sCantT - boardThickness/2) if visibleBack else sCantT/2
-            xPos = ((height-(legHeight if isBase else 0))/(shelvesCount+1))*curShelf
-            addOns['list'].append(["_Shelf" + str(curShelf), calcWidth, calcHeight, [sCantT, 0, 0, 0], 0, yPos, xPos, False])
+            zPos = ((height-(legHeight if isBase else 0))/(shelvesCount+1))*curShelf
+            addOns['list'].append(["_Shelf" + str(curShelf), calcWidth, calcHeight, [sCantT, 0, 0, 0], 0, yPos, zPos, False])
 
     #create addOns
     for addOn in addOns['list']:
         doorsHoles = addOn[8] if len(addOn) >= 9 else 0
         doorsHolesSide = addOn[9] if len(addOn) >= 10 else '-'
         pp.append([addOn[0], addOn[1], addOn[2], addOn[3], doorsMaterial if addOn[7] else material, 'H' if addOn[7] else 'W', boardThickness, doorsHoles, doorsHolesSide])
-        placementMatrix.append({'name':addOn[0], 'vec' : (addOn[4],(-baseHeight/2-baseCants[0]-2) if addOn[7] else addOn[5], ((height/2 - (legHeight+spaceBetweenDoors/2 if isBase else 0)/2) if addOn[7] else 0) + addOn[6], 0, 0, (90 if addOn[7] else 0))});
+        xPos = addOn[4]
+        yPos = (-baseHeight/2-baseCants[0]-2) if addOn[7] else addOn[5]
+        zPos = ((height/2 - ((legHeight+2) if isBase else 0)/2) if addOn[7] else 0) + addOn[6]
+        placementMatrix.append({'name':addOn[0], 'vec' : (xPos, yPos, zPos, 0, 0, (90 if addOn[7] else 0))});
 
     createBoards(name, pp, placementMatrix)
     objects.append(name + "_Spreadsheet")
@@ -342,12 +345,15 @@ def createCabinet(name, width, height, depth, addOns, visibleBack = False, isBas
     #create drawers
     if 'drawers' in addOns:
         drawersCount = addOns['drawers']
-        drawerHeight = (height - (legHeight if isBase else 0) - spaceBetweenDoors/2)/drawersCount
+        drawerHeight = (height - ((legHeight+2) if isBase else 0))/drawersCount
+        drawerHeightRoundingError = round(drawerHeight)-drawerHeight
+        print str(drawerHeight) + "," + str(drawerHeightRoundingError)
+        drawerHeight = round(drawerHeight)
         for curDrawer in range(1, drawersCount+1):
             createDrawer(name + "_Drawer" + str(curDrawer), width, drawerHeight, depth, visibleBack, material, doorsMaterial)
             objects.append(name + "_Drawer" + str(curDrawer) + "_Fusion")
             yA = -14 if visibleBack else -5.3;
-            zA = spaceBetweenDoors/2+(curDrawer-1)*drawerHeight
+            zA = (curDrawer-1)*drawerHeight-drawerHeightRoundingError
             App.activeDocument().getObject(name + "_Drawer" + str(curDrawer) + "_Fusion").Placement=App.Placement(App.Vector(0,yA,zA), App.Rotation(0,0,0), App.Vector(0,0,0)) 
 
     if isBase:
@@ -402,10 +408,10 @@ def createDrawerSlider(name, sliderName, width, depth, isLeft):
 
 def createDrawer(name, width, height, depth, visibleBack, material, doorsMaterial):
 
-#    createDrawerSlider(name, "LeftSlider", width, (depth-sCantT-(boardThickness if visibleBack else cardboardThickness)-5), True);
-#    createDrawerSlider(name, "RightSlider", width, (depth-sCantT-(boardThickness if visibleBack else cardboardThickness)-5), False);
-#    objects = [name + "LeftSliderBody", name + "RightSliderBody"]
-    objects = []
+    createDrawerSlider(name, "LeftSlider", width, (depth-sCantT-(boardThickness if visibleBack else cardboardThickness)-5), True);
+    createDrawerSlider(name, "RightSlider", width, (depth-sCantT-(boardThickness if visibleBack else cardboardThickness)-5), False);
+    objects = [name + "LeftSliderBody", name + "RightSliderBody"]
+#    objects = []
 
     pp = []
     placementMatrix = []
@@ -455,7 +461,7 @@ def createDrawer(name, width, height, depth, visibleBack, material, doorsMateria
     calcWidth = width-4*boardThickness+6;
     calcHeight = depth-(boardThickness if visibleBack else cardboardThickness)-5
     zeroZ = 0
-    pp.append(["_Base", calcWidth, calcHeight, cants, material, "H"])
+    pp.append(["_Base", calcWidth, calcHeight, cants, material+"_card", "H", cardboardThickness])
     placementMatrix.append({'name':'_Base', 'vec' : (0,0,zeroZ+drawerSliderHole+drawerSliderHoleToBottom+cardboardThickness+boardThickness, 0, 0, 0)})
 
     createBoards(name, pp, placementMatrix)
@@ -493,12 +499,12 @@ def createBaseCorpuses(height):
                         ["Door1", 597.0, 137.0, [2, 2, 2, 2], 0, 0, -309.5, True, 2, 'L']]}
     createCabinet('Oven', 600.0, height, 560.0, addOns, groupName="BaseCabinets")
 
-    addOns = {'shelves' : 1, 'list' : [["Plank1", 100.0, height-103.0, [0,0,0,0], -557, 0, 0, True],
-              ["Plank2", 197.0, height-103.0, [2,2,0,2], -90, 0, 0, True], 
-              ["Door1", 597.0, height-103.0, [2,2,2,2], 310, 0, 0, True, 2, 'L']]}
-    createCabinet('Cab1', 1220.0, height, 500.0, addOns, groupName="BaseCabinets")
+    addOns = {'shelves' : 1, 'list' : [["Plank1", 100.0, height-103.0, [0,0,0,0], -550, 0, 0, True],
+              ["Plank2", 197.0, height-103.0, [2,2,0,2], -102, 0, 0, True], 
+              ["Door1", 597.0, height-103.0, [2,2,2,2], 298, 0, 0, True, 2, 'L']]}
+    createCabinet('Cab1', 1200.0, height, 480.0, addOns, groupName="BaseCabinets")
 
-    createCabinet('Cab2', 442.0, height, 510.0, {'doors' : 1, 'doorsWallRight' : True, 'shelves': 1, 'doorsHoles' : 2, 'doorsHolesSide': 'L'}, groupName="BaseCabinets")
+    createCabinet('Cab2', 442.0, height, 490.0, {'doors' : 1, 'doorsWallRight' : True, 'shelves': 1, 'doorsHoles' : 2, 'doorsHolesSide': 'L'}, groupName="BaseCabinets")
     createCabinet('Sink', 600.0, height, 560.0, {'doors' : 1, 'doorsWallLeft' : True, 'doorsHoles' : 2, 'doorsHolesSide': 'L'}, groupName="BaseCabinets")
 
     addOns = {'shelves' : 1, 'list':[["Plank1", 100.0, height-103.0, [0,0,0,0], 492, 0, 0, True],
@@ -511,8 +517,8 @@ def createBaseCorpuses(height):
 
     placementMatrix = [{'name':'Bottles_Fusion','x':-1316, 	'y':-402,	'z':100,	'xR':0,	'yR':0, 'zR':1, 'R':0},
                        {'name':'Oven_Fusion',	'x':-1766, 	'y':-402, 	'z':100,	'xR':0,	'yR':0, 'zR':1, 'R':0},
-                       {'name':'Cab1_Fusion',	'x':-3276, 	'y':-432, 	'z':100,	'xR':0,	'yR':0, 'zR':1, 'R':0},
-                       {'name':'Cab2_Fusion',	'x':-3630, 	'y':-922, 	'z':100,	'xR':0, 'yR':0, 'zR':1, 'R':90},
+                       {'name':'Cab1_Fusion',	'x':-3266, 	'y':-442, 	'z':100,	'xR':0,	'yR':0, 'zR':1, 'R':0},
+                       {'name':'Cab2_Fusion',	'x':-3620, 	'y':-922, 	'z':100,	'xR':0, 'yR':0, 'zR':1, 'R':90},
                        {'name':'Sink_Fusion',	'x':-3655, 	'y':-1443, 	'z':100,	'xR':0, 'yR':0, 'zR':1, 'R':90},
                        {'name':'Cab3_Fusion',	'x':-3391, 	'y':-1947, 	'z':100,	'xR':0, 'yR':0, 'zR':1, 'R':180},
                        {'name':'Cab4_Fusion',	'x':-2546, 	'y':-2043, 	'z':100,	'xR':0, 'yR':0, 'zR':1, 'R':180},
@@ -1060,7 +1066,7 @@ def processAllSpreadSheetsByMaterial():
 #######################################
 #createSmallRoomWardrobe()
 #createSmallRoomCabinetsUnderTV()
-createSmallRoomDesk()
+#createSmallRoomDesk()
 
 #######################################
 # Corridor
@@ -1072,5 +1078,7 @@ createSmallRoomDesk()
 #Final Processing
 #######################################
 #processAllSpreadSheetsByMaterial()
+
+createCabinet('Cab4', 600.0, 860.0, 560.0, {'drawers' : 4}, visibleBack=True)
 
 #execfile('/home/nm/Dev/FreeCadScripts/createBaseCorpus.py')
