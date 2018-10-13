@@ -864,26 +864,26 @@ def createSmallRoomWardrobe():
 def createSmallRoomCabinetsUnderTV():
     App.ActiveDocument.addObject("App::DocumentObjectGroup","SmallRoomCabinets")
 
-    createCabinet('SRCab1', 400.0, 441.0, 370.0, {'doors':1}, groupName='SmallRoomCabinets', isBase=False)
-    createCabinet('SRCab2', 800.0, 441.0, 370.0, {'drawers':2}, groupName='SmallRoomCabinets', isBase=False)
-    createCabinet('SRCab3', 400.0, 441.0, 370.0, {'doors':1}, groupName='SmallRoomCabinets', isBase=False)
-    createCabinet('SRCab4', 800.0, 441.0, 370.0, {'drawers':2}, groupName='SmallRoomCabinets', isBase=False)
+    createCabinet('SRCab1', 400.0, 441.0, 310.0, {'doors':1}, groupName='SmallRoomCabinets', isBase=False)
+    createCabinet('SRCab2', 800.0, 441.0, 310.0, {'drawers':2}, groupName='SmallRoomCabinets', isBase=False)
+    createCabinet('SRCab3', 400.0, 441.0, 310.0, {'doors':1}, groupName='SmallRoomCabinets', isBase=False)
+    createCabinet('SRCab4', 800.0, 441.0, 310.0, {'drawers':2}, groupName='SmallRoomCabinets', isBase=False)
 
-    placementMatrix = [{'name':'SRCab1_Fusion',      'x':-187,       'y':-1425,       'z':50,        'xR':0, 'yR':0, 'zR':1, 'R':-90},
-                       {'name':'SRCab2_Fusion',      'x':-187,       'y':-2025,       'z':50,        'xR':0, 'yR':0, 'zR':1, 'R':-90},
-                       {'name':'SRCab3_Fusion',      'x':-187,       'y':-2225,       'z':491,        'xR':0, 'yR':0, 'zR':1, 'R':-90},
-                       {'name':'SRCab4_Fusion',      'x':-187,       'y':-1625,       'z':491,        'xR':0, 'yR':0, 'zR':1, 'R':-90}]
+    placementMatrix = [{'name':'SRCab1_Fusion',      'x':-157,       'y':-1425,       'z':50,        'xR':0, 'yR':0, 'zR':1, 'R':-90},
+                       {'name':'SRCab2_Fusion',      'x':-157,       'y':-2025,       'z':50,        'xR':0, 'yR':0, 'zR':1, 'R':-90},
+                       {'name':'SRCab3_Fusion',      'x':-157,       'y':-2225,       'z':491,        'xR':0, 'yR':0, 'zR':1, 'R':-90},
+                       {'name':'SRCab4_Fusion',      'x':-157,       'y':-1625,       'z':491,        'xR':0, 'yR':0, 'zR':1, 'R':-90}]
 
     placeObjects(placementMatrix)
 
-    pp = [["_Plot", 1200.0, 400.0, [0.8, 0.8, 0.8, 0.8], cabMaterial, "W"],
+    pp = [["_Plot", 1200.0, 330.0, [0.8, 0.8, 0.8, 0.8], cabMaterial, "W"],
           ["_Down1", 1164.0, 50.0, [0.8, 0.8, 0.8, 0.8], cabMaterial, "W"],
-          ["_Down2", 370.0, 50.0, [0.8, 0.8, 0.8, 0.8], cabMaterial, "W"],
-          ["_Down3", 370.0, 50.0, [0.8, 0.8, 0.8, 0.8], cabMaterial, "W"]]
-    placementMatrix = [{'name':"_Plot", 'vec':  (-200,-1825, 932, 90, 0, 0)},
-                       {'name':"_Down1", 'vec':  (-360,-1825, 25, 90, 0, 90)},
-                       {'name':"_Down2", 'vec':  (-186,-1225, 25, 0, 0, 90)},
-                       {'name':"_Down3", 'vec':  (-186,-2407, 25, 0, 0, 90)}]
+          ["_Down2", 310.0, 50.0, [0.8, 0.8, 0.8, 0.8], cabMaterial, "W"],
+          ["_Down3", 310.0, 50.0, [0.8, 0.8, 0.8, 0.8], cabMaterial, "W"]]
+    placementMatrix = [{'name':"_Plot", 'vec':  (-167,-1825, 932, 90, 0, 0)},
+                       {'name':"_Down1", 'vec':  (-310,-1825, 25, 90, 0, 90)},
+                       {'name':"_Down2", 'vec':  (-156,-1225, 25, 0, 0, 90)},
+                       {'name':"_Down3", 'vec':  (-156,-2407, 25, 0, 0, 90)}]
     createBoards("SR", pp, placementMatrix)
 
     App.ActiveDocument.getObject("SmallRoomCabinets").addObject(App.ActiveDocument.getObject("SR_Spreadsheet"))
@@ -894,33 +894,75 @@ def createSmallRoomCabinetsUnderTV():
 
 def createSmallRoomDesk():
     App.ActiveDocument.addObject("App::DocumentObjectGroup","SmallRoomDesk")
-    createCabinet('SRDeskDrawers', 450.0, 712.0, 530.0, {'drawers' : 4}, groupName='SmallRoomDesk', isBase=False)
-    createCabinet('SRDeskLeft', 550.0, 712.0, 450.0, {'doors':1, 'shelves' : 1}, groupName='SmallRoomDesk', isBase=False)
+    createCabinet('SRDeskLeft', 530.0, 732.0, 430.0, {'doors':1, 'shelves' : 1}, groupName='SmallRoomDesk', isBase=False)
 
-    createCabinet('SRDeskUp1', 500.0, 500.0, 350.0, {'doors':1, 'shelves' : 1}, groupName='SmallRoomDesk', isBase=False)
-    createCabinet('SRDeskUp2', 500.0, 500.0, 350.0, {'doors':1, 'shelves' : 1}, groupName='SmallRoomDesk', isBase=False)
-    createCabinet('SRDeskUp3', 500.0, 500.0, 350.0, {'doors':1, 'shelves' : 1}, groupName='SmallRoomDesk', isBase=False)
-    createCabinet('SRDeskUp4', 500.0, 500.0, 350.0, {'doors':1, 'shelves' : 1}, groupName='SmallRoomDesk', isBase=False)
-    createCabinet('SRDeskUp5', 500.0, 500.0, 350.0, {'doors':1, 'shelves' : 1}, groupName='SmallRoomDesk', isBase=False)
-    createCabinet('SRDeskUp6', 500.0, 500.0, 350.0, {'doors':1, 'shelves' : 1}, groupName='SmallRoomDesk', isBase=False)
+    createCabinet('SRDeskUp1', 445.0, 445.0, 280.0, {'doors':1, 'shelves' : 1, 'doorsWallLeft' : True}, groupName='SmallRoomDesk', isBase=False)
+    createCabinet('SRDeskUp2', 445.0, 445.0, 280.0, {'doors':1, 'shelves' : 1}, groupName='SmallRoomDesk', isBase=False)
+    createCabinet('SRDeskUp3', 445.0, 445.0, 280.0, {'doors':1, 'shelves' : 1}, groupName='SmallRoomDesk', isBase=False)
+    createCabinet('SRDeskUp4', 445.0, 445.0, 280.0, {'doors':1, 'shelves' : 1}, groupName='SmallRoomDesk', isBase=False)
+    createCabinet('SRDeskUp5', 445.0, 445.0, 280.0, {'doors':1, 'shelves' : 1}, groupName='SmallRoomDesk', isBase=False)
+    createCabinet('SRDeskUp6', 445.0, 445.0, 280.0, {'doors':1, 'shelves' : 1}, groupName='SmallRoomDesk', isBase=False)
+    createCabinet('SRDeskUp7', 445.0, 445.0, 280.0, {'doors':1, 'shelves' : 1, 'doorsWallRight' : True}, groupName='SmallRoomDesk', isBase=False)
 
-    placementMatrix = [{'name':'SRDeskDrawers_Fusion',  'x':-1575,      'y':-4073,       'z':0,        'xR':0, 'yR':0, 'zR':1, 'R':-180},
-                       {'name':'SRDeskLeft_Fusion',     'x':-228,       'y':-4063,       'z':0,        'xR':0, 'yR':0, 'zR':1, 'R':-90},
-                       {'name':'SRDeskUp1_Fusion',  'x':-250,     'y':-4163,       'z':1500,        'xR':0, 'yR':0, 'zR':1, 'R':-180},
-                       {'name':'SRDeskUp2_Fusion',  'x':-750,   'y':-4163,       'z':1500,        'xR':0, 'yR':0, 'zR':1, 'R':-180},
-                       {'name':'SRDeskUp3_Fusion',  'x':-1250,  'y':-4163,       'z':1500,        'xR':0, 'yR':0, 'zR':1, 'R':-180},
-                       {'name':'SRDeskUp4_Fusion',  'x':-1750,  'y':-4163,       'z':1500,        'xR':0, 'yR':0, 'zR':1, 'R':-180},
-                       {'name':'SRDeskUp5_Fusion',  'x':-2150,  'y':-4163,       'z':1500,        'xR':0, 'yR':0, 'zR':1, 'R':-180},
-                       {'name':'SRDeskUp6_Fusion',  'x':-2750,  'y':-4163,       'z':1500,        'xR':0, 'yR':0, 'zR':1, 'R':-180}]
+    placementMatrix = [{'name':'SRDeskLeft_Fusion',     'x':-218,       'y':-4238,       'z':0,        'xR':0, 'yR':0, 'zR':1, 'R':-90},
+                       {'name':'SRDeskUp1_Fusion',  'x':-223,   'y':-4383,       'z':1350,        'xR':0, 'yR':0, 'zR':1, 'R':-180},
+                       {'name':'SRDeskUp2_Fusion',  'x':-668,   'y':-4383,       'z':1350,        'xR':0, 'yR':0, 'zR':1, 'R':-180},
+                       {'name':'SRDeskUp3_Fusion',  'x':-1113,  'y':-4383,       'z':1350,        'xR':0, 'yR':0, 'zR':1, 'R':-180},
+                       {'name':'SRDeskUp4_Fusion',  'x':-1558,  'y':-4383,       'z':1350,        'xR':0, 'yR':0, 'zR':1, 'R':-180},
+                       {'name':'SRDeskUp5_Fusion',  'x':-2003,  'y':-4383,       'z':1350,        'xR':0, 'yR':0, 'zR':1, 'R':-180},
+                       {'name':'SRDeskUp6_Fusion',  'x':-2448,  'y':-4383,       'z':1350,        'xR':0, 'yR':0, 'zR':1, 'R':-180},
+                       {'name':'SRDeskUp7_Fusion',  'x':-2893,  'y':-4383,       'z':1350,        'xR':0, 'yR':0, 'zR':1, 'R':-180}]
 
     placeObjects(placementMatrix)
 
-    pp = [["_Plot", 1800.0, 550.0, [0.8, 0.8, 0.8, 0.8], cabMaterial, "W"]]
-    placementMatrix = [{'name':"_Plot", 'vec':  (-900,-4064, 712, 0, 0, 0)}]
+    pp = [["_Plot", 1550.0, 600.0, [2, 2, 2, 2], cabMaterial, "W"],
+          ["_Right", 600.0, 732.0, [0.8, 0, 0.8, 0.8], cabMaterial, "H"],
+          ["_Back", 1532.0, 732.0, [0.8, 0, 0.8, 0.8], cabMaterial, "W"]]
+    placementMatrix = [{'name':"_Plot",  'vec':  (-775,-4225, 732, 0, 0, 0)},
+                       {'name':"_Right", 'vec':  (-1550,-4225, 366, 90, 0, 90)},
+                       {'name':"_Back",  'vec':  (-767,-4503, 366, 0, 0, 90)}]
     createBoards("SRDesk", pp, placementMatrix)
 
     App.ActiveDocument.getObject("SmallRoomDesk").addObject(App.ActiveDocument.getObject("SRDesk_Spreadsheet"))
     App.ActiveDocument.getObject("SmallRoomDesk").addObject(App.ActiveDocument.getObject("SRDesk_Plot"))
+    App.ActiveDocument.getObject("SmallRoomDesk").addObject(App.ActiveDocument.getObject("SRDesk_Right"))
+    App.ActiveDocument.getObject("SmallRoomDesk").addObject(App.ActiveDocument.getObject("SRDesk_Back"))
+
+def createSmallRoomSofa():
+    App.ActiveDocument.addObject("App::DocumentObjectGroup","SmallRoomSofa")
+
+    createCabinet('SRSofaUp1', 445.0, 445.0, 280.0, {'doors':1, 'shelves' : 1}, groupName='SmallRoomSofa', isBase=False)
+    createCabinet('SRSofaUp2', 445.0, 445.0, 280.0, {'doors':1, 'shelves' : 1}, groupName='SmallRoomSofa', isBase=False)
+    createCabinet('SRSofaUp3', 445.0, 445.0, 280.0, {'doors':1, 'shelves' : 1}, groupName='SmallRoomSofa', isBase=False)
+    createCabinet('SRSofaUp4', 445.0, 445.0, 280.0, {'doors':1, 'shelves' : 1}, groupName='SmallRoomSofa', isBase=False)
+    createCabinet('SRSofaUp5', 445.0, 445.0, 280.0, {'doors':1, 'shelves' : 1, 'doorsWallRight' : True}, groupName='SmallRoomSofa', isBase=False)
+
+    placementMatrix = [{'name':'SRSofaUp1_Fusion',  'x':-3018,   'y':-847,       'z':1795,        'xR':0, 'yR':0, 'zR':1, 'R':90},
+                       {'name':'SRSofaUp2_Fusion',  'x':-3018,   'y':-1292,      'z':1795,        'xR':0, 'yR':0, 'zR':1, 'R':90},
+                       {'name':'SRSofaUp3_Fusion',  'x':-3018,   'y':-1737,      'z':1795,        'xR':0, 'yR':0, 'zR':1, 'R':90},
+                       {'name':'SRSofaUp4_Fusion',  'x':-3018,   'y':-2182,      'z':1795,        'xR':0, 'yR':0, 'zR':1, 'R':90},
+                       {'name':'SRSofaUp5_Fusion',  'x':-3018,   'y':-2627,      'z':1795,        'xR':0, 'yR':0, 'zR':1, 'R':90}]
+
+    placeObjects(placementMatrix)
+
+    pp = [["_Down",  1335.0, 200.0, [0.8, 0, 0.8, 0.8], cabMaterial, "W"],
+          ["_Left",  200.0, 427.0, [0, 0, 0, 0.8], cabMaterial, "H"],
+          ["_Right", 200.0, 427.0, [0, 0, 0, 0.8], cabMaterial, "H"],
+          ["_Back",  1299.0, 427.0, [0, 0, 0, 0], cabMaterial, "W"],
+          ["_Up",    1299.0, 182.0, [0, 0, 0, 0], cabMaterial, "W"]]
+    placementMatrix = [{'name':"_Down",  'vec':  (-3060,-1737, 1350, 90, 0, 0)},
+                       {'name':"_Left",  'vec':  (-3060,-2386, 1582, 0, 0, 90)},
+                       {'name':"_Right", 'vec':  (-3060,-1070, 1582, 0, 0, 90)},
+                       {'name':"_Back",  'vec':  (-3160,-1737, 1582, 90, 0, 90)},
+                       {'name':"_Up",    'vec':  (-3051,-1737, 1777, 90, 0, 0)}]
+    createBoards("SRSofa", pp, placementMatrix)
+
+    App.ActiveDocument.getObject("SmallRoomSofa").addObject(App.ActiveDocument.getObject("SRSofa_Spreadsheet"))
+    App.ActiveDocument.getObject("SmallRoomSofa").addObject(App.ActiveDocument.getObject("SRSofa_Down"))
+    App.ActiveDocument.getObject("SmallRoomSofa").addObject(App.ActiveDocument.getObject("SRSofa_Left"))
+    App.ActiveDocument.getObject("SmallRoomSofa").addObject(App.ActiveDocument.getObject("SRSofa_Right"))
+    App.ActiveDocument.getObject("SmallRoomSofa").addObject(App.ActiveDocument.getObject("SRSofa_Back"))
+    App.ActiveDocument.getObject("SmallRoomSofa").addObject(App.ActiveDocument.getObject("SRSofa_Up"))
 
 def createCorridorWardrobe():
     App.ActiveDocument.addObject("App::DocumentObjectGroup","CorridorWD")
@@ -1067,6 +1109,7 @@ def processAllSpreadSheetsByMaterial():
 #createSmallRoomWardrobe()
 #createSmallRoomCabinetsUnderTV()
 #createSmallRoomDesk()
+createSmallRoomSofa()
 
 #######################################
 # Corridor
@@ -1079,6 +1122,6 @@ def processAllSpreadSheetsByMaterial():
 #######################################
 #processAllSpreadSheetsByMaterial()
 
-createCabinet('Cab4', 600.0, 860.0, 560.0, {'drawers' : 4}, visibleBack=True)
+#createCabinet('Cab4', 600.0, 860.0, 560.0, {'drawers' : 4}, visibleBack=True)
 
 #execfile('/home/nm/Dev/FreeCadScripts/createBaseCorpus.py')

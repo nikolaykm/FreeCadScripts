@@ -1,8 +1,8 @@
 <COLLADA xmlns="http://www.collada.org/2005/11/COLLADASchema" version="1.4.1">
   <asset>
     <contributor/>
-    <created>2018-10-11T22:02:32.756263</created>
-    <modified>2018-10-11T22:02:32.756320</modified>
+    <created>2018-10-14T00:28:57.351410</created>
+    <modified>2018-10-14T00:28:57.351463</modified>
     <unit name="meter" meter="1.0"/>
     <up_axis>Z_UP</up_axis>
   </asset>
@@ -59,86 +59,6 @@
             </ambient>
             <diffuse>
               <color>0.800000011921 0.800000011921 0.800000011921 1.0</color>
-            </diffuse>
-            <specular>
-              <color>1 1 1 1.0</color>
-            </specular>
-            <shininess>
-              <float>0.0</float>
-            </shininess>
-            <reflective>
-              <color>0.0 0.0 0.0 1.0</color>
-            </reflective>
-            <reflectivity>
-              <float>0.0</float>
-            </reflectivity>
-            <transparent>
-              <color>0.0 0.0 0.0 1.0</color>
-            </transparent>
-            <transparency>
-              <float>1.0</float>
-            </transparency>
-          </phong>
-        </technique>
-        <extra>
-          <technique profile="GOOGLEEARTH">
-            <double_sided>0</double_sided>
-          </technique>
-        </extra>
-      </profile_COMMON>
-    </effect>
-    <effect name="effect_Wall002" id="effect_Wall002">
-      <profile_COMMON>
-        <technique sid="common">
-          <phong>
-            <emission>
-              <color>0.0 0.0 0.0 1.0</color>
-            </emission>
-            <ambient>
-              <color>0.0 0.0 0.0 1.0</color>
-            </ambient>
-            <diffuse>
-              <color>1.0 1.0 1.0 1.0</color>
-            </diffuse>
-            <specular>
-              <color>1 1 1 1.0</color>
-            </specular>
-            <shininess>
-              <float>0.0</float>
-            </shininess>
-            <reflective>
-              <color>0.0 0.0 0.0 1.0</color>
-            </reflective>
-            <reflectivity>
-              <float>0.0</float>
-            </reflectivity>
-            <transparent>
-              <color>0.0 0.0 0.0 1.0</color>
-            </transparent>
-            <transparency>
-              <float>1.0</float>
-            </transparency>
-          </phong>
-        </technique>
-        <extra>
-          <technique profile="GOOGLEEARTH">
-            <double_sided>0</double_sided>
-          </technique>
-        </extra>
-      </profile_COMMON>
-    </effect>
-    <effect name="effect_Wall005" id="effect_Wall005">
-      <profile_COMMON>
-        <technique sid="common">
-          <phong>
-            <emission>
-              <color>0.0 0.0 0.0 1.0</color>
-            </emission>
-            <ambient>
-              <color>0.0 0.0 0.0 1.0</color>
-            </ambient>
-            <diffuse>
-              <color>1.0 1.0 1.0 1.0</color>
             </diffuse>
             <specular>
               <color>1 1 1 1.0</color>
@@ -287,7 +207,87 @@
         </extra>
       </profile_COMMON>
     </effect>
+    <effect name="effect_Wall002" id="effect_Wall002">
+      <profile_COMMON>
+        <technique sid="common">
+          <phong>
+            <emission>
+              <color>0.0 0.0 0.0 1.0</color>
+            </emission>
+            <ambient>
+              <color>0.0 0.0 0.0 1.0</color>
+            </ambient>
+            <diffuse>
+              <color>1.0 1.0 1.0 1.0</color>
+            </diffuse>
+            <specular>
+              <color>1 1 1 1.0</color>
+            </specular>
+            <shininess>
+              <float>0.0</float>
+            </shininess>
+            <reflective>
+              <color>0.0 0.0 0.0 1.0</color>
+            </reflective>
+            <reflectivity>
+              <float>0.0</float>
+            </reflectivity>
+            <transparent>
+              <color>0.0 0.0 0.0 1.0</color>
+            </transparent>
+            <transparency>
+              <float>1.0</float>
+            </transparency>
+          </phong>
+        </technique>
+        <extra>
+          <technique profile="GOOGLEEARTH">
+            <double_sided>0</double_sided>
+          </technique>
+        </extra>
+      </profile_COMMON>
+    </effect>
     <effect name="effect_Wall001" id="effect_Wall001">
+      <profile_COMMON>
+        <technique sid="common">
+          <phong>
+            <emission>
+              <color>0.0 0.0 0.0 1.0</color>
+            </emission>
+            <ambient>
+              <color>0.0 0.0 0.0 1.0</color>
+            </ambient>
+            <diffuse>
+              <color>1.0 1.0 1.0 1.0</color>
+            </diffuse>
+            <specular>
+              <color>1 1 1 1.0</color>
+            </specular>
+            <shininess>
+              <float>0.0</float>
+            </shininess>
+            <reflective>
+              <color>0.0 0.0 0.0 1.0</color>
+            </reflective>
+            <reflectivity>
+              <float>0.0</float>
+            </reflectivity>
+            <transparent>
+              <color>0.0 0.0 0.0 1.0</color>
+            </transparent>
+            <transparency>
+              <float>1.0</float>
+            </transparency>
+          </phong>
+        </technique>
+        <extra>
+          <technique profile="GOOGLEEARTH">
+            <double_sided>0</double_sided>
+          </technique>
+        </extra>
+      </profile_COMMON>
+    </effect>
+    <effect name="effect_Wall005" id="effect_Wall005">
       <profile_COMMON>
         <technique sid="common">
           <phong>
@@ -342,7 +342,7 @@
           </technique_common>
         </source>
         <source id="cubeverts-array0">
-          <float_array count="48" id="cubeverts-array0-array">0 0 0 0 -2.452596 0.8973624 0 0 2.545 0 -2.452596 2.197362 0 -3.752596 2.197362 0 -4.4 2.545 0 -3.752596 0.8973624 0 -4.4 0 0.12 0 0 0.12 0 2.545 0.12 -4.4 0 0.12 -4.4 2.545 0.12 -2.452596 0.8973624 0.12 -2.452596 2.197362 0.12 -3.752596 2.197362 0.12 -3.752596 0.8973624</float_array>
+          <float_array count="48" id="cubeverts-array0-array">0 0 0 0 -2.452596 0.8973624 0 0 2.545 0 -2.452596 2.197362 0 -3.752596 2.197362 0 -4.645 2.545 0 -3.752596 0.8973624 0 -4.645 0 0.12 0 0 0.12 0 2.545 0.12 -4.645 0 0.12 -4.645 2.545 0.12 -2.452596 0.8973624 0.12 -2.452596 2.197362 0.12 -3.752596 2.197362 0.12 -3.752596 0.8973624</float_array>
           <technique_common>
             <accessor count="16" source="#cubeverts-array0-array" stride="3">
               <param type="float" name="X"/>
@@ -364,7 +364,7 @@
     <geometry id="geometry1" name="Window">
       <mesh>
         <source id="cubenormals-array1">
-          <float_array count="360" id="cubenormals-array1-array">0 0 -1 0 0 -1 0 1 -0 0 1 0 0 -1 -0 0 -1 0 -1 0 -0 -1 0 0 -1 0 0 -1 0 -0 -1 0 0 -1 0 0 -1 0 0 -1 0 0 1 0 0 1 0 0 1 0 0 1 0 -0 1 0 0 1 0 0 1 0 0 1 0 0 0 0 1 -0 0 1 -0 0 1 0 0 1 0 1 0 0 1 -0 0 0 -1 0 0 -1 0 -1 0 0 -1 -0 0 0 -1 0 0 -1 0 1 -0 0 1 0 0 -1 -0 0 -1 0 -1 0 0 -1 0 0 -1 0 0 -1 0 0 -1 0 0 -1 0 0 -1 0 0 -1 0 0 1 -0 0 1 0 0 1 0 0 1 -0 0 1 -0 0 1 0 0 1 0 0 1 0 0 0 0 1 -0 0 1 -0 0 1 0 0 1 0 1 0 0 1 -0 0 0 -1 0 0 -1 0 -1 0 0 -1 -0 0 0 -1 0 0 -1 0 -1 -0 0 -1 0 0 0 1 -0 0 1 0 1 -0 0 1 0 -1 0 0 -1 0 0 1 -0 0 1 0 0 0 0 -1 0 0 -1 0 1 -0 0 1 0 0 -1 -0 0 -1 0 -1 0 -0 -1 0 0 -1 0 0 -1 0 -0 -1 0 0 -1 0 0 -1 0 0 -1 0 0 1 0 0 1 0 0 1 0 0 1 0 -0 1 0 0 1 0 0 1 0 0 1 0 0 0 0 1 -0 0 1 -0 0 1 0 0 1 0 1 0 0 1 -0 0 0 -1 0 0 -1 0 -1 0 0 -1 -0 0 0 -1 0 0 -1 0 -1 -0 0 -1 0 0 0 1 -0 0 1 0 1 -0 0 1 0 -1 0 0 -1 0 0 1 0 0 1 0 0</float_array>
+          <float_array count="360" id="cubenormals-array1-array">0 0 -1 0 0 -1 0 1 -0 0 1 0 0 -1 -0 0 -1 0 -1 0 0 -1 0 0 -1 0 0 -1 0 0 -1 0 0 -1 0 0 -1 0 0 -1 0 0 1 0 0 1 -0 0 1 -0 0 1 0 0 1 -0 0 1 0 0 1 0 0 1 0 0 0 0 1 -0 0 1 -0 0 1 0 0 1 0 1 0 0 1 -0 0 0 -1 0 0 -1 0 -1 0 0 -1 -0 0 0 -1 0 0 -1 0 1 -0 0 1 0 0 -1 -0 0 -1 0 -1 0 0 -1 0 0 -1 0 0 -1 0 0 -1 0 0 -1 0 0 -1 0 0 -1 0 0 1 -0 0 1 0 0 1 0 0 1 -0 0 1 -0 0 1 0 0 1 0 0 1 0 0 0 0 1 -0 0 1 -0 0 1 0 0 1 0 1 0 0 1 -0 0 0 -1 0 0 -1 0 -1 0 0 -1 -0 0 0 -1 0 0 -1 0 -1 -0 0 -1 0 0 0 1 -0 0 1 0 1 -0 0 1 0 -1 0 0 -1 0 0 1 -0 0 1 0 0 0 0 -1 0 0 -1 0 1 -0 0 1 0 0 -1 -0 0 -1 0 -1 0 -0 -1 0 0 -1 0 0 -1 0 -0 -1 0 0 -1 0 0 -1 0 0 -1 0 0 1 0 0 1 0 0 1 0 0 1 0 -0 1 0 0 1 0 0 1 0 0 1 0 0 0 0 1 -0 0 1 -0 0 1 0 0 1 0 1 0 0 1 -0 0 0 -1 0 0 -1 0 -1 0 0 -1 -0 0 0 -1 0 0 -1 0 -1 -0 0 -1 0 0 0 1 -0 0 1 0 1 -0 0 1 0 -1 0 0 -1 0 0 1 0 0 1 0 0</float_array>
           <technique_common>
             <accessor count="120" source="#cubenormals-array1-array" stride="3">
               <param type="float" name="X"/>
@@ -374,7 +374,7 @@
           </technique_common>
         </source>
         <source id="cubeverts-array1">
-          <float_array count="192" id="cubeverts-array1-array">0.1 -3.752596 0.8973624 0.05 -2.452596 0.8973624 0.1 -2.452596 0.8973624 0.05 -3.752596 0.8973624 0.05 -2.452596 2.197362 0.1 -2.452596 2.197362 0.1 -3.752596 2.197362 0.05 -3.752596 2.197362 0.05 -3.702596 0.9473624 0.05 -2.502596 0.9473624 0.05 -2.502596 2.147362 0.05 -3.702596 2.147362 0.1 -3.702596 0.9473624 0.1 -2.502596 0.9473624 0.1 -2.502596 2.147362 0.1 -3.702596 2.147362 0.15 -3.100096 0.9523624 0.1 -2.507596 0.9523624 0.15 -2.507596 0.9523624 0.1 -3.100096 0.9523624 0.1 -2.507596 2.142362 0.15 -2.507596 2.142362 0.15 -3.100096 2.142362 0.1 -3.100096 2.142362 0.1 -3.050096 2.092362 0.1 -2.557596 2.092362 0.1 -2.557596 1.002362 0.1 -3.050096 1.002362 0.15 -3.050096 2.092362 0.15 -2.557596 2.092362 0.15 -2.557596 1.002362 0.15 -3.050096 1.002362 0.125 -3.050096 1.002362 0.125 -2.557596 1.002362 0.13 -2.557596 1.002362 0.13 -3.050096 1.002362 0.13 -3.050096 2.092362 0.125 -3.050096 2.092362 0.125 -2.557596 2.092362 0.13 -2.557596 2.092362 0.15 -3.697596 0.9523624 0.1 -3.105096 0.9523624 0.15 -3.105096 0.9523624 0.1 -3.697596 0.9523624 0.1 -3.105096 2.142362 0.15 -3.105096 2.142362 0.15 -3.697596 2.142362 0.1 -3.697596 2.142362 0.1 -3.647596 1.002362 0.1 -3.155096 1.002362 0.1 -3.155096 2.092362 0.1 -3.647596 2.092362 0.15 -3.647596 1.002362 0.15 -3.155096 1.002362 0.15 -3.155096 2.092362 0.15 -3.647596 2.092362 0.125 -3.647596 1.002362 0.125 -3.155096 1.002362 0.13 -3.155096 1.002362 0.13 -3.647596 1.002362 0.13 -3.647596 2.092362 0.125 -3.647596 2.092362 0.125 -3.155096 2.092362 0.13 -3.155096 2.092362</float_array>
+          <float_array count="192" id="cubeverts-array1-array">0.1 -3.752596 0.8973624 0.05 -2.452596 0.8973624 0.1 -2.452596 0.8973624 0.05 -3.752596 0.8973624 0.05 -2.452596 2.197362 0.1 -2.452596 2.197362 0.1 -3.752596 2.197362 0.05 -3.752596 2.197362 0.05 -2.502596 0.9473624 0.05 -2.502596 2.147362 0.05 -3.702596 2.147362 0.05 -3.702596 0.9473624 0.1 -2.502596 0.9473624 0.1 -2.502596 2.147362 0.1 -3.702596 2.147362 0.1 -3.702596 0.9473624 0.15 -3.100096 0.9523624 0.1 -2.507596 0.9523624 0.15 -2.507596 0.9523624 0.1 -3.100096 0.9523624 0.1 -2.507596 2.142362 0.15 -2.507596 2.142362 0.15 -3.100096 2.142362 0.1 -3.100096 2.142362 0.1 -3.050096 2.092362 0.1 -2.557596 2.092362 0.1 -2.557596 1.002362 0.1 -3.050096 1.002362 0.15 -3.050096 2.092362 0.15 -2.557596 2.092362 0.15 -2.557596 1.002362 0.15 -3.050096 1.002362 0.125 -3.050096 1.002362 0.125 -2.557596 1.002362 0.13 -2.557596 1.002362 0.13 -3.050096 1.002362 0.13 -3.050096 2.092362 0.125 -3.050096 2.092362 0.125 -2.557596 2.092362 0.13 -2.557596 2.092362 0.15 -3.697596 0.9523624 0.1 -3.105096 0.9523624 0.15 -3.105096 0.9523624 0.1 -3.697596 0.9523624 0.1 -3.105096 2.142362 0.15 -3.105096 2.142362 0.15 -3.697596 2.142362 0.1 -3.697596 2.142362 0.1 -3.647596 1.002362 0.1 -3.155096 1.002362 0.1 -3.155096 2.092362 0.1 -3.647596 2.092362 0.15 -3.647596 1.002362 0.15 -3.155096 1.002362 0.15 -3.155096 2.092362 0.15 -3.647596 2.092362 0.125 -3.647596 1.002362 0.125 -3.155096 1.002362 0.13 -3.155096 1.002362 0.13 -3.647596 1.002362 0.13 -3.647596 2.092362 0.125 -3.647596 2.092362 0.125 -3.155096 2.092362 0.13 -3.155096 2.092362</float_array>
           <technique_common>
             <accessor count="64" source="#cubeverts-array1-array" stride="3">
               <param type="float" name="X"/>
@@ -389,14 +389,14 @@
         <triangles count="120" material="ref_Window">
           <input source="#cubenormals-array1" semantic="NORMAL" offset="1"/>
           <input source="#cubeverts-array1-vertices" semantic="VERTEX" offset="0"/>
-          <p>0 0 1 0 2 0 3 1 1 1 0 1 2 2 4 2 5 2 1 3 4 3 2 3 6 4 3 4 0 4 7 5 3 5 6 5 8 6 1 6 3 6 8 7 9 7 1 7 4 8 9 8 10 8 4 9 1 9 9 9 7 10 11 10 8 10 7 11 8 11 3 11 7 12 4 12 10 12 7 13 10 13 11 13 2 14 12 14 0 14 13 15 12 15 2 15 13 16 5 16 14 16 2 17 5 17 13 17 15 18 6 18 12 18 12 19 6 19 0 19 5 20 6 20 14 20 14 21 6 21 15 21 5 22 7 22 6 22 4 23 7 23 5 23 9 24 8 24 13 24 13 25 8 25 12 25 8 26 11 26 12 26 12 27 11 27 15 27 11 28 10 28 15 28 15 29 10 29 14 29 10 30 9 30 14 30 14 31 9 31 13 31 16 32 17 32 18 32 19 33 17 33 16 33 18 34 20 34 21 34 17 35 20 35 18 35 22 36 19 36 16 36 23 37 19 37 22 37 24 38 23 38 20 38 24 39 20 39 25 39 26 40 20 40 17 40 26 41 25 41 20 41 19 42 27 42 26 42 19 43 26 43 17 43 19 44 23 44 24 44 19 45 24 45 27 45 22 46 28 46 21 46 21 47 28 47 29 47 21 48 30 48 18 48 29 49 30 49 21 49 31 50 16 50 30 50 30 51 16 51 18 51 22 52 16 52 28 52 28 53 16 53 31 53 21 54 23 54 22 54 20 55 23 55 21 55 26 56 27 56 30 56 30 57 27 57 31 57 27 58 24 58 31 58 31 59 24 59 28 59 24 60 25 60 28 60 28 61 25 61 29 61 25 62 26 62 29 62 29 63 26 63 30 63 32 64 33 64 34 64 32 65 34 65 35 65 36 66 32 66 35 66 37 67 32 67 36 67 38 68 37 68 36 68 38 69 36 69 39 69 34 70 38 70 39 70 33 71 38 71 34 71 32 72 37 72 38 72 32 73 38 73 33 73 36 74 35 74 39 74 39 75 35 75 34 75 40 76 41 76 42 76 43 77 41 77 40 77 42 78 44 78 45 78 41 79 44 79 42 79 46 80 43 80 40 80 47 81 43 81 46 81 48 82 41 82 43 82 48 83 49 83 41 83 44 84 49 84 50 84 44 85 41 85 49 85 47 86 51 86 48 86 47 87 50 87 51 87 47 88 48 88 43 88 47 89 44 89 50 89 42 90 52 90 40 90 53 91 52 91 42 91 53 92 45 92 54 92 42 93 45 93 53 93 55 94 46 94 52 94 54 95 46 95 55 95 52 96 46 96 40 96 45 97 46 97 54 97 45 98 47 98 46 98 44 99 47 99 45 99 49 100 48 100 53 100 53 101 48 101 52 101 48 102 51 102 52 102 52 103 51 103 55 103 51 104 50 104 55 104 55 105 50 105 54 105 50 106 49 106 54 106 54 107 49 107 53 107 56 108 57 108 58 108 56 109 58 109 59 109 60 110 56 110 59 110 61 111 56 111 60 111 62 112 61 112 60 112 62 113 60 113 63 113 58 114 62 114 63 114 57 115 62 115 58 115 61 116 57 116 56 116 61 117 62 117 57 117 58 118 60 118 59 118 63 119 60 119 58 119</p>
+          <p>0 0 1 0 2 0 3 1 1 1 0 1 2 2 4 2 5 2 1 3 4 3 2 3 6 4 3 4 0 4 7 5 3 5 6 5 8 6 4 6 1 6 8 7 9 7 4 7 10 8 7 8 4 8 10 9 4 9 9 9 3 10 11 10 8 10 3 11 8 11 1 11 3 12 7 12 10 12 3 13 10 13 11 13 5 14 12 14 2 14 13 15 12 15 5 15 6 16 14 16 5 16 5 17 14 17 13 17 15 18 0 18 12 18 12 19 0 19 2 19 6 20 0 20 14 20 14 21 0 21 15 21 5 22 7 22 6 22 4 23 7 23 5 23 8 24 11 24 12 24 12 25 11 25 15 25 11 26 10 26 15 26 15 27 10 27 14 27 10 28 9 28 14 28 14 29 9 29 13 29 9 30 8 30 13 30 13 31 8 31 12 31 16 32 17 32 18 32 19 33 17 33 16 33 18 34 20 34 21 34 17 35 20 35 18 35 22 36 19 36 16 36 23 37 19 37 22 37 24 38 23 38 20 38 24 39 20 39 25 39 26 40 20 40 17 40 26 41 25 41 20 41 19 42 27 42 26 42 19 43 26 43 17 43 19 44 23 44 24 44 19 45 24 45 27 45 22 46 28 46 21 46 21 47 28 47 29 47 21 48 30 48 18 48 29 49 30 49 21 49 31 50 16 50 30 50 30 51 16 51 18 51 22 52 16 52 28 52 28 53 16 53 31 53 21 54 23 54 22 54 20 55 23 55 21 55 26 56 27 56 30 56 30 57 27 57 31 57 27 58 24 58 31 58 31 59 24 59 28 59 24 60 25 60 28 60 28 61 25 61 29 61 25 62 26 62 29 62 29 63 26 63 30 63 32 64 33 64 34 64 32 65 34 65 35 65 36 66 32 66 35 66 37 67 32 67 36 67 38 68 37 68 36 68 38 69 36 69 39 69 34 70 38 70 39 70 33 71 38 71 34 71 32 72 37 72 38 72 32 73 38 73 33 73 36 74 35 74 39 74 39 75 35 75 34 75 40 76 41 76 42 76 43 77 41 77 40 77 42 78 44 78 45 78 41 79 44 79 42 79 46 80 43 80 40 80 47 81 43 81 46 81 48 82 41 82 43 82 48 83 49 83 41 83 44 84 49 84 50 84 44 85 41 85 49 85 47 86 51 86 48 86 47 87 50 87 51 87 47 88 48 88 43 88 47 89 44 89 50 89 42 90 52 90 40 90 53 91 52 91 42 91 53 92 45 92 54 92 42 93 45 93 53 93 55 94 46 94 52 94 54 95 46 95 55 95 52 96 46 96 40 96 45 97 46 97 54 97 45 98 47 98 46 98 44 99 47 99 45 99 49 100 48 100 53 100 53 101 48 101 52 101 48 102 51 102 52 102 52 103 51 103 55 103 51 104 50 104 55 104 55 105 50 105 54 105 50 106 49 106 54 106 54 107 49 107 53 107 56 108 57 108 58 108 56 109 58 109 59 109 60 110 56 110 59 110 61 111 56 111 60 111 62 112 61 112 60 112 62 113 60 113 63 113 58 114 62 114 63 114 57 115 62 115 58 115 61 116 57 116 56 116 61 117 62 117 57 117 58 118 60 118 59 118 63 119 60 119 58 119</p>
         </triangles>
       </mesh>
     </geometry>
-    <geometry id="geometry2" name="Wall002">
+    <geometry id="geometry2" name="Wall003">
       <mesh>
         <source id="cubeverts-array2">
-          <float_array count="24" id="cubeverts-array2-array">-1 -0.625 0 -1 -3.6e-17 0 -1 -3.6e-17 2.545 -1 -0.625 2.545 -1.12 -3.6e-17 0 -1.12 -3.6e-17 2.545 -1.12 -0.625 0 -1.12 -0.625 2.545</float_array>
+          <float_array count="24" id="cubeverts-array2-array">-3.22 -0.625 0 -1.12 -0.625 0 -1.12 -0.625 2.545 -3.22 -0.625 2.545 -1.12 -0.505 0 -1.12 -0.505 2.545 -3.22 -0.505 0 -3.22 -0.505 2.545</float_array>
           <technique_common>
             <accessor count="8" source="#cubeverts-array2-array" stride="3">
               <param type="float" name="X"/>
@@ -406,7 +406,7 @@
           </technique_common>
         </source>
         <source id="cubenormals-array2">
-          <float_array count="36" id="cubenormals-array2-array">1 0 0 1 0 0 0 1 -0 0 1 0 -1 0 0 -1 -0 0 0 -1 0 0 -1 0 0 0 -1 0 0 -1 0 0 1 0 0 1</float_array>
+          <float_array count="36" id="cubenormals-array2-array">0 -1 0 0 -1 0 1 0 0 1 -0 0 0 1 -0 0 1 0 -1 0 0 -1 0 0 0 0 -1 0 0 -1 0 0 1 0 0 1</float_array>
           <technique_common>
             <accessor count="12" source="#cubenormals-array2-array" stride="3">
               <param type="float" name="X"/>
@@ -418,19 +418,19 @@
         <vertices id="cubeverts-array2-vertices">
           <input source="#cubeverts-array2" semantic="POSITION"/>
         </vertices>
-        <triangles count="12" material="ref_Wall002">
+        <triangles count="12" material="ref_Wall003">
           <input source="#cubenormals-array2" semantic="NORMAL" offset="1"/>
           <input source="#cubeverts-array2-vertices" semantic="VERTEX" offset="0"/>
-          <p>0 0 1 0 2 0 0 1 2 1 3 1 1 2 4 2 2 2 2 3 4 3 5 3 4 4 6 4 5 4 5 5 6 5 7 5 6 6 0 6 3 6 6 7 3 7 7 7 4 8 1 8 0 8 4 9 0 9 6 9 2 10 5 10 3 10 3 11 5 11 7 11</p>
+          <p>0 0 1 0 2 0 0 1 2 1 3 1 1 2 4 2 2 2 2 3 4 3 5 3 4 4 6 4 5 4 5 5 6 5 7 5 6 6 0 6 3 6 6 7 3 7 7 7 0 8 4 8 1 8 6 9 4 9 0 9 5 10 3 10 2 10 5 11 7 11 3 11</p>
         </triangles>
       </mesh>
     </geometry>
-    <geometry id="geometry3" name="Wall005">
+    <geometry id="geometry3" name="Wall004">
       <mesh>
         <source id="cubeverts-array3">
-          <float_array count="24" id="cubeverts-array3-array">-3.16 -4.46 0.0107693 0.005875705 -4.46 2.548467 -3.154124 -4.46 2.555762 -2.046362e-15 -4.46 0.00347371 -3.16 -4.34 0.0107693 -3.154124 -4.34 2.555762 0.005875705 -4.34 2.548467 -2.046362e-15 -4.34 0.00347371</float_array>
+          <float_array count="48" id="cubeverts-array3-array">-3.28 -0.625 0 -3.28 -3.223719 2.04488 -3.28 -0.625 2.545 -3.28 -4.023719 2.04488 -3.28 -4.645 2.545 -3.28 -3.223719 0.04487949 -3.28 -4.023719 0.04487949 -3.28 -4.645 0 -3.16 -0.625 0 -3.16 -0.625 2.545 -3.16 -4.645 0 -3.16 -4.645 2.545 -3.16 -3.223719 0.04487949 -3.16 -3.223719 2.04488 -3.16 -4.023719 2.04488 -3.16 -4.023719 0.04487949</float_array>
           <technique_common>
-            <accessor count="8" source="#cubeverts-array3-array" stride="3">
+            <accessor count="16" source="#cubeverts-array3-array" stride="3">
               <param type="float" name="X"/>
               <param type="float" name="Y"/>
               <param type="float" name="Z"/>
@@ -438,9 +438,9 @@
           </technique_common>
         </source>
         <source id="cubenormals-array3">
-          <float_array count="36" id="cubenormals-array3-array">0 -1 0 0 -1 0 -0.9999973 0 0.002308736 -0.9999973 0 0.002308736 0 1 0 0 1 -0 0.9999973 0 -0.002308725 0.9999973 0 -0.002308725 -0.002308725 -0 -0.9999974 -0.002308725 0 -0.9999974 0.002308668 0 0.9999974 0.002308668 0 0.9999974</float_array>
+          <float_array count="96" id="cubenormals-array3-array">-1 0 0 -1 0 0 -1 0 0 -1 0 0 -1 -0 0 -1 -0 0 -1 0 0 -1 -0 0 0 1 0 0 1 -0 0 0 -1 0 0 -1 0 0 1 0 0 1 0 -1 0 0 -1 0 0 -1 0 0 -1 0 -0 0 -1 0 -0 -1 0 1 0 0 1 0 0 0 1 0 -0 1 1 -0 0 1 0 0 1 -0 0 1 -0 0 1 0 0 1 0 0 1 0 0 1 0 0</float_array>
           <technique_common>
-            <accessor count="12" source="#cubenormals-array3-array" stride="3">
+            <accessor count="32" source="#cubenormals-array3-array" stride="3">
               <param type="float" name="X"/>
               <param type="float" name="Y"/>
               <param type="float" name="Z"/>
@@ -450,19 +450,19 @@
         <vertices id="cubeverts-array3-vertices">
           <input source="#cubeverts-array3" semantic="POSITION"/>
         </vertices>
-        <triangles count="12" material="ref_Wall005">
+        <triangles count="32" material="ref_Wall004">
           <input source="#cubenormals-array3" semantic="NORMAL" offset="1"/>
           <input source="#cubeverts-array3-vertices" semantic="VERTEX" offset="0"/>
-          <p>0 0 1 0 2 0 0 1 3 1 1 1 4 2 0 2 2 2 4 3 2 3 5 3 6 4 4 4 5 4 7 5 4 5 6 5 3 6 7 6 1 6 1 7 7 7 6 7 4 8 3 8 0 8 4 9 7 9 3 9 1 10 5 10 2 10 6 11 5 11 1 11</p>
+          <p>0 0 1 0 2 0 3 1 4 1 1 1 1 2 4 2 2 2 0 3 5 3 1 3 6 4 7 4 3 4 3 5 7 5 4 5 0 6 7 6 5 6 5 7 7 7 6 7 8 8 0 8 2 8 8 9 2 9 9 9 0 10 8 10 7 10 7 11 8 11 10 11 9 12 2 12 4 12 9 13 4 13 11 13 7 14 10 14 4 14 4 15 10 15 11 15 12 16 1 16 5 16 12 17 13 17 1 17 13 18 3 18 1 18 13 19 14 19 3 19 3 20 15 20 6 20 14 21 15 21 3 21 15 22 5 22 6 22 15 23 12 23 5 23 13 24 8 24 9 24 11 25 14 25 13 25 11 26 13 26 9 26 12 27 8 27 13 27 10 28 15 28 14 28 10 29 14 29 11 29 10 30 8 30 12 30 10 31 12 31 15 31</p>
         </triangles>
       </mesh>
     </geometry>
-    <geometry id="geometry4" name="Wall003">
+    <geometry id="geometry4" name="Window001">
       <mesh>
         <source id="cubenormals-array4">
-          <float_array count="36" id="cubenormals-array4-array">0 -1 0 0 -1 0 1 0 0 1 -0 0 0 1 -0 0 1 0 -1 0 0 -1 0 0 0 0 -1 0 0 -1 0 0 1 0 0 1</float_array>
+          <float_array count="87" id="cubenormals-array4-array">0 0 -1 0 0 -1 -1 0 0 -1 0 0 -1 0 0 -1 0 0 -1 0 0 -1 0 0 0 -1 0 1 -0 0 1 -0 0 1 0 0 0 1 0 0 1 0 0 0 1 -0 0 1 0 -1 0 0 -1 0 0 0 -1 0 0 -1 0 1 0 0 0 -1 0 0 -1 0 0 -1 0 -1 -0 0 0 1 0 1 -0 1 -0 0 1 0 0</float_array>
           <technique_common>
-            <accessor count="12" source="#cubenormals-array4-array" stride="3">
+            <accessor count="29" source="#cubenormals-array4-array" stride="3">
               <param type="float" name="X"/>
               <param type="float" name="Y"/>
               <param type="float" name="Z"/>
@@ -470,9 +470,9 @@
           </technique_common>
         </source>
         <source id="cubeverts-array4">
-          <float_array count="24" id="cubeverts-array4-array">-3.22 -0.625 0 -1.12 -0.625 0 -1.12 -0.625 2.545 -3.22 -0.625 2.545 -1.12 -0.505 0 -1.12 -0.505 2.545 -3.22 -0.505 0 -3.22 -0.505 2.545</float_array>
+          <float_array count="60" id="cubeverts-array4-array">-3.23 -3.273719 0.04487949 -3.18 -3.223719 0.04487949 -3.18 -3.273719 0.04487949 -3.23 -3.223719 0.04487949 -3.23 -3.973719 1.99488 -3.23 -4.023719 2.04488 -3.23 -3.223719 2.04488 -3.23 -3.273719 1.99488 -3.23 -4.023719 0.04487949 -3.23 -3.973719 0.04487949 -3.18 -3.273719 1.99488 -3.18 -4.023719 2.04488 -3.18 -3.973719 1.99488 -3.18 -3.223719 2.04488 -3.18 -4.023719 0.04487949 -3.18 -3.973719 0.04487949 -3.13 -3.973719 0.04487949 -3.13 -3.273719 0.04487949 -3.13 -3.973719 1.99488 -3.13 -3.273719 1.99488</float_array>
           <technique_common>
-            <accessor count="8" source="#cubeverts-array4-array" stride="3">
+            <accessor count="20" source="#cubeverts-array4-array" stride="3">
               <param type="float" name="X"/>
               <param type="float" name="Y"/>
               <param type="float" name="Z"/>
@@ -482,19 +482,19 @@
         <vertices id="cubeverts-array4-vertices">
           <input source="#cubeverts-array4" semantic="POSITION"/>
         </vertices>
-        <triangles count="12" material="ref_Wall003">
+        <triangles count="29" material="ref_Window001">
           <input source="#cubenormals-array4" semantic="NORMAL" offset="1"/>
           <input source="#cubeverts-array4-vertices" semantic="VERTEX" offset="0"/>
-          <p>0 0 1 0 2 0 0 1 2 1 3 1 1 2 4 2 2 2 2 3 4 3 5 3 4 4 6 4 5 4 5 5 6 5 7 5 6 6 0 6 3 6 6 7 3 7 7 7 0 8 4 8 1 8 6 9 4 9 0 9 5 10 3 10 2 10 5 11 7 11 3 11</p>
+          <p>0 0 1 0 2 0 0 1 3 1 1 1 4 2 5 2 6 2 4 3 6 3 7 3 3 4 7 4 6 4 0 5 7 5 3 5 8 6 4 6 9 6 8 7 5 7 4 7 7 8 0 8 2 8 11 9 12 9 13 9 10 10 1 10 13 10 11 11 14 11 12 11 3 12 6 12 13 12 3 13 13 13 1 13 13 14 5 14 11 14 6 15 5 15 13 15 5 16 8 16 14 16 5 17 14 17 11 17 8 18 15 18 14 18 8 19 9 19 15 19 9 20 4 20 12 20 4 21 7 21 10 21 16 22 2 22 17 22 15 23 2 23 16 23 18 24 15 24 16 24 19 25 12 25 18 25 17 26 10 26 19 26 18 27 16 27 19 27 19 28 16 28 17 28</p>
         </triangles>
       </mesh>
     </geometry>
-    <geometry id="geometry5" name="Wall004">
+    <geometry id="geometry5" name="Wall002">
       <mesh>
         <source id="cubenormals-array5">
-          <float_array count="96" id="cubenormals-array5-array">-1 0 0 -1 0 0 -1 0 0 -1 0 0 -1 -0 0 -1 -0 0 -1 0 0 -1 -0 0 0 1 0 0 1 -0 0 0 -1 0 0 -1 0 0 1 0 0 1 0 -1 0 0 -1 0 0 -1 0 0 -1 0 -0 0 -1 0 -0 -1 0 1 0 0 1 0 0 0 1 0 -0 1 1 -0 0 1 -0 0 1 0 -0 1 -0 0 1 0 0 1 0 0 1 0 0 1 0 0</float_array>
+          <float_array count="36" id="cubenormals-array5-array">1 0 0 1 0 0 0 1 -0 0 1 0 -1 0 0 -1 -0 0 0 -1 0 0 -1 0 0 0 -1 0 0 -1 0 0 1 0 0 1</float_array>
           <technique_common>
-            <accessor count="32" source="#cubenormals-array5-array" stride="3">
+            <accessor count="12" source="#cubenormals-array5-array" stride="3">
               <param type="float" name="X"/>
               <param type="float" name="Y"/>
               <param type="float" name="Z"/>
@@ -502,9 +502,9 @@
           </technique_common>
         </source>
         <source id="cubeverts-array5">
-          <float_array count="48" id="cubeverts-array5-array">-3.28 -0.625 0 -3.28 -3.223719 2.04488 -3.28 -0.625 2.545 -3.28 -4.4 2.545 -3.28 -4.023719 2.04488 -3.28 -3.223719 0.04487949 -3.28 -4.023719 0.04487949 -3.28 -4.4 0 -3.16 -0.625 0 -3.16 -0.625 2.545 -3.16 -4.4 0 -3.16 -4.4 2.545 -3.16 -3.223719 0.04487949 -3.16 -3.223719 2.04488 -3.16 -4.023719 2.04488 -3.16 -4.023719 0.04487949</float_array>
+          <float_array count="24" id="cubeverts-array5-array">-1 -0.625 0 -1 -3.6e-17 0 -1 -3.6e-17 2.545 -1 -0.625 2.545 -1.12 -3.6e-17 0 -1.12 -3.6e-17 2.545 -1.12 -0.625 0 -1.12 -0.625 2.545</float_array>
           <technique_common>
-            <accessor count="16" source="#cubeverts-array5-array" stride="3">
+            <accessor count="8" source="#cubeverts-array5-array" stride="3">
               <param type="float" name="X"/>
               <param type="float" name="Y"/>
               <param type="float" name="Z"/>
@@ -514,19 +514,19 @@
         <vertices id="cubeverts-array5-vertices">
           <input source="#cubeverts-array5" semantic="POSITION"/>
         </vertices>
-        <triangles count="32" material="ref_Wall004">
+        <triangles count="12" material="ref_Wall002">
           <input source="#cubenormals-array5" semantic="NORMAL" offset="1"/>
           <input source="#cubeverts-array5-vertices" semantic="VERTEX" offset="0"/>
-          <p>0 0 1 0 2 0 1 1 3 1 2 1 1 2 4 2 3 2 0 3 5 3 1 3 6 4 7 4 4 4 4 5 7 5 3 5 0 6 7 6 5 6 5 7 7 7 6 7 8 8 0 8 2 8 8 9 2 9 9 9 0 10 8 10 7 10 7 11 8 11 10 11 9 12 2 12 3 12 9 13 3 13 11 13 7 14 10 14 3 14 3 15 10 15 11 15 12 16 1 16 5 16 12 17 13 17 1 17 13 18 4 18 1 18 13 19 14 19 4 19 4 20 15 20 6 20 14 21 15 21 4 21 15 22 5 22 6 22 15 23 12 23 5 23 13 24 8 24 9 24 11 25 13 25 9 25 14 26 13 26 11 26 12 27 8 27 13 27 10 28 15 28 14 28 10 29 14 29 11 29 10 30 8 30 12 30 10 31 12 31 15 31</p>
+          <p>0 0 1 0 2 0 0 1 2 1 3 1 1 2 4 2 2 2 2 3 4 3 5 3 4 4 6 4 5 4 5 5 6 5 7 5 6 6 0 6 3 6 6 7 3 7 7 7 4 8 1 8 0 8 4 9 0 9 6 9 2 10 5 10 3 10 3 11 5 11 7 11</p>
         </triangles>
       </mesh>
     </geometry>
-    <geometry id="geometry6" name="Window001">
+    <geometry id="geometry6" name="Wall001">
       <mesh>
         <source id="cubeverts-array6">
-          <float_array count="60" id="cubeverts-array6-array">-3.23 -3.273719 0.04487949 -3.18 -3.223719 0.04487949 -3.18 -3.273719 0.04487949 -3.23 -3.223719 0.04487949 -3.23 -3.973719 1.99488 -3.23 -4.023719 2.04488 -3.23 -3.223719 2.04488 -3.23 -3.273719 1.99488 -3.23 -4.023719 0.04487949 -3.23 -3.973719 0.04487949 -3.18 -3.273719 1.99488 -3.18 -4.023719 2.04488 -3.18 -3.973719 1.99488 -3.18 -3.223719 2.04488 -3.18 -4.023719 0.04487949 -3.18 -3.973719 0.04487949 -3.13 -3.973719 0.04487949 -3.13 -3.273719 0.04487949 -3.13 -3.973719 1.99488 -3.13 -3.273719 1.99488</float_array>
+          <float_array count="24" id="cubeverts-array6-array">-1 -3.6e-17 0 0 0 0 0 0 2.545 -1 -3.6e-17 2.545 -4e-18 0.12 0 -4e-18 0.12 2.545 -1 0.12 0 -1 0.12 2.545</float_array>
           <technique_common>
-            <accessor count="20" source="#cubeverts-array6-array" stride="3">
+            <accessor count="8" source="#cubeverts-array6-array" stride="3">
               <param type="float" name="X"/>
               <param type="float" name="Y"/>
               <param type="float" name="Z"/>
@@ -534,9 +534,9 @@
           </technique_common>
         </source>
         <source id="cubenormals-array6">
-          <float_array count="87" id="cubenormals-array6-array">0 0 -1 0 0 -1 -1 0 0 -1 0 0 -1 0 0 -1 0 0 -1 0 0 -1 0 0 0 -1 0 1 -0 0 1 -0 0 1 0 0 0 1 0 0 1 0 0 0 1 -0 0 1 0 -1 0 0 -1 0 0 0 -1 0 0 -1 0 1 0 0 0 -1 0 0 -1 0 0 -1 0 -1 -0 0 0 1 0 1 -0 1 -0 0 1 0 0</float_array>
+          <float_array count="36" id="cubenormals-array6-array">3.6e-17 -1 0 3.6e-17 -1 0 1 3.333333e-17 -0 1 3.333333e-17 0 0 1 -0 0 1 0 -1 0 0 -1 0 0 0 0 -1 0 0 -1 0 0 1 0 0 1</float_array>
           <technique_common>
-            <accessor count="29" source="#cubenormals-array6-array" stride="3">
+            <accessor count="12" source="#cubenormals-array6-array" stride="3">
               <param type="float" name="X"/>
               <param type="float" name="Y"/>
               <param type="float" name="Z"/>
@@ -546,17 +546,17 @@
         <vertices id="cubeverts-array6-vertices">
           <input source="#cubeverts-array6" semantic="POSITION"/>
         </vertices>
-        <triangles count="29" material="ref_Window001">
+        <triangles count="12" material="ref_Wall001">
           <input source="#cubenormals-array6" semantic="NORMAL" offset="1"/>
           <input source="#cubeverts-array6-vertices" semantic="VERTEX" offset="0"/>
-          <p>0 0 1 0 2 0 0 1 3 1 1 1 4 2 5 2 6 2 4 3 6 3 7 3 3 4 7 4 6 4 0 5 7 5 3 5 8 6 4 6 9 6 8 7 5 7 4 7 7 8 0 8 2 8 11 9 12 9 13 9 10 10 1 10 13 10 11 11 14 11 12 11 3 12 6 12 13 12 3 13 13 13 1 13 13 14 5 14 11 14 6 15 5 15 13 15 5 16 8 16 14 16 5 17 14 17 11 17 8 18 15 18 14 18 8 19 9 19 15 19 9 20 4 20 12 20 4 21 7 21 10 21 16 22 2 22 17 22 15 23 2 23 16 23 18 24 15 24 16 24 19 25 12 25 18 25 17 26 10 26 19 26 18 27 16 27 19 27 19 28 16 28 17 28</p>
+          <p>0 0 1 0 2 0 0 1 2 1 3 1 1 2 4 2 2 2 2 3 4 3 5 3 4 4 6 4 5 4 5 5 6 5 7 5 6 6 0 6 3 6 6 7 3 7 7 7 6 8 1 8 0 8 6 9 4 9 1 9 2 10 7 10 3 10 5 11 7 11 2 11</p>
         </triangles>
       </mesh>
     </geometry>
-    <geometry id="geometry7" name="Wall001">
+    <geometry id="geometry7" name="Wall005">
       <mesh>
         <source id="cubeverts-array7">
-          <float_array count="24" id="cubeverts-array7-array">-1 -3.6e-17 0 0 0 0 0 0 2.545 -1 -3.6e-17 2.545 -4e-18 0.12 0 -4e-18 0.12 2.545 -1 0.12 0 -1 0.12 2.545</float_array>
+          <float_array count="24" id="cubeverts-array7-array">-3.16 -4.645 0 0 -4.645 2.545 -3.16 -4.645 2.545 0 -4.645 0 -3.16 -4.525 0 -3.16 -4.525 2.545 0 -4.525 2.545 0 -4.525 0</float_array>
           <technique_common>
             <accessor count="8" source="#cubeverts-array7-array" stride="3">
               <param type="float" name="X"/>
@@ -566,7 +566,7 @@
           </technique_common>
         </source>
         <source id="cubenormals-array7">
-          <float_array count="36" id="cubenormals-array7-array">3.6e-17 -1 0 3.6e-17 -1 0 1 3.333333e-17 -0 1 3.333333e-17 0 0 1 -0 0 1 0 -1 0 0 -1 0 0 0 0 -1 0 0 -1 0 0 1 0 0 1</float_array>
+          <float_array count="36" id="cubenormals-array7-array">0 -1 0 0 -1 0 -1 0 0 -1 0 0 0 1 0 0 1 -0 1 0 0 1 -0 0 0 0 -1 0 0 -1 0 0 1 0 0 1</float_array>
           <technique_common>
             <accessor count="12" source="#cubenormals-array7-array" stride="3">
               <param type="float" name="X"/>
@@ -578,10 +578,10 @@
         <vertices id="cubeverts-array7-vertices">
           <input source="#cubeverts-array7" semantic="POSITION"/>
         </vertices>
-        <triangles count="12" material="ref_Wall001">
+        <triangles count="12" material="ref_Wall005">
           <input source="#cubenormals-array7" semantic="NORMAL" offset="1"/>
           <input source="#cubeverts-array7-vertices" semantic="VERTEX" offset="0"/>
-          <p>0 0 1 0 2 0 0 1 2 1 3 1 1 2 4 2 2 2 2 3 4 3 5 3 4 4 6 4 5 4 5 5 6 5 7 5 6 6 0 6 3 6 6 7 3 7 7 7 6 8 1 8 0 8 6 9 4 9 1 9 2 10 7 10 3 10 5 11 7 11 2 11</p>
+          <p>0 0 1 0 2 0 0 1 3 1 1 1 4 2 0 2 2 2 4 3 2 3 5 3 6 4 4 4 5 4 7 5 4 5 6 5 3 6 7 6 1 6 1 7 7 7 6 7 0 8 7 8 3 8 4 9 7 9 0 9 6 10 2 10 1 10 6 11 5 11 2 11</p>
         </triangles>
       </mesh>
     </geometry>
@@ -593,12 +593,6 @@
     <material name="Window" id="mat_Window">
       <instance_effect url="#effect_Window"/>
     </material>
-    <material name="Wall002" id="mat_Wall002">
-      <instance_effect url="#effect_Wall002"/>
-    </material>
-    <material name="Wall005" id="mat_Wall005">
-      <instance_effect url="#effect_Wall005"/>
-    </material>
     <material name="Wall003" id="mat_Wall003">
       <instance_effect url="#effect_Wall003"/>
     </material>
@@ -608,8 +602,14 @@
     <material name="Window001" id="mat_Window001">
       <instance_effect url="#effect_Window001"/>
     </material>
+    <material name="Wall002" id="mat_Wall002">
+      <instance_effect url="#effect_Wall002"/>
+    </material>
     <material name="Wall001" id="mat_Wall001">
       <instance_effect url="#effect_Wall001"/>
+    </material>
+    <material name="Wall005" id="mat_Wall005">
+      <instance_effect url="#effect_Wall005"/>
     </material>
   </library_materials>
   <library_visual_scenes>
@@ -636,7 +636,7 @@
         <instance_geometry url="#geometry2">
           <bind_material>
             <technique_common>
-              <instance_material symbol="ref_Wall002" target="#mat_Wall002"/>
+              <instance_material symbol="ref_Wall003" target="#mat_Wall003"/>
             </technique_common>
           </bind_material>
         </instance_geometry>
@@ -645,7 +645,7 @@
         <instance_geometry url="#geometry3">
           <bind_material>
             <technique_common>
-              <instance_material symbol="ref_Wall005" target="#mat_Wall005"/>
+              <instance_material symbol="ref_Wall004" target="#mat_Wall004"/>
             </technique_common>
           </bind_material>
         </instance_geometry>
@@ -654,7 +654,7 @@
         <instance_geometry url="#geometry4">
           <bind_material>
             <technique_common>
-              <instance_material symbol="ref_Wall003" target="#mat_Wall003"/>
+              <instance_material symbol="ref_Window001" target="#mat_Window001"/>
             </technique_common>
           </bind_material>
         </instance_geometry>
@@ -663,7 +663,7 @@
         <instance_geometry url="#geometry5">
           <bind_material>
             <technique_common>
-              <instance_material symbol="ref_Wall004" target="#mat_Wall004"/>
+              <instance_material symbol="ref_Wall002" target="#mat_Wall002"/>
             </technique_common>
           </bind_material>
         </instance_geometry>
@@ -672,7 +672,7 @@
         <instance_geometry url="#geometry6">
           <bind_material>
             <technique_common>
-              <instance_material symbol="ref_Window001" target="#mat_Window001"/>
+              <instance_material symbol="ref_Wall001" target="#mat_Wall001"/>
             </technique_common>
           </bind_material>
         </instance_geometry>
@@ -681,7 +681,7 @@
         <instance_geometry url="#geometry7">
           <bind_material>
             <technique_common>
-              <instance_material symbol="ref_Wall001" target="#mat_Wall001"/>
+              <instance_material symbol="ref_Wall005" target="#mat_Wall005"/>
             </technique_common>
           </bind_material>
         </instance_geometry>
