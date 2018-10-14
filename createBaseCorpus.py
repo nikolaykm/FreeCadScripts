@@ -353,7 +353,7 @@ def createCabinet(name, width, height, depth, addOns, visibleBack = False, isBas
             createDrawer(name + "_Drawer" + str(curDrawer), width, drawerHeight, depth, visibleBack, material, doorsMaterial)
             objects.append(name + "_Drawer" + str(curDrawer) + "_Fusion")
             yA = -14 if visibleBack else -5.3;
-            zA = (curDrawer-1)*drawerHeight-drawerHeightRoundingError
+            zA = (curDrawer-1)*drawerHeight-drawerHeightRoundingError*curDrawer
             App.activeDocument().getObject(name + "_Drawer" + str(curDrawer) + "_Fusion").Placement=App.Placement(App.Vector(0,yA,zA), App.Rotation(0,0,0), App.Vector(0,0,0)) 
 
     if isBase:
@@ -433,7 +433,7 @@ def createDrawer(name, width, height, depth, visibleBack, material, doorsMateria
     placementMatrix.append({'name':'_Front', 'vec' : (0,-(depth-sCantT-3*(boardThickness if visibleBack else cardboardThickness)-5)/2, zeroZ+drawerSliderHole+2*cardboardThickness+drawerSliderHoleToBottom+boardThickness, 0, 0, 90)})
 
     #create left side
-    cants = [sCantT, sCantT, 0, 0]
+    cants = [0, sCantT, 0, 0]
     calcWidth = depth-(boardThickness if visibleBack else cardboardThickness)-5
     calcHeight = height-2*30
     zeroZ = (calcHeight+cants[0]+cants[1])/2
@@ -441,7 +441,7 @@ def createDrawer(name, width, height, depth, visibleBack, material, doorsMateria
     placementMatrix.append({'name':'_LeftSide', 'vec' : (-width/2+boardThickness+5,0,zeroZ+drawerSliderHoleToBottom+cardboardThickness+boardThickness, 90, 0, 90)})
 
     #create right side
-    cants = [sCantT, sCantT, 0, 0]
+    cants = [sCantT, 0, 0, 0]
     calcWidth = depth-(boardThickness if visibleBack else cardboardThickness)-5
     calcHeight = height-2*30
     zeroZ = (calcHeight+cants[0]+cants[1])/2
@@ -565,7 +565,7 @@ def createPlots(height):
     plotProperties = []
     plotProperties.append(["_Right", 2172.0, App.Placement(App.Vector(-2252,-420,height-40),  App.Rotation(App.Vector(0,0,1),0))])
     plotProperties.append(["_Front", 2020.0, App.Placement(App.Vector(-3640,-1130,height-40), App.Rotation(App.Vector(0,0,1),90))])
-    plotProperties.append(["_Left", 2060.0, App.Placement(App.Vector(-2308,-2023,height-40),  App.Rotation(App.Vector(0,0,1),180))])
+    plotProperties.append(["_Left", 2060.0, App.Placement(App.Vector(-2308,-2024,height-40),  App.Rotation(App.Vector(0,0,1),180))])
 
     for plotProp in plotProperties:
         createPlot('PlotsGranite', name, plotProp[0], plotProp[1], plotObjects)
@@ -596,7 +596,7 @@ def createBackForPlots(height):
     #create backs for plots
 
     s = sCantT
-
+#TODO: shrink left plots from 203 to 197 so then can match the other cabinets
     pp = []
     pp.append(["_Right1", 2100.0, height,    [0, 0, 0, 0], plotsBackMaterial, "W"])
     pp.append(["_Front1", 70.0,   height,    [0, s, 0, 0], plotsBackMaterial, "W"])
@@ -1094,7 +1094,7 @@ def processAllSpreadSheetsByMaterial():
 #createBaseCorpuses(860.0)
 #createPlots(900)
 #createVitodens()
-#createBackForPlots(600.0)
+createBackForPlots(600.0)
 #createVitodensDownCabinet()
 #createKitchenDownPlanks()
 #createColumnBoards()
