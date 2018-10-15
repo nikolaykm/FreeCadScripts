@@ -333,7 +333,7 @@ def createCabinet(name, width, height, depth, addOns, visibleBack = False, isBas
         doorsHolesSide = addOn[9] if len(addOn) >= 10 else '-'
         pp.append([addOn[0], addOn[1], addOn[2], addOn[3], doorsMaterial if addOn[7] else material, 'H' if addOn[7] else 'W', boardThickness, doorsHoles, doorsHolesSide])
         xPos = addOn[4]
-        yPos = (-baseHeight/2-baseCants[0]-2) if addOn[7] else addOn[5]
+        yPos = ((-baseHeight/2-baseCants[0]-2) if addOn[7] else 0) + addOn[5]
         zPos = ((height/2 - ((legHeight+2) if isBase else 0)/2) if addOn[7] else 0) + addOn[6]
         placementMatrix.append({'name':addOn[0], 'vec' : (xPos, yPos, zPos, 0, 0, (90 if addOn[7] else 0))});
 
@@ -662,9 +662,9 @@ def createKitchenDownPlanks():
 def createColumnBoards():
 
     pp = []
-    pp.append(["_Column1",     620.0,  2200.0, [0, 0.8, 0.8,   0], columnMaterial, "H"])
-    pp.append(["_Column2",     710.0,  2450.0, [0, 0.8, 0.8, 0.8], columnMaterial, "H"])
-    pp.append(["_Column3",     620.0,  2450.0, [0, 0.8, 0.8,   0], columnMaterial, "H"])
+    pp.append(["_Column1",     620.0,  2200.0, [0, 0, 0, 0], columnMaterial, "H"])
+    pp.append(["_Column2",     710.0,  2450.0, [0, 0, 0.8, 0.8], columnMaterial, "H"])
+    pp.append(["_Column3",     620.0,  2450.0, [0, 0, 0, 0], columnMaterial, "H"])
 
     placementMatrix = [{'name':"_Column1",     'vec':  (-1163,    -425,  1100,    90, 0, 90)},
                        {'name':"_Column2",     'vec':  (-816,     -735,  1225,    0,  0, 90)},
@@ -723,20 +723,20 @@ def createShelvesAroundKitchenWindow():
 def createLivingRoomShelves():
     
     pp = []
-    pp.append(["_LivRoom1",    1500.0, 470.0,  [2, 0, 0, 0],         cabMaterial, "W"])
-    pp.append(["_LivRoom2",    1500.0, 300.0,  [2, 0, 0, 0],         cabMaterial, "W"])
-    pp.append(["_LivRoom3",    1500.0, 300.0,  [2, 0, 0, 0],         cabMaterial, "W"])
+    pp.append(["_LivRoom1",    1500.0, 450.0,  [0.8, 0, 0, 0],         cabMaterial, "W"])
+    pp.append(["_LivRoom2",    1500.0, 230.0,  [0.8, 0, 0, 0],         cabMaterial, "W"])
+    pp.append(["_LivRoom3",    1500.0, 230.0,  [0.8, 0, 0, 0],         cabMaterial, "W"])
 
-    pp.append(["_ShelvesR1",    318.0,  2100.0,  [0.8,   0.8,   0.8,   0.8], cabMaterial, "H"])
-    pp.append(["_ShelvesR2",    300.0,  2100.0,  [0.8,   0.8,   0.8,   0.8], cabMaterial, "H"])
-    pp.append(["_ShelvesR3",    300.0,  300.0,   [0,     0,     0,     0],   cabMaterial, "-"])
-    pp.append(["_ShelvesR4",    300.0,  300.0,   [0,     0,     0,     0],   cabMaterial, "-"])
-    pp.append(["_ShelvesR5",    300.0,  300.0,   [0,     0,     0,     0],   cabMaterial, "-"])
+    pp.append(["_ShelvesR1",    318.0,  2100.0,  [0.8,   0.8,   0.8,     0],   cabMaterial, "H"])
+    pp.append(["_ShelvesR2",    300.0,  2100.0,  [0.8,   0.8,   0,     0.8],   cabMaterial, "H"])
+    pp.append(["_ShelvesR3",    300.0,  300.0,   [0,     0,     0,       0],   cabMaterial, "-"])
+    pp.append(["_ShelvesR4",    300.0,  300.0,   [0,     0,     0,       0],   cabMaterial, "-"])
+    pp.append(["_ShelvesR5",    300.0,  300.0,   [0,     0,     0,       0],   cabMaterial, "-"])
 
 
-    placementMatrix = [{'name':"_LivRoom1",    'vec':  (2051,     -349,   900,     0,  0, 0)},
-                       {'name':"_LivRoom2",    'vec':  (2051,     -264,   1100,    0,  0, 0)},
-                       {'name':"_LivRoom3",    'vec':  (2051,     -264,   1500,    0,  0, 0)},
+    placementMatrix = [{'name':"_LivRoom1",    'vec':  (2051,     -339,   900,     0,  0, 0)},
+                       {'name':"_LivRoom2",    'vec':  (2051,     -229,   1100,    0,  0, 0)},
+                       {'name':"_LivRoom3",    'vec':  (2051,     -229,   1500,    0,  0, 0)},
                        {'name':"_ShelvesR1",   'vec':  (3801,     -274.0, 1150,     90, 0, 90)},
                        {'name':"_ShelvesR2",   'vec':  (3969,     -115.0, 1150,     0, 0, 90)},
                        {'name':"_ShelvesR3",   'vec':  (3969,     -283.0, 500,     0, 0, 0)},
@@ -744,6 +744,21 @@ def createLivingRoomShelves():
                        {'name':"_ShelvesR5",   'vec':  (3969,     -283.0, 1500,    0, 0, 0)}]
 
     createBoards("LivingShelves", pp, placementMatrix, groupByName=True)
+
+def createLivingRoomDown():
+    pp = []
+    pp.append(["_Down1", 1732.0, 100.0,  [0.8, 0.8, 0.8, 0.8], cabMaterial, "W"])
+    pp.append(["_Down2", 1732.0, 100.0,  [0.8, 0.8, 0.8, 0.8], cabMaterial, "W"])
+    pp.append(["_Down3", 430.0,  100.0,  [0.8, 0.8, 0.8, 0.8], cabMaterial, "W"])
+    pp.append(["_Down4", 430.0,  100.0,  [0.8, 0.8, 0.8, 0.8], cabMaterial, "W"])
+
+    placementMatrix = [{'name':"_Down1",    'vec':  (1185,    -515,  50,  0,   0, 90)},
+                       {'name':"_Down2",    'vec':  (2917,    -515,  50,  0,   0, 90)},
+                       {'name':"_Down3",    'vec':  (3783,    -330,  50,  90,  0, 90)},
+                       {'name':"_Down4",    'vec':  (300,     -330,  50,  90,  0, 90)}]
+
+    createBoards("LivingDown", pp, placementMatrix, groupByName=True)
+
 
 def createSofaShelves():
     pp = []
@@ -763,21 +778,22 @@ def createSofaShelves():
     pp.append(["_ShelfV6", 122.0, 299.0,  [  0,   0,   0.8, 0], cabMaterial, "H"])
     pp.append(["_Back",    964.0, 1564.0, [  0,   0,   0,   0], cabMaterial, "H"])
 
-    placementMatrix = [{'name':"_Bottom",   'vec':  (0,    0, 0,      0, 0, 0)},
-                       {'name':"_Up",       'vec':  (0,    0, 1582,   0, 0, 0)},
-                       {'name':"_Left",     'vec':  (-500, 0, 800,    0, 90, 0)},
-                       {'name':"_Right",    'vec':  (482,  0, 800,    0, 90, 0)},
-                       {'name':"_Shelf1",   'vec':  (0,    -9, 317,    0, 0, 0)},
-                       {'name':"_Shelf2",   'vec':  (0,    -9, 634,    0, 0, 0)},
-                       {'name':"_Shelf3",   'vec':  (0,    -9, 951,    0, 0, 0)},
-                       {'name':"_Shelf4",   'vec':  (0,    -9, 1268,   0, 0, 0)},
-                       {'name':"_ShelfV1",  'vec':  (-200, -9, 484.5,  90, 0, 90)},
-                       {'name':"_ShelfV2",  'vec':  (0,    -9, 484.5,  90, 0, 90)},
-                       {'name':"_ShelfV3",  'vec':  (200,  -9, 484.5,  90, 0, 90)},
-                       {'name':"_ShelfV4",  'vec':  (-200, -9, 1118.5, 90, 0, 90)},
-                       {'name':"_ShelfV5",  'vec':  (0,    -9, 1118.5, 90, 0, 90)},
-                       {'name':"_ShelfV6",  'vec':  (200,  -9, 1118.5, 90, 0, 90)},
-                       {'name':"_Back",     'vec':  (0,    70, 800,  0, 0, 90)}]
+    x=1000
+    placementMatrix = [{'name':"_Bottom",   'vec':  (x+0,    x+0, 0,      0, 0, 0)},
+                       {'name':"_Up",       'vec':  (x+0,    x+0, 1582,   0, 0, 0)},
+                       {'name':"_Left",     'vec':  (x+-500, x+0, 800,    0, 90, 0)},
+                       {'name':"_Right",    'vec':  (x+482,  x+0, 800,    0, 90, 0)},
+                       {'name':"_Shelf1",   'vec':  (x+0,    x+-9, 317,    0, 0, 0)},
+                       {'name':"_Shelf2",   'vec':  (x+0,    x+-9, 634,    0, 0, 0)},
+                       {'name':"_Shelf3",   'vec':  (x+0,    x+-9, 951,    0, 0, 0)},
+                       {'name':"_Shelf4",   'vec':  (x+0,    x+-9, 1268,   0, 0, 0)},
+                       {'name':"_ShelfV1",  'vec':  (x+-200, x+-9, 484.5,  90, 0, 90)},
+                       {'name':"_ShelfV2",  'vec':  (x+0,    x+-9, 484.5,  90, 0, 90)},
+                       {'name':"_ShelfV3",  'vec':  (x+200,  x+-9, 484.5,  90, 0, 90)},
+                       {'name':"_ShelfV4",  'vec':  (x+-200, x+-9, 1118.5, 90, 0, 90)},
+                       {'name':"_ShelfV5",  'vec':  (x+0,    x+-9, 1118.5, 90, 0, 90)},
+                       {'name':"_ShelfV6",  'vec':  (x+200,  x+-9, 1118.5, 90, 0, 90)},
+                       {'name':"_Back",     'vec':  (x+0,    x+70, 800,  0, 0, 90)}]
 
 
     createBoards("SofaShelves", pp, placementMatrix, groupByName=True)
@@ -823,7 +839,11 @@ def createLivingRoomCorpuses():
     createCabinet('LivCab4_Up', 500.0, 400.0, 430.0, {'doors' : 1, 'shelves':1, 'doorsHoles' : 2, 'doorsHolesSide': 'S'}, groupName='LivingCabinets', isBase=False)
     createCabinet('LivCab5_Up', 500.0, 400.0, 430.0, {'doors' : 1, 'shelves':1, 'doorsHoles' : 2, 'doorsHolesSide': 'S'}, groupName='LivingCabinets', isBase=False)
     createCabinet('LivCab6_Up', 500.0, 400.0, 430.0, {'doors' : 1, 'shelves':1, 'doorsHoles' : 2, 'doorsHolesSide': 'S'}, groupName='LivingCabinets', isBase=False)
-    createCabinet('LivCab8', 300.0, 882.0, 280.0, {}, groupName='LivingCabinets', isBase=False, visibleBack=True)
+
+    addOnsTVColumn = {'list': [["Plank1", 264.0, 846.0, [0, 0, 0, 0], 0, 21, 0, True],
+                               ["Plank2", 264.0, 846.0, [0, 0, 0, 0], 0, 39, 0, True],
+                               ["Plank3", 264.0, 846.0, [0, 0, 0, 0], 0, 57, 0, True]] }
+    createCabinet('LivCab8', 300.0, 882.0, 230.0, addOnsTVColumn, groupName='LivingCabinets', isBase=False, visibleBack=True)
     createCabinet('LivCab9', 770.0, 300.0, 300.0, {'doors' : 2, 'shelves':1, 'doorsWallLeft' : True, 'doorsHoles' : 2, 'doorsHolesSide': 'S'}, groupName='LivingCabinets', isBase=False)
 
     placementMatrix = [{'name':'LivCab1_Fusion',      'x':551,       'y':-331,       'z':100,        'xR':0, 'yR':1, 'zR':0, 'R':0},
@@ -838,7 +858,7 @@ def createLivingRoomCorpuses():
                        {'name':'LivCab4_Up_Fusion',   'x':2051,      'y':-331,       'z':1800,       'xR':0, 'yR':1, 'zR':0, 'R':0},
                        {'name':'LivCab5_Up_Fusion',   'x':2551,      'y':-331,       'z':1800,       'xR':0, 'yR':1, 'zR':0, 'R':0},
                        {'name':'LivCab6_Up_Fusion',   'x':3051,      'y':-331,       'z':1800,       'xR':0, 'yR':1, 'zR':0, 'R':0},
-                       {'name':'LivCab8_Fusion',      'x':2051,      'y':-246,       'z':918,        'xR':0, 'yR':1, 'zR':0, 'R':0},
+                       {'name':'LivCab8_Fusion',      'x':2051,      'y':-229,       'z':918,        'xR':0, 'yR':1, 'zR':0, 'R':0},
                        {'name':'LivCab9_Fusion',      'x':-84,       'y':-396,       'z':1900,       'xR':0, 'yR':1, 'zR':0, 'R':0}]
 
     placeObjects(placementMatrix)
@@ -1063,7 +1083,9 @@ def processAllSpreadSheetsByMaterial():
                           x['HCantRight']+x['HCantLeft'] == curRowDict['HCantRight']+curRowDict['HCantLeft'] and \
                           x['BoardThickness'] == curRowDict['BoardThickness'] and \
                           x['WCantFront']+x['WCantBack'] == curRowDict['WCantFront']+curRowDict['WCantBack'] and \
-                          x['ByFlader'] == curRowDict['ByFlader']:
+                          x['ByFlader'] == curRowDict['ByFlader'] and \
+                          (('Holes' not in x) or ('Holes' not in curRowDict) or (x['Holes'] == curRowDict['Holes'])) and \
+                          (('HolesSide' not in x) or ('HolesSide' not in curRowDict) or (x['HolesSide'] == curRowDict['HolesSide'])):
                               x['Count'] = x['Count'] + 1
                               found = True
                               break
@@ -1085,7 +1107,7 @@ def processAllSpreadSheetsByMaterial():
             edgeThickness = max(x['WCantFront'], x['WCantBack'], x['HCantLeft'], x['HCantRight'])
             canRotate = 0 if x['ByFlader']=='H' else (0 if x['ByFlader']=='W' else 1)
 
-            row = [x['Name'], length, width, x['Count'], canRotate, longEdgeCount, shortEdgeCount, edgeThickness, x['Material'], x['Holes'], x['HolesSide']]
+            row = [x['Name'], length, width, x['Count'], canRotate, longEdgeCount, shortEdgeCount, edgeThickness, x['Material'], x['Holes'] if 'Holes' in x else 0, x['HolesSide'] if 'HolesSide' in x else 0]
             writeRecordInSpreadsheet(mat + "_Spreadsheet", row)
                     
 ######################################
@@ -1104,13 +1126,14 @@ def processAllSpreadSheetsByMaterial():
 #######################################
 # Column
 #######################################
-#createColumnBoards()
+createColumnBoards()
 
 #######################################
 # Living Room
 #######################################
-createLivingRoomCorpuses()
+#createLivingRoomCorpuses()
 #createLivingRoomShelves()
+#createLivingRoomDown()
 #createSofaShelves()
 
 #######################################
