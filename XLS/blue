@@ -15,7 +15,7 @@ SRCab1_WholeBlend_Sketch	364	306	2	0	1	0	0.8	blue	0	-
 SRCab1_Door1_Sketch	434	393	2	0	2	2	2	blue	2	L
 SRCab2_Base_Sketch	798	306	2	0	1	2	0.8	blue	0	-
 SRCab2_WholeBlend_Sketch	764	306	2	0	1	0	0.8	blue	0	-
-SRCab2_Drawer1_Door_Sketch	214	793	4	0	2	2	2	blue	0	-
+SRCab2_Drawer1_Door_Sketch	214	793	2	0	2	2	2	blue	0	-
 SRCab2_Drawer1_Front_Sketch	718	147	8	1	1	0	0.8	blue	0	-
 SRCab2_Drawer1_LeftSide_Sketch	302	160	8	1	1	0	0.8	blue	0	-
 SR_Plot_Sketch	1196	326	1	0	2	2	2	blue	0	-

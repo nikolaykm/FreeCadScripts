@@ -957,7 +957,7 @@ def createSmallRoomDesk():
 def createSmallRoomSofa():
     App.ActiveDocument.addObject("App::DocumentObjectGroup","SmallRoomSofa")
 
-    pp = [["_Down",  2500.0, 800.0, [2, 2, 2, 2], greenMaterial, "W"]]
+    pp = [["_Down",  2500.0, 800.0, [2, 2, 2, 2], yellowMaterial, "W"]]
     placementMatrix = [{'name':"_Down",  'vec':  (-3160,-1890, 600, 90, 0, 90)}]
     createBoards("SRSofa", pp, placementMatrix)
 

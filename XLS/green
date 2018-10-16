@@ -1,5 +1,5 @@
 Name	Length	Width	Count	CanRotate	LongCantCount	ShortCantCount	EdgeThickness	CantMaterial	PantsHolesCount	SideForHoles
-SRSofa_Down_Sketch	2496	796	1	0	2	2	2	green	0	-
+SRCab2_Drawer1_Door_Sketch	214	793	1	0	2	2	2	green	0	-
 SRDeskLeft_Base_Sketch	528	426	1	0	1	2	0.8	green	0	-
 SRDeskLeft_LeftSide_Sketch	713	426	2	0	1	1	0.8	green	0	-
 SRDeskLeft_WholeBlend_Sketch	494	426	1	0	1	0	0.8	green	0	-
