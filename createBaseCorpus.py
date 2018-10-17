@@ -504,17 +504,17 @@ def createBaseCorpuses(height):
                         ["Door1", 597.0, 137.0, [2, 2, 2, 2], 0, 0, -309.5, True, 2, 'L']]}
     createCabinet('Oven', 600.0, height, 560.0, addOns, groupName="BaseCabinets")
 
-    addOns = {'shelves' : 1, 'list' : [["Plank1", 100.0, height-103.0, [0,0,0,0], -550, 0, 0, True],
-              ["Plank2", 197.0, height-103.0, [2,2,0,2], -102, 0, 0, True], 
-              ["Door1", 597.0, height-103.0, [2,2,2,2], 298, 0, 0, True, 2, 'L']]}
+    addOns = {'shelves' : 1, 'list' : [["Plank1", 100.0, height-104.5, [0,0,0,0], -550, 0, 0, True],
+              ["Plank2", 197.0, height-104.5, [2,2,0,2], -102, 0, 0, True], 
+              ["Door1", 597.0, height-104.5, [2,2,2,2], 298, 0, 0, True, 2, 'L']]}
     createCabinet('Cab1', 1200.0, height, 480.0, addOns, groupName="BaseCabinets")
 
     createCabinet('Cab2', 442.0, height, 490.0, {'doors' : 1, 'doorsWallRight' : True, 'shelves': 1, 'doorsHoles' : 2, 'doorsHolesSide': 'L'}, groupName="BaseCabinets")
     createCabinet('Sink', 600.0, height, 560.0, {'doors' : 1, 'doorsWallLeft' : True, 'doorsHoles' : 2, 'doorsHolesSide': 'L'}, groupName="BaseCabinets")
 
-    addOns = {'shelves' : 1, 'list':[["Plank1", 100.0, height-103.0, [0,0,0,0], 492, 0, 0, True],
-              ["Plank2", 197.0, height-103.0, [2,2,2,0], 7.5, 0, 0, True], 
-              ["Door1", 450.0, height-103.0, [2,2,2,2], -318.5, 0, 0, True, 2, 'L']]}
+    addOns = {'shelves' : 1, 'list':[["Plank1", 100.0, height-104.5, [0,0,0,0], 492, 0, 0, True],
+              ["Plank2", 197.0, height-104.5, [2,2,2,0], 7.5, 0, 0, True], 
+              ["Door1", 450.0, height-104.5, [2,2,2,2], -318.5, 0, 0, True, 2, 'L']]}
     createCabinet('Cab3', 1090.0, height, 370.0, addOns, groupName="BaseCabinets")
  
     createCabinet('Cab4', 600.0, height, 560.0, {'drawers' : 4}, visibleBack=True, groupName="BaseCabinets")
@@ -1148,7 +1148,7 @@ def processAllSpreadSheetsByMaterial():
 # Small room
 #######################################
 #createSmallRoomWardrobe()
-createSmallRoomCabinetsUnderTV()
+#createSmallRoomCabinetsUnderTV()
 #createSmallRoomDesk()
 #createSmallRoomSofa()
 
@@ -1162,7 +1162,5 @@ createSmallRoomCabinetsUnderTV()
 #Final Processing
 #######################################
 #processAllSpreadSheetsByMaterial()
-
-#createCabinet('Cab4', 600.0, 860.0, 560.0, {'drawers' : 4}, visibleBack=True)
 
 #execfile('/home/nm/Dev/FreeCadScripts/createBaseCorpus.py')
