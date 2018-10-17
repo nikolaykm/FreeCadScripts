@@ -1000,19 +1000,40 @@ def createCorridorWardrobe():
 def createPortmanto():
     App.ActiveDocument.addObject("App::DocumentObjectGroup","CorridorPortmanto")
 
-#TODO: Add boots planks in the mechanism
-    addOnsBoots =    {'list': [["Door1", 658.0, 380.0,  [2, 2, 2, 2], 0, 21, -548,  True],
-                               ["Door2", 658.0, 380.0,  [2, 2, 2, 2], 0, 21, -174,  True],
-                               ["Door3", 658.0, 380.0,  [2, 2, 2, 2], 0, 21, 200, True],
-                               ["Door4", 658.0, 380.0,  [2, 2, 2, 2], 0, 21, 574, True]] }
+    addOnsBoots =    {'list': [["Door1", 658.0, 380.0,  [2,   2, 2, 2], 0, 21, -575,  True],
+                               ["Pl11",  658.0, 150.0,  [0.8, 0, 0, 0], 0, 51, -575,  True],
+                               ["Pl12",  658.0, 150.0,  [0.8, 0, 0, 0], 0, 81, -575,  True],
+                               ["Pl13",  658.0, 150.0,  [0.8, 0, 0, 0], 0, 121,-575,  True],
+                               ["Pl14",  658.0,  96.0,  [0.8, 0, 0, 0], 0, 151,-575,  True],
 
-    createCabinet('CorBoots', 700.0, 1628.0, 300.0, addOnsBoots, groupName='CorridorPortmanto', haveWholeBlend=True,  material=veronaMaterial, doorsMaterial=newspapersMaterial)
+                               ["Door2", 658.0, 380.0,  [2, 2, 2,   2], 0, 21, -190,  True],
+                               ["Pl21",  658.0, 150.0,  [0.8, 0, 0, 0], 0, 51, -190,  True],
+                               ["Pl22",  658.0, 150.0,  [0.8, 0, 0, 0], 0, 81, -190,  True],
+                               ["Pl23",  658.0, 150.0,  [0.8, 0, 0, 0], 0, 121,-190,  True],
+                               ["Pl24",  658.0,  96.0,  [0.8, 0, 0, 0], 0, 151,-190,  True],
 
-    placementMatrix = [{'name':'CorBoots_Fusion',      'x':-432,       'y':2786,       'z':100,        'xR':0, 'yR':0, 'zR':1, 'R':270}]
+                               ["Door3", 658.0, 380.0,  [2, 2, 2,   2], 0, 21,  195,  True],
+                               ["Pl31",  658.0, 150.0,  [0.8, 0, 0, 0], 0, 51,  195,  True],
+                               ["Pl32",  658.0, 150.0,  [0.8, 0, 0, 0], 0, 81,  195,  True],
+                               ["Pl33",  658.0, 150.0,  [0.8, 0, 0, 0], 0, 121, 195,  True],
+                               ["Pl34",  658.0,  96.0,  [0.8, 0, 0, 0], 0, 151, 195,  True],
+
+                               ["Door4", 658.0, 380.0,  [2, 2, 2,   2], 0, 21,  580,  True],
+                               ["Pl41",  658.0, 150.0,  [0.8, 0, 0, 0], 0, 51,  580,  True],
+                               ["Pl42",  658.0, 150.0,  [0.8, 0, 0, 0], 0, 81,  580,  True],
+                               ["Pl43",  658.0, 150.0,  [0.8, 0, 0, 0], 0, 121, 580,  True],
+                               ["Pl44",  658.0,  96.0,  [0.8, 0, 0, 0], 0, 151, 580,  True]]}
+
+    createCabinet('CorBoots', 700.0, 1628.0, 300.0, addOnsBoots, groupName='CorridorPortmanto', haveWholeBlend=True,  material=veronaMaterial, doorsMaterial=newspapersMaterial, legHeight=50.0)
+
+    placementMatrix = [{'name':'CorBoots_Fusion',      'x':-432,       'y':2786,       'z':50,        'xR':0, 'yR':0, 'zR':1, 'R':270}]
 
     placeObjects(placementMatrix)
 
-    pp = [["_Back",   600.0, 2000.0, [2, 2, 2, 2], veronaMaterial, "H"],
+    pp = [["_Down1",  300.0, 50.0,   [0.8, 0.8, 0.8, 0.8], veronaMaterial, "H"],
+          ["_Down2",  300.0, 50.0,   [0.8, 0.8, 0.8, 0.8], veronaMaterial, "H"],
+          ["_Down3",  664.0, 50.0,   [0.8, 0.8, 0.8, 0.8], veronaMaterial, "H"],
+          ["_Back",   600.0, 2000.0, [2, 2, 2, 2], veronaMaterial, "H"],
           ["_Shelf1", 600.0, 264.0,  [2, 0, 2, 2], newspapersMaterial, "H"],
           ["_Shelf2", 600.0, 264.0,  [2, 0, 2, 2], newspapersMaterial, "H"],
           ["_Shelf3", 600.0, 264.0,  [2, 0, 2, 2], newspapersMaterial, "H"],
@@ -1023,7 +1044,10 @@ def createPortmanto():
           ["_Front2b",150.0, 264.0,  [0, 0, 2, 2], veronaMaterial, "H"],
           ["_Front3", 150.0, 264.0,  [0, 0, 2, 2], veronaMaterial, "H"]]
 
-    placementMatrix = [{'name':"_Back",   'vec':  (-280, 2136, 1000, -90, 0, 90)},
+    placementMatrix = [{'name':"_Down1",  'vec':  (-431, 2454, 25,    0, 0, 90)},
+                       {'name':"_Down2",  'vec':  (-431, 3136, 25,    0, 0, 90)},
+                       {'name':"_Down3",  'vec':  (-555, 2786, 25,   -90, 0, 90)},
+                       {'name':"_Back",   'vec':  (-280, 2136, 1000, -90, 0, 90)},
                        {'name':"_Shelf1", 'vec':  (-429, 2136, 400,  -90, 0, 0)},
                        {'name':"_Shelf2", 'vec':  (-429, 2136, 1600, -90, 0, 0)},
                        {'name':"_Shelf3", 'vec':  (-429, 2136, 418,  -90, 0, 0)},
@@ -1037,16 +1061,8 @@ def createPortmanto():
     createBoards("CorPor", pp, placementMatrix)
 
     App.ActiveDocument.getObject("CorridorPortmanto").addObject(App.ActiveDocument.getObject("CorPor_Spreadsheet"))
-    App.ActiveDocument.getObject("CorridorPortmanto").addObject(App.ActiveDocument.getObject("CorPor_Back"))
-    App.ActiveDocument.getObject("CorridorPortmanto").addObject(App.ActiveDocument.getObject("CorPor_Shelf1"))
-    App.ActiveDocument.getObject("CorridorPortmanto").addObject(App.ActiveDocument.getObject("CorPor_Shelf2"))
-    App.ActiveDocument.getObject("CorridorPortmanto").addObject(App.ActiveDocument.getObject("CorPor_Shelf3"))
-    App.ActiveDocument.getObject("CorridorPortmanto").addObject(App.ActiveDocument.getObject("CorPor_Shelf4"))
-    App.ActiveDocument.getObject("CorridorPortmanto").addObject(App.ActiveDocument.getObject("CorPor_Front1"))
-    App.ActiveDocument.getObject("CorridorPortmanto").addObject(App.ActiveDocument.getObject("CorPor_Front2"))
-    App.ActiveDocument.getObject("CorridorPortmanto").addObject(App.ActiveDocument.getObject("CorPor_Front1b"))
-    App.ActiveDocument.getObject("CorridorPortmanto").addObject(App.ActiveDocument.getObject("CorPor_Front2b"))
-    App.ActiveDocument.getObject("CorridorPortmanto").addObject(App.ActiveDocument.getObject("CorPor_Front3"))
+    for item in placementMatrix:
+        App.ActiveDocument.getObject("CorridorPortmanto").addObject(App.ActiveDocument.getObject("CorPor" + item['name']))
 
 
 def processAllSpreadSheetsByMaterial():
