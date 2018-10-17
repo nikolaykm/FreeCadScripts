@@ -355,7 +355,7 @@ def createCabinet(name, width, height, depth, addOns, visibleBack = False, isBas
         print str(drawerHeight) + "," + str(drawerHeightRoundingError)
         drawerHeight = round(drawerHeight)
         for curDrawer in range(1, drawersCount+1):
-            createDrawer(name + "_Drawer" + str(curDrawer), width, drawerHeight, depth, visibleBack, material, doorsMaterial)
+            createDrawer(name + "_Drawer" + str(curDrawer), width, drawerHeight, depth, visibleBack, material, doorsMaterial, addOns)
             objects.append(name + "_Drawer" + str(curDrawer) + "_Fusion")
             yA = -14 if visibleBack else -5.3;
             zA = (curDrawer-1)*drawerHeight-drawerHeightRoundingError*curDrawer
@@ -411,7 +411,7 @@ def createDrawerSlider(name, sliderName, width, depth, isLeft):
     App.activeDocument().recompute()
 
 
-def createDrawer(name, width, height, depth, visibleBack, material, doorsMaterial):
+def createDrawer(name, width, height, depth, visibleBack, material, doorsMaterial, addOns):
 
     createDrawerSlider(name, "LeftSlider", width, (depth-sCantT-(boardThickness if visibleBack else cardboardThickness)-5), True);
     createDrawerSlider(name, "RightSlider", width, (depth-sCantT-(boardThickness if visibleBack else cardboardThickness)-5), False);
@@ -423,7 +423,7 @@ def createDrawer(name, width, height, depth, visibleBack, material, doorsMateria
 
     #create door
     cants = [lCantT, lCantT, lCantT, lCantT]
-    calcWidth = width-3;
+    calcWidth = width-3-(spaceBetweenDoors/2 if 'doorsWallRight' in addOns else 0) - (spaceBetweenDoors/2 if 'doorsWallLeft' in addOns else 0);
     calcHeight = height-3
     zeroZ = (calcHeight+cants[0]+cants[1])/2
     pp.append(["_Door", calcWidth, calcHeight, cants, doorsMaterial, "H"])
@@ -890,26 +890,26 @@ def createSmallRoomWardrobe():
 def createSmallRoomCabinetsUnderTV():
     App.ActiveDocument.addObject("App::DocumentObjectGroup","SmallRoomCabinets")
 
-    createCabinet('SRCab1', 400.0, 441.0, 310.0, {'doors':1, 'doorsHoles' : 2, 'doorsHolesSide': 'L'}, groupName='SmallRoomCabinets', isBase=False, material=blueMaterial, doorsMaterial=blueMaterial)
-    createCabinet('SRCab2', 800.0, 441.0, 310.0, {'drawers':2}, groupName='SmallRoomCabinets', isBase=False, material=blueMaterial, doorsMaterial=blueMaterial)
-    createCabinet('SRCab3', 400.0, 441.0, 310.0, {'doors':1, 'doorsHoles' : 2, 'doorsHolesSide': 'L'}, groupName='SmallRoomCabinets', isBase=False, material=blueMaterial, doorsMaterial=blueMaterial)
-    createCabinet('SRCab4', 800.0, 441.0, 310.0, {'drawers':2}, groupName='SmallRoomCabinets', isBase=False, material=blueMaterial, doorsMaterial=blueMaterial)
+    createCabinet('SRCab1', 400.0, 441.0, 310.0, {'doors':1, 'doorsHoles' : 2, 'doorsHolesSide': 'L', 'doorsWallLeft' : True}, groupName='SmallRoomCabinets', isBase=False, material=blueMaterial, doorsMaterial=blueMaterial)
+    createCabinet('SRCab2', 760.0, 441.0, 310.0, {'drawers':2, 'doorsWallRight' : True}, groupName='SmallRoomCabinets', isBase=False, material=blueMaterial, doorsMaterial=blueMaterial)
+    createCabinet('SRCab3', 400.0, 441.0, 310.0, {'doors':1, 'doorsHoles' : 2, 'doorsHolesSide': 'L', 'doorsWallRight' : True}, groupName='SmallRoomCabinets', isBase=False, material=blueMaterial, doorsMaterial=blueMaterial)
+    createCabinet('SRCab4', 760.0, 441.0, 310.0, {'drawers':2, 'doorsWallLeft' : True}, groupName='SmallRoomCabinets', isBase=False, material=blueMaterial, doorsMaterial=blueMaterial)
 
-    placementMatrix = [{'name':'SRCab1_Fusion',      'x':-157,       'y':-1425,       'z':50,        'xR':0, 'yR':0, 'zR':1, 'R':-90},
+    placementMatrix = [{'name':'SRCab1_Fusion',      'x':-157,       'y':-1445,       'z':50,        'xR':0, 'yR':0, 'zR':1, 'R':-90},
                        {'name':'SRCab2_Fusion',      'x':-157,       'y':-2025,       'z':50,        'xR':0, 'yR':0, 'zR':1, 'R':-90},
-                       {'name':'SRCab3_Fusion',      'x':-157,       'y':-2225,       'z':491,       'xR':0, 'yR':0, 'zR':1, 'R':-90},
+                       {'name':'SRCab3_Fusion',      'x':-157,       'y':-2205,       'z':491,       'xR':0, 'yR':0, 'zR':1, 'R':-90},
                        {'name':'SRCab4_Fusion',      'x':-157,       'y':-1625,       'z':491,       'xR':0, 'yR':0, 'zR':1, 'R':-90}]
 
     placeObjects(placementMatrix)
 
-    pp = [["_Plot", 1200.0, 330.0,         [2, 2, 2, 2],  blueMaterial, "W"],
-          ["_Down1", 1164.0, 50.0, [0.8, 0.8, 0.8, 0.8],  blueMaterial, "W"],
-          ["_Down2", 310.0, 50.0,  [0.8, 0.8, 0.8, 0.8],  blueMaterial, "W"],
-          ["_Down3", 310.0, 50.0,  [0.8, 0.8, 0.8, 0.8],  blueMaterial, "W"]]
+    pp = [["_Plot",  1196.0, 330.0,         [2, 2, 2, 2],  blueMaterial, "W"],
+          ["_Down1", 1160.0, 50.0, [0.8, 0.8, 0.8, 0.8],  blueMaterial, "W"],
+          ["_Down2", 330.0, 932.0, [0.8, 0.8, 0.8, 0.8],  blueMaterial, "W"],
+          ["_Down3", 330.0, 932.0, [0.8, 0.8, 0.8, 0.8],  blueMaterial, "W"]]
     placementMatrix = [{'name':"_Plot", 'vec':  (-167,-1825, 932, 90, 0, 0)},
                        {'name':"_Down1", 'vec':  (-310,-1825, 25, 90, 0, 90)},
-                       {'name':"_Down2", 'vec':  (-156,-1225, 25, 0, 0, 90)},
-                       {'name':"_Down3", 'vec':  (-156,-2407, 25, 0, 0, 90)}]
+                       {'name':"_Down2", 'vec':  (-167,-1227, 466, 0, 0, 90)},
+                       {'name':"_Down3", 'vec':  (-167,-2405, 466, 0, 0, 90)}]
     createBoards("SR", pp, placementMatrix)
 
     App.ActiveDocument.getObject("SmallRoomCabinets").addObject(App.ActiveDocument.getObject("SR_Spreadsheet"))
@@ -1148,7 +1148,7 @@ def processAllSpreadSheetsByMaterial():
 # Small room
 #######################################
 #createSmallRoomWardrobe()
-#createSmallRoomCabinetsUnderTV()
+createSmallRoomCabinetsUnderTV()
 #createSmallRoomDesk()
 #createSmallRoomSofa()
 
@@ -1156,7 +1156,7 @@ def processAllSpreadSheetsByMaterial():
 # Corridor
 #######################################
 #createCorridorWardrobe()
-createPortmanto()
+#createPortmanto()
 
 #######################################
 #Final Processing
