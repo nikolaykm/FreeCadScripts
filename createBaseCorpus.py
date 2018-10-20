@@ -602,19 +602,19 @@ def createBackForPlots(height):
 
     s = sCantT
     pp = []
-    pp.append(["_Right1", 2100.0, height,    [0, 0, 0, 0], plotsBackMaterial, "W"])
+    pp.append(["_Right1", 2100.0, height,    [0, 0, 0, s], plotsBackMaterial, "W"])
     pp.append(["_Front1", 70.0,   height,    [0, s, 0, s], plotsBackMaterial, "W"])
     pp.append(["_Front2", 1320.0, 115.0,     [0, 0, s, s], plotsBackMaterial, "W"])
     pp.append(["_Front3", 620.0,  height,    [0, s, s, 0], plotsBackMaterial, "W"])
     pp.append(["_Front4", 200.0,  465.0,     [s, s, s, s], plotsBackMaterial, "W"])
     pp.append(["_Front5", 200.0,  465.0,     [s, s, s, s], plotsBackMaterial, "W"])
-    pp.append(["_Left1",  1072.0, height,    [0, s, 0, 0], plotsBackMaterial, "W"])
-    pp.append(["_Left2",  197.0,  height,    [0, 0, 0, s], plotsBackMaterial, "W"])
+    pp.append(["_Left1",  1072.0, height,    [0, s, s, s], plotsBackMaterial, "W"])
+    pp.append(["_Left2",  197.0,  height,    [0, 0, s, s], plotsBackMaterial, "W"])
     pp.append(["_Left3",  1541.0, height,    [0, 0, 0, 0], plotsBackMaterial, "W"])
-    pp.append(["_Left4",  197.0,  height,    [0, 0, 0, s], plotsBackMaterial, "W"])
+    pp.append(["_Left4",  197.0,  height,    [0, 0, s, s], plotsBackMaterial, "W"])
     pp.append(["_Left5",  1577.0, 197.0,     [s, s, s, s], plotsBackMaterial, "W"])
-    pp.append(["_Left2D", 161.0,  height-18, [0, 0, 0, s], plotsBackMaterial, "W"])
-    pp.append(["_Left4D", 161.0,  height-18, [0, 0, 0, s], plotsBackMaterial, "W"])
+    pp.append(["_Left2D", 161.0,  height-18, [0, 0, s, s], plotsBackMaterial, "W"])
+    pp.append(["_Left4D", 161.0,  height-18, [0, 0, s, s], plotsBackMaterial, "W"])
     pp.append(["_Left5D", 1541.0, 161.0,     [0, s, 0, 0], plotsBackMaterial, "W"])
 
 
