@@ -196,36 +196,36 @@ for row in your_list:
 
     #Enter door holes
     hitTab()
-    if int(row[9]) > 100:
-        hitEnter(5)
-        hitTab()
+#    if int(row[9]) > 100:
+#        hitEnter(5)
+#        hitTab()
 
-        if int(row[1]) > int(row[2]):
-            if row[10] == "д":
-                print "H1"
-                hitSpace()
-            else:
-                print "H2"
-                hitTab()
-                hitSpace()
-        else:
-            if row[10] == "к":
-                print "H3"
-                hitSpace()
-            else:
-                print "H4"
-                hitTab()
-                hitSpace()
+#        if int(row[1]) > int(row[2]):
+#            if row[10] == "д":
+#                print "H1"
+#                hitSpace()
+#            else:
+#                print "H2"
+#                hitTab()
+#                hitSpace()
+#        else:
+#            if row[10] == "к":
+#                print "H3"
+#                hitSpace()
+#            else:
+#                print "H4"
+#                hitTab()
+#                hitSpace()
 
-        hitTab()
-        hitKeyDownArrow(2-int(row[9]))
+#        hitTab()
+#        hitKeyDownArrow(2-int(row[9]))
 
         #Save and exit
-        hitEscape()
-        raw_input("Press Enter to continue...")
-        time.sleep(5)
-        for t in range(1,22+(int(row[0])-1)*10 + 8):
-            hitTab(sleep=0)
+#        hitEscape()
+#        raw_input("Press Enter to continue...")
+#        time.sleep(5)
+#        for t in range(1,22+(int(row[0])-1)*10 + 8):
+#            hitTab(sleep=0)
 
         
 
