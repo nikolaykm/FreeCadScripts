@@ -1,0 +1,8 @@
+Name	Length	Width	Count	CanRotate	LongCantCount	ShortCantCount	EdgeThickness	CantMaterial	PantsHolesCount	SideForHoles
+SRWD1_Back_Sketch	597	987	1	0	0	0	0	blue_card	0	-
+SRWD1_Drawer1_Base_Sketch	582	924	3	0	0	0	0	blue_card	0	-
+SRWD2_Back_Sketch	1297	987	1	0	0	0	0	blue_card	0	-
+SRWD3_Back_Sketch	527	987	1	0	0	0	0	blue_card	0	-
+SRCab1_Back_Sketch	438	397	2	0	0	0	0	blue_card	0	-
+SRCab2_Back_Sketch	438	757	2	0	0	0	0	blue_card	0	-
+SRCab2_Drawer1_Base_Sketch	302	694	4	0	0	0	0	blue_card	0	-
