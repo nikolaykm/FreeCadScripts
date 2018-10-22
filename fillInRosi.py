@@ -2,38 +2,40 @@
 
 import pynput
 import csv
+from pynput.mouse import Button
 from pynput.keyboard import Key, Controller
 import time
 from pynput.mouse import Controller as MouseControler
+import sys
 
-def typeText(text, hitEnter=False):
+def typeText(text, hitEnter=False, sleep=1):
     keyboard = Controller()
     keyboard.type(text)
     if hitEnter:
         keyboard.press(Key.enter)
         keyboard.release(Key.enter)
-    time.sleep(1)
+    time.sleep(sleep)
     if hitEnter:
         time.sleep(2)
 
-def hitTab(forward=True, sleep=1):
+def hitTab(forward=True, sleep=1, count=1):
     keyboard = Controller()
-    if forward:
-        keyboard.press(Key.tab)
-        keyboard.release(Key.tab)
-    else:
-        with keyboard.pressed(Key.shift):
+    for c in range(0, count):
+        if forward:
             keyboard.press(Key.tab)
             keyboard.release(Key.tab)
-    time.sleep(sleep)
+        else:
+            with keyboard.pressed(Key.shift):
+                keyboard.press(Key.tab)
+                keyboard.release(Key.tab)
+        time.sleep(sleep)
 
-def hitEnter(addSleep=0):
-    print "Sleeping before hitting enter"
-    time.sleep(1)
+def hitEnter(sleepBefore=1, sleepAfter=1):
+    time.sleep(sleepBefore)
     keyboard = Controller()
     keyboard.press(Key.enter)
     keyboard.release(Key.enter)
-    time.sleep(1+addSleep)
+    time.sleep(sleepAfter)
 
 def hitKeyDownArrow(count=1):
    for x in range(1, count+1):
@@ -48,128 +50,129 @@ def hitSpace():
     keyboard.release(Key.space)
     time.sleep(1)
 
-def hitEscape():
+def hitEscape(sleepBefore=1, sleepAfter=1):
+    time.sleep(sleepBefore)
     keyboard = Controller()
     keyboard.press(Key.esc)
     keyboard.release(Key.esc)
-    time.sleep(1)
+    time.sleep(sleepAfter)
 
+def mouseClickOn(mouse, pair, sleepBefore=1, sleepAfter=1):
+    # Set pointer position
+    mouse.position = (pair[0], pair[1])
+    time.sleep(sleepBefore)
+    mouse.press(Button.left)
+    mouse.release(Button.left)
+    time.sleep(sleepAfter)
 
-mouse = MouseControler()
+if __name__ == "__main__":
 
-with open('XLS/WallnutTropic.csv', 'rb') as f:
-    reader = csv.reader(f)
-    your_list = list(reader)
+    #sleep a little so the user could place the mouse market in the proper field
+    time.sleep(10)
 
+    mouse = MouseControler()
 
-time.sleep(5)
-firstTime=True
-for row in your_list:
+    with open(sys.argv[1], 'rb') as f:
+        reader = csv.reader(f)
+        cvsList = list(reader)
 
-    print row
+    if sys.argv[2] == "createRows":
+        hitTab(sleep=0, count=11)
+        for curRow in range(1, len(cvsList)):
+            hitEnter(sleepBefore=0, sleepAfter=0)  
+        exit()
 
-    desc = ''
+    if sys.argv[2] == "fillInBase":
 
-    #Choose material
-    hitEnter()
-    hitKeyDownArrow(1)
-    hitEnter()
- 
-    #Enter Lenght By the Fladder
-    hitTab()
-    typeText(row[1])
+        startFromRow = int(sys.argv[3]) if len(sys.argv) > 3 else 0
+
+        for row in cvsList:
+
+            print row
+            if int(row[0]) < startFromRow: continue
+
+            #Enter Lenght By the Fladder
+            hitTab(sleep=0)
+            typeText(row[1], sleep=0)
     
-    #Enter Width By the Fladder
-    hitTab()
-    typeText(row[2])
+            #Enter Width By the Fladder
+            hitTab(sleep=0)
+            typeText(row[2], sleep=0)
 
-    #Enter Count
-    hitTab()
-    typeText(row[3])
+            #Enter Count
+            hitTab(sleep=0)
+            typeText(row[3], sleep=0)
 
-    #Enter can rotate
-    hitTab()
-    if row[4] != "": 
-        hitEnter()
-        hitKeyDownArrow(1)
-        hitEnter()
-
-    #skip joint
-    hitTab()
-
-    #enter Description
-    hitTab()
-    typeText(row[13])
-
-    #Enter cants
-    hitTab()
-
-    longCants = 0
-    shortCants = 0
-#    longCants = int(row[5])
-#    shortCants = int(row[6])
-
-    if longCants + shortCants > 0:
-        hitEnter(5)
-
-        hitCantThick = 0
-        if row[7] == "0.8": hitCantThick=1
-        if row[7] == "2"  : hitCantThick=2
-
-        if int(row[1]) > int(row[2]):
-
-            #First long cant
-            if min(int(row[1]), int(row[2])) >= 100: hitTab()
-            if longCants > 0:
+            #Enter can rotate
+            hitTab(sleep=0)
+            if row[4] != "": 
                 hitEnter()
-                hitKeyDownArrow(hitCantThick)
+                hitKeyDownArrow(1)
                 hitEnter()
-                longCants = longCants - 1
 
-            if min(int(row[1]), int(row[2])) >= 100:
-                #First short cant
-                hitTab()
-                if shortCants > 0:
-                    hitEnter()
-                    hitKeyDownArrow(hitCantThick)
-                    hitEnter()
-                    shortCants = shortCants - 1
+            #skip joint
+            hitTab(sleep=0)
 
-                #Second short cant
-                hitTab()
-                if shortCants > 0:
-                    hitEnter()
-                    hitKeyDownArrow(hitCantThick)
-                    hitEnter()
-                    shortCants = shortCants - 1
+            #enter Description
+            hitTab(sleep=0)
+            #if row[13] != "":
+            #    typeText(row[13], sleep=0)
 
-            #Second long cant
-            hitTab()
-            if longCants > 0:
-                hitEnter()
-                hitKeyDownArrow(hitCantThick)
-                hitEnter()
-                longCants = longCants - 1
+            #skip to the next line
+            hitTab(sleep=1, count=4)
 
+        exit()
 
-        if int(row[1]) <= int(row[2]):
+    if sys.argv[2] == "fillInCants":
 
-            #First short cant
-            if min(int(row[1]), int(row[2])) >= 100: hitTab()
-            if shortCants > 0:
-                hitEnter()
-                hitKeyDownArrow(hitCantThick)
-                hitEnter()
-                shortCants = shortCants - 1
+        startFromRow = int(sys.argv[3]) if len(sys.argv) > 3 else 0
 
-            if min(int(row[1]), int(row[2])) >= 100:
+        for row in cvsList:
+
+            print row
+
+            if int(row[0]) < startFromRow: continue
+
+            longCants = int(row[5])
+            shortCants = int(row[6])
+            hitCantThick = 0
+            if row[7] == "0.8": hitCantThick=1
+            if row[7] == "2"  : hitCantThick=2
+
+            if longCants+shortCants == 0: continue
+
+            #going to the proper resync button
+            hitTab(sleep=0, count=23+(int(row[0])-1)*10 + 7)
+            hitEnter(sleepBefore=5, sleepAfter=5)
+
+            mouseClickOn(mouse, (620,580))
+
+            if int(row[1]) > int(row[2]):
+ 
                 #First long cant
                 hitTab()
                 if longCants > 0:
-                    hitEnter()
-                    hitKeyDownArrow(hitCantThick)
-                    hitEnter()
-                    longCants = longCants - 1
+                     hitEnter()
+                     hitKeyDownArrow(hitCantThick)
+                     hitEnter()
+                     longCants = longCants - 1
+
+                if min(int(row[1]), int(row[2])) >= 100:
+                    #First short cant
+                    hitTab()
+                    if shortCants > 0:
+                        hitEnter()
+                        hitKeyDownArrow(hitCantThick)
+                        hitEnter()
+                        shortCants = shortCants - 1
+
+                    #Second short cant
+                    hitTab()
+                    if shortCants > 0:
+                        hitEnter()
+                        hitKeyDownArrow(hitCantThick)
+                        hitEnter()
+                        shortCants = shortCants - 1
 
                 #Second long cant
                 hitTab()
@@ -179,75 +182,41 @@ for row in your_list:
                     hitEnter()
                     longCants = longCants - 1
 
-            #Second short cant
-            hitTab()
-            if shortCants > 0:
-                hitEnter()
-                hitKeyDownArrow(hitCantThick)
-                hitEnter()
-                shortCants = shortCants - 1
+            if int(row[1]) <= int(row[2]):
+ 
+                #First short cant
+                hitTab()
+                if shortCants > 0:
+                    hitEnter()
+                    hitKeyDownArrow(hitCantThick)
+                    hitEnter()
+                    shortCants = shortCants - 1
 
-        #Save and exit
-        hitTab()
-        hitEnter(5)
-        for t in range(1,22+(int(row[0])-1)*10 + 7):
-            hitTab(sleep=0)
-        
+                if min(int(row[1]), int(row[2])) >= 100:
+                    #First long cant
+                    hitTab()
+                    if longCants > 0:
+                        hitEnter()
+                        hitKeyDownArrow(hitCantThick)
+                        hitEnter()
+                        longCants = longCants - 1
 
-    #Enter door holes
-    hitTab()
-#    if int(row[9]) > 100:
-#        hitEnter(5)
-#        hitTab()
+                    #Second long cant
+                    hitTab()
+                    if longCants > 0:
+                        hitEnter()
+                        hitKeyDownArrow(hitCantThick)
+                        hitEnter()
+                        longCants = longCants - 1
 
-#        if int(row[1]) > int(row[2]):
-#            if row[10] == "д":
-#                print "H1"
-#                hitSpace()
-#            else:
-#                print "H2"
-#                hitTab()
-#                hitSpace()
-#        else:
-#            if row[10] == "к":
-#                print "H3"
-#                hitSpace()
-#            else:
-#                print "H4"
-#                hitTab()
-#                hitSpace()
+                #Second short cant
+                hitTab()
+                if shortCants > 0:
+                    hitEnter()
+                    hitKeyDownArrow(hitCantThick)
+                    hitEnter()
+                    shortCants = shortCants - 1
 
-#        hitTab()
-#        hitKeyDownArrow(2-int(row[9]))
-
-        #Save and exit
-#        hitEscape()
-#        raw_input("Press Enter to continue...")
-#        time.sleep(5)
-#        for t in range(1,22+(int(row[0])-1)*10 + 8):
-#            hitTab(sleep=0)
-
-        
-
-    #skip delete row
-    hitTab()
-
-    #add new row
-    hitTab()
-    hitEnter()
-    for x in range (1,11):
-        hitTab(forward=False, sleep=0)
-
-#    typeText(row[8])
-#    hitTab()
-#    if row[9] != "": desc = desc + "Отвори за панти: " + int(row[9]) + " бр., страна за дупчене: " + row[10]
-#    hitTab()
-#    if not firstTime:
-#        hitTab()
-#    hitEnter()
-#    for x in range (1,10):
-#        hitTab(forward=False)
-
-    mouse.scroll(0, -2)
-
-    firstTime=False
+            hitEscape(sleepBefore=5, sleepAfter=5)
+                    
+        exit()    
