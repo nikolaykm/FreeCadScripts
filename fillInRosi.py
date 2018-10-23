@@ -77,19 +77,21 @@ if __name__ == "__main__":
         cvsList = list(reader)
 
     if sys.argv[2] == "createRows":
+        count = int(sys.argv[3]) if len(sys.argv) > 3 else len(cvsList)
         hitTab(sleep=0, count=11)
-        for curRow in range(1, len(cvsList)):
+        for curRow in range(1, count):
             hitEnter(sleepBefore=0, sleepAfter=0)  
         exit()
 
     if sys.argv[2] == "fillInBase":
 
         startFromRow = int(sys.argv[3]) if len(sys.argv) > 3 else 0
+        endRow = int(sys.argv[4]) if len(sys.argv) > 4 else 1000000
 
         for row in cvsList:
 
+            if int(row[0]) < startFromRow or int(row[0]) > endRow: continue
             print row
-            if int(row[0]) < startFromRow: continue
 
             #Enter Lenght By the Fladder
             hitTab(sleep=0)
@@ -122,101 +124,3 @@ if __name__ == "__main__":
             hitTab(sleep=1, count=4)
 
         exit()
-
-    if sys.argv[2] == "fillInCants":
-
-        startFromRow = int(sys.argv[3]) if len(sys.argv) > 3 else 0
-
-        for row in cvsList:
-
-            print row
-
-            if int(row[0]) < startFromRow: continue
-
-            longCants = int(row[5])
-            shortCants = int(row[6])
-            hitCantThick = 0
-            if row[7] == "0.8": hitCantThick=1
-            if row[7] == "2"  : hitCantThick=2
-
-            if longCants+shortCants == 0: continue
-
-            #going to the proper resync button
-            hitTab(sleep=0, count=23+(int(row[0])-1)*10 + 7)
-            hitEnter(sleepBefore=5, sleepAfter=5)
-
-            mouseClickOn(mouse, (620,580))
-
-            if int(row[1]) > int(row[2]):
- 
-                #First long cant
-                hitTab()
-                if longCants > 0:
-                     hitEnter()
-                     hitKeyDownArrow(hitCantThick)
-                     hitEnter()
-                     longCants = longCants - 1
-
-                if min(int(row[1]), int(row[2])) >= 100:
-                    #First short cant
-                    hitTab()
-                    if shortCants > 0:
-                        hitEnter()
-                        hitKeyDownArrow(hitCantThick)
-                        hitEnter()
-                        shortCants = shortCants - 1
-
-                    #Second short cant
-                    hitTab()
-                    if shortCants > 0:
-                        hitEnter()
-                        hitKeyDownArrow(hitCantThick)
-                        hitEnter()
-                        shortCants = shortCants - 1
-
-                #Second long cant
-                hitTab()
-                if longCants > 0:
-                    hitEnter()
-                    hitKeyDownArrow(hitCantThick)
-                    hitEnter()
-                    longCants = longCants - 1
-
-            if int(row[1]) <= int(row[2]):
- 
-                #First short cant
-                hitTab()
-                if shortCants > 0:
-                    hitEnter()
-                    hitKeyDownArrow(hitCantThick)
-                    hitEnter()
-                    shortCants = shortCants - 1
-
-                if min(int(row[1]), int(row[2])) >= 100:
-                    #First long cant
-                    hitTab()
-                    if longCants > 0:
-                        hitEnter()
-                        hitKeyDownArrow(hitCantThick)
-                        hitEnter()
-                        longCants = longCants - 1
-
-                    #Second long cant
-                    hitTab()
-                    if longCants > 0:
-                        hitEnter()
-                        hitKeyDownArrow(hitCantThick)
-                        hitEnter()
-                        longCants = longCants - 1
-
-                #Second short cant
-                hitTab()
-                if shortCants > 0:
-                    hitEnter()
-                    hitKeyDownArrow(hitCantThick)
-                    hitEnter()
-                    shortCants = shortCants - 1
-
-            hitEscape(sleepBefore=5, sleepAfter=5)
-                    
-        exit()    
