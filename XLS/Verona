@@ -1,26 +1,26 @@
-Name	Length	Width	Count	CanRotate	LongCantCount	ShortCantCount	EdgeThickness	CantMaterial	PantsHolesCount	SideForHoles
-CorWD1_Base_Sketch	893	496	6	0	1	2	0.8	verona	0	-
-CorWD1_LeftSide_Sketch	582	496	4	0	1	0	0.8	verona	0	-
-CorWD1_FrontBlend_Sketch	859	99	2	1	1	0	0.8	verona	0	-
-CorWD1_BackBlend_Sketch	859	100	2	1	0	0	0	verona	0	-
-CorWD1_Drawer1_Door_Sketch	192	887	6	0	2	2	2	verona	0	-
-CorWD1_Drawer1_Front_Sketch	813	125	12	1	1	0	0.8	verona	0	-
-CorWD1_Drawer1_LeftSide_Sketch	492	138	12	1	1	0	0.8	verona	0	-
-CorWD2_LeftSide_Sketch	1281	496	4	0	1	1	0.8	verona	0	-
-CorWD2_WholeBlend_Sketch	859	496	4	0	1	0	0.8	verona	0	-
-CorWD2_Door1_Sketch	1293	440	4	0	2	2	2	verona	3	L
-CorWD2_Shelf1_Sketch	859	495	4	0	1	0	0.8	verona	0	-
-CorWD3_LeftSide_Sketch	511	496	4	0	1	1	0.8	verona	0	-
-CorWD3_Door1_Sketch	523	440	4	0	2	2	2	verona	2	L
-CorWD_Down1_Sketch	1788	98	1	0	2	2	0.8	verona	0	-
-CorWD_Down2_Sketch	2528	268	2	0	2	2	0.8	verona	0	-
-CorBoots_Base_Sketch	698	296	1	0	1	2	0.8	verona	0	-
-CorBoots_LeftSide_Sketch	1560	296	2	0	1	0	0.8	verona	0	-
-CorBoots_WholeBlend_Sketch	664	296	1	0	1	0	0.8	verona	0	-
-CorBootsPl11_Sketch	658	149	12	0	1	0	0.8	verona	0	-
-CorBootsPl14_Sketch	658	95	4	0	1	0	0.8	verona	0	-
-CorPor_Down1_Sketch	48	298	2	0	2	2	0.8	verona	0	-
-CorPor_Down3_Sketch	48	662	1	0	2	2	0.8	verona	0	-
-CorPor_Back_Sketch	1996	596	1	0	2	2	2	verona	0	-
-CorPor_Shelf5_Sketch	262	596	2	0	1	2	2	verona	0	-
-CorPor_Front3_Sketch	264	146	1	0	2	0	2	verona	0	-
+Name,Length,Width,Count,CanRotate,LongCantCount,ShortCantCount,EdgeThickness,CantMaterial,PantsHolesCount,SideForHoles
+CorWD1_BackBlend_Sketch,859,100,2,1,0,0,0,verona,0,-
+CorWD1_Drawer1_LeftSide_Sketch,492,138,12,1,1,0,0.8,verona,0,-
+CorWD1_LeftSide_Sketch,582,496,4,0,1,0,0.8,verona,0,-
+CorBootsPl14_Sketch,658,95,4,0,1,0,0.8,verona,0,-
+CorBootsPl11_Sketch,658,149,12,0,1,0,0.8,verona,0,-
+CorBoots_WholeBlend_Sketch,664,296,1,0,1,0,0.8,verona,0,-
+CorWD1_Drawer1_Front_Sketch,813,125,12,1,1,0,0.8,verona,0,-
+CorWD1_FrontBlend_Sketch,859,99,2,1,1,0,0.8,verona,0,-
+CorWD2_Shelf1_Sketch,859,495,4,0,1,0,0.8,verona,0,-
+CorWD2_WholeBlend_Sketch,859,496,4,0,1,0,0.8,verona,0,-
+CorBoots_LeftSide_Sketch,1560,296,2,0,1,0,0.8,verona,0,-
+CorWD3_LeftSide_Sketch,511,496,4,0,1,1,0.8,verona,0,-
+CorWD2_LeftSide_Sketch,1281,496,4,0,1,1,0.8,verona,0,-
+CorBoots_Base_Sketch,698,296,1,0,1,2,0.8,verona,0,-
+CorWD1_Base_Sketch,893,496,6,0,1,2,0.8,verona,0,-
+CorPor_Shelf5_Sketch,262,596,2,0,1,2,2,verona,0,-
+CorPor_Front3_Sketch,264,146,1,0,2,0,2,verona,0,-
+CorPor_Down1_Sketch,48,298,2,0,2,2,0.8,verona,0,-
+CorPor_Down3_Sketch,48,662,1,0,2,2,0.8,verona,0,-
+CorWD_Down1_Sketch,1788,98,1,0,2,2,0.8,verona,0,-
+CorWD_Down2_Sketch,2528,268,2,0,2,2,0.8,verona,0,-
+CorWD1_Drawer1_Door_Sketch,192,887,6,0,2,2,2,verona,0,-
+CorWD3_Door1_Sketch,523,440,4,0,2,2,2,verona,2,L
+CorWD2_Door1_Sketch,1293,440,4,0,2,2,2,verona,3,L
+CorPor_Back_Sketch,1996,596,1,0,2,2,2,verona,0,-

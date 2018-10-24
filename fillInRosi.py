@@ -107,7 +107,7 @@ if __name__ == "__main__":
 
             #Enter can rotate
             hitTab(sleep=0)
-            if row[4] != "": 
+            if row[4] != "" and row[4] != "0": 
                 hitEnter()
                 hitKeyDownArrow(1)
                 hitEnter()
