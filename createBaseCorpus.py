@@ -602,25 +602,23 @@ def createPlots(height):
 def createBackForPlots(height):
     #create backs for plots
 
-    #TODO: What cant to use for the plots back
-    s = sCantT
+    z = zCantT
     pp = []
-    pp.append(["_Right1", 2100.0, height,    [0, 0, 0, s], plotsBackMaterial, "W", backThickness])
-    pp.append(["_Front1", 70.0,   height,    [0, s, 0, s], plotsBackMaterial, "W", backThickness])
-    pp.append(["_Front2", 1320.0, 115.0,     [0, 0, s, s], plotsBackMaterial, "W", backThickness])
-    pp.append(["_Front3", 620.0,  height,    [0, s, s, 0], plotsBackMaterial, "W", backThickness])
-    pp.append(["_Front4", 200.0,  465.0,     [s, s, s, s], plotsBackMaterial, "W", backThickness])
-    pp.append(["_Front5", 200.0,  465.0,     [s, s, s, s], plotsBackMaterial, "W", backThickness])
-    pp.append(["_Left1",  1072.0, height,    [0, s, s, s], plotsBackMaterial, "W", backThickness])
-    pp.append(["_Left2",  1541.0, height,    [0, 0, 0, 0], plotsBackMaterial, "W", backThickness])
+    pp.append(["_Right1", 2100.0, height,    [z, z, z, z], plotsBackMaterial, "W", backThickness])
+    pp.append(["_Front1", 2010.0, height,    [z, z, z, z], plotsBackMaterial, "W", backThickness])
+#TODO: size of the sides ??? look at the schemas and substract 9mm if needed
+    pp.append(["_Front2", 200.0,  465.0,     [z, z, z, z], plotsBackMaterial, "W", backThickness])
+    pp.append(["_Front3", 200.0,  465.0,     [z, z, z, z], plotsBackMaterial, "W", backThickness])
+    pp.append(["_Front4", 477.0,  950.0,     [z, z, z, z], plotsBackMaterial, "W", backThickness])
+    pp.append(["_Left1",  1081.0, height,    [z, z, z, z], plotsBackMaterial, "W", backThickness])
+    pp.append(["_Left2",  1541.0, height,    [z, z, z, z], plotsBackMaterial, "W", backThickness])
 
-    placementMatrix = [{'name':'_Right1',      'vec' : (-2216,    -115,  1200,    0,  0, 90)},
-                       {'name':'_Front1',      'vec' : (-3945,    -2110, 1200,    90, 0, 90)},
-                       {'name':'_Front2',      'vec' : (-3945,    -1415, 957,     90, 0, 90)},
-                       {'name':'_Front3',      'vec' : (-3945,    -445,  1200,    90, 0, 90)}, 
-                       {'name':'_Front4',      'vec' : (-4027,    -2057, 1267,    0,  0, 90)},
-                       {'name':'_Front5',      'vec' : (-4027,    -755,  1267,    0,  0, 90)},
-                       {'name':'_Left1',       'vec' : (-3391,    -2127, 1200,    0,  0, 90)},
+    placementMatrix = [{'name':'_Right1',      'vec' : (-2216,    -116,  1200,    0,  0, 90)},
+                       {'name':'_Front1',      'vec' : (-3944,    -1140, 1200,    90, 0, 90)},
+                       {'name':'_Front2',      'vec' : (-4027,    -2057, 1267,    0,  0, 90)},
+                       {'name':'_Front3',      'vec' : (-4027,    -755,  1267,    0,  0, 90)},
+                       {'name':"_Front4",      'vec':  (-3944,    -371.4, 1975, 90, 0, 90)},
+                       {'name':'_Left1',       'vec' : (-3394.5,  -2135, 1200,    0,  0, 90)},
                        {'name':'_Left2',       'vec' : (-2066.5,  -2288, 1200,    0,  0, 90)}]
 
     createBoards("PlotsBacks", pp, placementMatrix, groupByName=True)
@@ -668,7 +666,6 @@ def createColumnBoards():
 
 def createAdditionalBoards():
     pp = []
-    pp.append(["_VitoCabAdd1", 477.0,  950.0,  [0,   0.8, 0.8,   0],  cabMaterial, "-"])
     pp.append(["_WindowBack",  1541.0, 600.0,  [0,     0,   0,   0],  cabMaterial, "H"])
     pp.append(["_DishDoor",    597.0,  757.0,  [2,     2,   2,   2],  cabMaterial, "H"])
     pp.append(["_DishUp1",     600.0,  100.0,  [0,     0,   0,   0],  cabMaterial, "-"])
@@ -682,8 +679,7 @@ def createAdditionalBoards():
     pp.append(["_Left2D",      161.0,  600-18, [0, 0, s, s],          cabMaterial, "W"])
     pp.append(["_Left3D",      1541.0, 161.0,  [0, s, 0, 0],          cabMaterial, "W"])
 
-    placementMatrix = [{'name':"_VitoCabAdd1", 'vec':  (-3945,    -371.4, 1975, 90, 0, 90)},
-                       {'name':'_WindowBack',  'vec' : (-2066.5,  -2306,  1200, 0, 0, 90)},
+    placementMatrix = [{'name':'_WindowBack',  'vec' : (-2066.5,  -2306,  1200, 0, 0, 90)},
                        {'name':'_DishDoor',    'vec' : (-2366.0,  -683,   479,  0, 0, 90)},
                        {'name':'_DishUp1',     'vec' : (-2366.0,  -234,   824,  0, 0, 0)},
                        {'name':'_DishUp2',     'vec' : (-2366.0,  -234,   842,  0, 0, 0)},
