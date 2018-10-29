@@ -1144,7 +1144,7 @@ def processAllSpreadSheetsByMaterial():
 # Living Room
 #######################################
 #createLivingRoomCorpuses()
-createLivingRoomShelves()
+#createLivingRoomShelves()
 #createLivingRoomDown()
 #createSofaShelves()
 
