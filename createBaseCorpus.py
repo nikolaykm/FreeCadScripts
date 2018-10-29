@@ -727,7 +727,7 @@ def createShelvesAroundKitchenWindow():
 def createLivingRoomShelves():
     
     pp = []
-    pp.append(["_LivRoom1",    1500.0, 450.0,  [0.8, 0, 0, 0],         cabMaterial, "W"])
+    pp.append(["_LivRoom1",    1500.0, 600.0,  [0.8, 0, 0, 0],         cabMaterial, "W"])
     pp.append(["_LivRoom2",    1500.0, 230.0,  [0.8, 0, 0, 0],         cabMaterial, "W"])
     pp.append(["_LivRoom3",    1500.0, 230.0,  [0.8, 0, 0, 0],         cabMaterial, "W"])
 
@@ -738,9 +738,9 @@ def createLivingRoomShelves():
     pp.append(["_ShelvesR5",    300.0,  300.0,   [0,     0,     0,       0],   cabMaterial, "-"])
 
 
-    placementMatrix = [{'name':"_LivRoom1",    'vec':  (2051,     -339,   900,     0,  0, 0)},
+    placementMatrix = [{'name':"_LivRoom1",    'vec':  (2051,     -416,   700,     0,  0, 0)},
                        {'name':"_LivRoom2",    'vec':  (2051,     -229,   1100,    0,  0, 0)},
-                       {'name':"_LivRoom3",    'vec':  (2051,     -229,   1500,    0,  0, 0)},
+                       {'name':"_LivRoom3",    'vec':  (2051,     -229,   1600,    0,  0, 0)},
                        {'name':"_ShelvesR1",   'vec':  (3801,     -274.0, 1150,     90, 0, 90)},
                        {'name':"_ShelvesR2",   'vec':  (3969,     -115.0, 1150,     0, 0, 90)},
                        {'name':"_ShelvesR3",   'vec':  (3969,     -283.0, 500,     0, 0, 0)},
@@ -831,39 +831,39 @@ def createLivingRoomCorpuses():
 
     App.ActiveDocument.addObject("App::DocumentObjectGroup","LivingCabinets")
 
-    createCabinet('LivCab1', 500.0, 2200.0, 430.0, {'shelves':5, 'doors' : 1, 'doorsWallLeft' : True, 'doorsHoles' : 5, 'doorsHolesSide': 'L'}, groupName='LivingCabinets', haveWholeBlend=True)
-    createCabinet('LivCab2', 500.0, 1800.0, 430.0, {'shelves':4, 'doors' : 1, 'doorsHoles' : 4, 'doorsHolesSide': 'L'}, groupName='LivingCabinets', haveWholeBlend=True)
-    createCabinet('LivCab3', 500.0, 900.0, 430.0, {'drawers' : 4}, groupName='LivingCabinets')
-    createCabinet('LivCab4', 500.0, 900.0, 430.0, {'drawers' : 2}, groupName='LivingCabinets')
-    createCabinet('LivCab5', 500.0, 900.0, 430.0, {'drawers' : 4}, groupName='LivingCabinets')
-    createCabinet('LivCab6', 500.0, 1800.0, 430.0, {'shelves':4, 'doors' : 1, 'doorsHoles' : 4, 'doorsHolesSide': 'L'}, groupName='LivingCabinets', haveWholeBlend=True)
+    createCabinet('LivCab1', 500.0, 2200.0, 580.0, {'shelves':5, 'doors' : 1, 'doorsWallLeft' : True, 'doorsHoles' : 5, 'doorsHolesSide': 'L'}, groupName='LivingCabinets', haveWholeBlend=True)
+    createCabinet('LivCab2', 500.0, 2200.0, 580.0, {'shelves':5, 'doors' : 1, 'doorsHoles' : 5, 'doorsHolesSide': 'L'}, groupName='LivingCabinets', haveWholeBlend=True)
+    createCabinet('LivCab3', 450.0, 700.0, 580.0, {'shelves':2, 'doors' : 1, 'doorsHoles' : 2, 'doorsHolesSide': 'L'}, groupName='LivingCabinets')
+    createCabinet('LivCab4', 600.0, 700.0, 580.0, {'drawers' : 3}, groupName='LivingCabinets')
+    createCabinet('LivCab5', 450.0, 700.0, 580.0, {'shelves':2, 'doors' : 1, 'doorsHoles' : 2, 'doorsHolesSide': 'L'}, groupName='LivingCabinets')
+    createCabinet('LivCab6', 500.0, 2200.0, 430.0, {'shelves':5, 'doors' : 1, 'doorsHoles' : 5, 'doorsHolesSide': 'L'}, groupName='LivingCabinets', haveWholeBlend=True)
     createCabinet('LivCab7', 500.0, 2200.0, 430.0, {'shelves':5, 'doors' : 1, 'doorsHoles' : 5, 'doorsHolesSide': 'L'}, groupName='LivingCabinets', haveWholeBlend=True)
-    createCabinet('LivCab2_Up', 500.0, 400.0, 430.0, {'doors' : 1, 'shelves':1, 'doorsHoles' : 2, 'doorsHolesSide': 'S'}, groupName='LivingCabinets', isBase=False)
-    createCabinet('LivCab3_Up', 500.0, 400.0, 430.0, {'doors' : 1, 'shelves':1, 'doorsHoles' : 2, 'doorsHolesSide': 'S'}, groupName='LivingCabinets', isBase=False)
-    createCabinet('LivCab4_Up', 500.0, 400.0, 430.0, {'doors' : 1, 'shelves':1, 'doorsHoles' : 2, 'doorsHolesSide': 'S'}, groupName='LivingCabinets', isBase=False)
-    createCabinet('LivCab5_Up', 500.0, 400.0, 430.0, {'doors' : 1, 'shelves':1, 'doorsHoles' : 2, 'doorsHolesSide': 'S'}, groupName='LivingCabinets', isBase=False)
-    createCabinet('LivCab6_Up', 500.0, 400.0, 430.0, {'doors' : 1, 'shelves':1, 'doorsHoles' : 2, 'doorsHolesSide': 'S'}, groupName='LivingCabinets', isBase=False)
+#    createCabinet('LivCab2_Up', 500.0, 400.0, 430.0, {'doors' : 1, 'shelves':1, 'doorsHoles' : 2, 'doorsHolesSide': 'S'}, groupName='LivingCabinets', isBase=False)
+    createCabinet('LivCab3_Up', 750.0, 400.0, 430.0, {'doors' : 1, 'shelves':1}, groupName='LivingCabinets', isBase=False)
+    #createCabinet('LivCab4_Up', 500.0, 400.0, 430.0, {'doors' : 1, 'shelves':1}, groupName='LivingCabinets', isBase=False)
+    createCabinet('LivCab5_Up', 750.0, 400.0, 430.0, {'doors' : 1, 'shelves':1, }, groupName='LivingCabinets', isBase=False)
+#    createCabinet('LivCab6_Up', 500.0, 400.0, 430.0, {'doors' : 1, 'shelves':1, 'doorsHoles' : 2, 'doorsHolesSide': 'S'}, groupName='LivingCabinets', isBase=False)
 
     addOnsTVColumn = {'list': [["Plank1", 264.0, 846.0, [0, 0, 0, 0], 0, 21, 0, True],
                                ["Plank2", 264.0, 846.0, [0, 0, 0, 0], 0, 39, 0, True],
                                ["Plank3", 264.0, 846.0, [0, 0, 0, 0], 0, 57, 0, True]] }
     createCabinet('LivCab8', 300.0, 882.0, 230.0, addOnsTVColumn, groupName='LivingCabinets', isBase=False, visibleBack=True)
-    createCabinet('LivCab9', 770.0, 300.0, 300.0, {'doors' : 2, 'shelves':1, 'doorsWallLeft' : True, 'doorsHoles' : 2, 'doorsHolesSide': 'S'}, groupName='LivingCabinets', isBase=False)
+    createCabinet('LivCab9', 770.0, 300.0, 450.0, {'doors' : 1, 'shelves':1, 'doorsWallLeft' : True}, groupName='LivingCabinets', isBase=False)
 
-    placementMatrix = [{'name':'LivCab1_Fusion',      'x':551,       'y':-331,       'z':100,        'xR':0, 'yR':1, 'zR':0, 'R':0},
-                       {'name':'LivCab2_Fusion',      'x':1051,      'y':-331,       'z':100,        'xR':0, 'yR':1, 'zR':0, 'R':0},
-                       {'name':'LivCab3_Fusion',      'x':1551,      'y':-331,       'z':100,        'xR':0, 'yR':1, 'zR':0, 'R':0},
-                       {'name':'LivCab4_Fusion',      'x':2051,      'y':-331,       'z':100,        'xR':0, 'yR':1, 'zR':0, 'R':0},
-                       {'name':'LivCab5_Fusion',      'x':2551,      'y':-331,       'z':100,        'xR':0, 'yR':1, 'zR':0, 'R':0},
+    placementMatrix = [{'name':'LivCab1_Fusion',      'x':551,       'y':-407,       'z':100,        'xR':0, 'yR':1, 'zR':0, 'R':0},
+                       {'name':'LivCab2_Fusion',      'x':1051,      'y':-407,       'z':100,        'xR':0, 'yR':1, 'zR':0, 'R':0},
+                       {'name':'LivCab3_Fusion',      'x':1526,      'y':-407,       'z':100,        'xR':0, 'yR':1, 'zR':0, 'R':0},
+                       {'name':'LivCab4_Fusion',      'x':2051,      'y':-407,       'z':100,        'xR':0, 'yR':1, 'zR':0, 'R':0},
+                       {'name':'LivCab5_Fusion',      'x':2576,      'y':-407,       'z':100,        'xR':0, 'yR':1, 'zR':0, 'R':0},
                        {'name':'LivCab6_Fusion',      'x':3051,      'y':-331,       'z':100,        'xR':0, 'yR':1, 'zR':0, 'R':0},
                        {'name':'LivCab7_Fusion',      'x':3551,      'y':-331,       'z':100,        'xR':0, 'yR':1, 'zR':0, 'R':0},
-                       {'name':'LivCab2_Up_Fusion',   'x':1051,      'y':-331,       'z':1800,       'xR':0, 'yR':1, 'zR':0, 'R':0},
-                       {'name':'LivCab3_Up_Fusion',   'x':1551,      'y':-331,       'z':1800,       'xR':0, 'yR':1, 'zR':0, 'R':0},
-                       {'name':'LivCab4_Up_Fusion',   'x':2051,      'y':-331,       'z':1800,       'xR':0, 'yR':1, 'zR':0, 'R':0},
-                       {'name':'LivCab5_Up_Fusion',   'x':2551,      'y':-331,       'z':1800,       'xR':0, 'yR':1, 'zR':0, 'R':0},
-                       {'name':'LivCab6_Up_Fusion',   'x':3051,      'y':-331,       'z':1800,       'xR':0, 'yR':1, 'zR':0, 'R':0},
-                       {'name':'LivCab8_Fusion',      'x':2051,      'y':-229,       'z':918,        'xR':0, 'yR':1, 'zR':0, 'R':0},
-                       {'name':'LivCab9_Fusion',      'x':-84,       'y':-396,       'z':1900,       'xR':0, 'yR':1, 'zR':0, 'R':0}]
+#                       {'name':'LivCab2_Up_Fusion',   'x':1051,      'y':-331,       'z':1800,       'xR':0, 'yR':1, 'zR':0, 'R':0},
+                       {'name':'LivCab3_Up_Fusion',   'x':1676,      'y':-331,       'z':1800,       'xR':0, 'yR':1, 'zR':0, 'R':0},
+#                       {'name':'LivCab4_Up_Fusion',   'x':2051,      'y':-331,       'z':1800,       'xR':0, 'yR':1, 'zR':0, 'R':0},
+                       {'name':'LivCab5_Up_Fusion',   'x':2426,      'y':-331,       'z':1800,       'xR':0, 'yR':1, 'zR':0, 'R':0},
+#                       {'name':'LivCab6_Up_Fusion',   'x':3051,      'y':-331,       'z':1800,       'xR':0, 'yR':1, 'zR':0, 'R':0},
+                       {'name':'LivCab8_Fusion',      'x':2051,      'y':-229,       'z':718,        'xR':0, 'yR':1, 'zR':0, 'R':0},
+                       {'name':'LivCab9_Fusion',      'x':-84,       'y':-472,       'z':1900,       'xR':0, 'yR':1, 'zR':0, 'R':0}]
 
     placeObjects(placementMatrix)
 
