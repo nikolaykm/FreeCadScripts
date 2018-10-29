@@ -1,7 +1,12 @@
 boardThickness = 18.0
+backThickness = 9.0
 cardboardThickness = 3.0
+
+zCantT = 0.5
 sCantT = 0.8
+mCantT = 1.0
 lCantT = 2.0
+
 plotsBackMaterial = 'DecoriniQuads'
 cabMaterial = 'WallnutTropic'
 columnMaterial = 'ColumnMaterial'
@@ -14,9 +19,6 @@ baseLegHeight = 100.0
 spaceBetweenDoors = 3.0
 drawerSliderHole = 10.0
 drawerSliderHoleToBottom = 12.0
-colorsMap = {cabMaterial :       (1.0, 0.0, 0.0), 
-             plotsBackMaterial : (0.0, 1.0, 0.0), 
-             columnMaterial :    (0.0, 0.0, 1.0)}
 
 def writeRecordInSpreadsheet(spreadsheetName, recArr):
     #find next empty row
@@ -600,23 +602,17 @@ def createPlots(height):
 def createBackForPlots(height):
     #create backs for plots
 
+    #TODO: What cant to use for the plots back
     s = sCantT
     pp = []
-    pp.append(["_Right1", 2100.0, height,    [0, 0, 0, s], plotsBackMaterial, "W"])
-    pp.append(["_Front1", 70.0,   height,    [0, s, 0, s], plotsBackMaterial, "W"])
-    pp.append(["_Front2", 1320.0, 115.0,     [0, 0, s, s], plotsBackMaterial, "W"])
-    pp.append(["_Front3", 620.0,  height,    [0, s, s, 0], plotsBackMaterial, "W"])
-    pp.append(["_Front4", 200.0,  465.0,     [s, s, s, s], plotsBackMaterial, "W"])
-    pp.append(["_Front5", 200.0,  465.0,     [s, s, s, s], plotsBackMaterial, "W"])
-    pp.append(["_Left1",  1072.0, height,    [0, s, s, s], plotsBackMaterial, "W"])
-    pp.append(["_Left2",  197.0,  height,    [0, 0, s, s], plotsBackMaterial, "W"])
-    pp.append(["_Left3",  1541.0, height,    [0, 0, 0, 0], plotsBackMaterial, "W"])
-    pp.append(["_Left4",  197.0,  height,    [0, 0, s, s], plotsBackMaterial, "W"])
-    pp.append(["_Left5",  1577.0, 197.0,     [s, s, s, s], plotsBackMaterial, "W"])
-    pp.append(["_Left2D", 161.0,  height-18, [0, 0, s, s], plotsBackMaterial, "W"])
-    pp.append(["_Left4D", 161.0,  height-18, [0, 0, s, s], plotsBackMaterial, "W"])
-    pp.append(["_Left5D", 1541.0, 161.0,     [0, s, 0, 0], plotsBackMaterial, "W"])
-
+    pp.append(["_Right1", 2100.0, height,    [0, 0, 0, s], plotsBackMaterial, "W", backThickness])
+    pp.append(["_Front1", 70.0,   height,    [0, s, 0, s], plotsBackMaterial, "W", backThickness])
+    pp.append(["_Front2", 1320.0, 115.0,     [0, 0, s, s], plotsBackMaterial, "W", backThickness])
+    pp.append(["_Front3", 620.0,  height,    [0, s, s, 0], plotsBackMaterial, "W", backThickness])
+    pp.append(["_Front4", 200.0,  465.0,     [s, s, s, s], plotsBackMaterial, "W", backThickness])
+    pp.append(["_Front5", 200.0,  465.0,     [s, s, s, s], plotsBackMaterial, "W", backThickness])
+    pp.append(["_Left1",  1072.0, height,    [0, s, s, s], plotsBackMaterial, "W", backThickness])
+    pp.append(["_Left2",  1541.0, height,    [0, 0, 0, 0], plotsBackMaterial, "W", backThickness])
 
     placementMatrix = [{'name':'_Right1',      'vec' : (-2216,    -115,  1200,    0,  0, 90)},
                        {'name':'_Front1',      'vec' : (-3945,    -2110, 1200,    90, 0, 90)},
@@ -625,13 +621,7 @@ def createBackForPlots(height):
                        {'name':'_Front4',      'vec' : (-4027,    -2057, 1267,    0,  0, 90)},
                        {'name':'_Front5',      'vec' : (-4027,    -755,  1267,    0,  0, 90)},
                        {'name':'_Left1',       'vec' : (-3391,    -2127, 1200,    0,  0, 90)},
-                       {'name':'_Left2',       'vec' : (-2855,    -2226, 1200,    90, 0, 90)},
-                       {'name':'_Left3',       'vec' : (-2066.5,  -2288, 1200,    0,  0, 90)},
-                       {'name':'_Left4',       'vec' : (-1296,    -2226, 1200,    90, 0, 90)},
-                       {'name':'_Left5',       'vec' : (-2066.5,  -2226, 1500,    0,  0, 0 )},
-                       {'name':'_Left2D',      'vec' : (-2837,    -2208, 1191,    90, 0, 90)},
-                       {'name':'_Left4D',      'vec' : (-1314,    -2208, 1191,    90, 0, 90)},
-                       {'name':'_Left5D',      'vec' : (-2066.5,  -2208, 1482,    0,  0, 0 )}]
+                       {'name':'_Left2',       'vec' : (-2066.5,  -2288, 1200,    0,  0, 90)}]
 
     createBoards("PlotsBacks", pp, placementMatrix, groupByName=True)
 
@@ -678,13 +668,19 @@ def createColumnBoards():
 
 def createAdditionalBoards():
     pp = []
-    pp.append(["_VitoCabAdd1", 477.0,  950.0, [0,   0.8, 0.8,   0],  cabMaterial, "-"])
-    pp.append(["_WindowBack",  1541.0, 600.0, [0,     0,   0,   0],  cabMaterial, "H"])
-    pp.append(["_DishDoor",    597.0,  757.0, [2,     2,   2,   2],  cabMaterial, "H"])
-    pp.append(["_DishUp1",     600.0,  100.0, [0,     0,   0,   0],  cabMaterial, "-"])
-    pp.append(["_DishUp2",     600.0,  100.0, [0,     0,   0,   0],  cabMaterial, "-"])
-    pp.append(["_DishUp3",     600.0,  100.0, [0.8,   0,   0,   0],  cabMaterial, "-"])
-    pp.append(["_DishUp4",     600.0,  100.0, [0.8,   0,   0,   0],  cabMaterial, "-"])
+    pp.append(["_VitoCabAdd1", 477.0,  950.0,  [0,   0.8, 0.8,   0],  cabMaterial, "-"])
+    pp.append(["_WindowBack",  1541.0, 600.0,  [0,     0,   0,   0],  cabMaterial, "H"])
+    pp.append(["_DishDoor",    597.0,  757.0,  [2,     2,   2,   2],  cabMaterial, "H"])
+    pp.append(["_DishUp1",     600.0,  100.0,  [0,     0,   0,   0],  cabMaterial, "-"])
+    pp.append(["_DishUp2",     600.0,  100.0,  [0,     0,   0,   0],  cabMaterial, "-"])
+    pp.append(["_DishUp3",     600.0,  100.0,  [0.8,   0,   0,   0],  cabMaterial, "-"])
+    pp.append(["_DishUp4",     600.0,  100.0,  [0.8,   0,   0,   0],  cabMaterial, "-"])
+    pp.append(["_Left1",       197.0,  600.0,  [0, 0, s, s],          cabMaterial, "W"])
+    pp.append(["_Left2",       197.0,  600.0,  [0, 0, s, s],          cabMaterial, "W"])
+    pp.append(["_Left3",       1577.0, 197.0,  [s, s, s, s],          cabMaterial, "W"])
+    pp.append(["_Left1D",      161.0,  600-18, [0, 0, s, s],          cabMaterial, "W"])
+    pp.append(["_Left2D",      161.0,  600-18, [0, 0, s, s],          cabMaterial, "W"])
+    pp.append(["_Left3D",      1541.0, 161.0,  [0, s, 0, 0],          cabMaterial, "W"])
 
     placementMatrix = [{'name':"_VitoCabAdd1", 'vec':  (-3945,    -371.4, 1975, 90, 0, 90)},
                        {'name':'_WindowBack',  'vec' : (-2066.5,  -2306,  1200, 0, 0, 90)},
@@ -692,7 +688,14 @@ def createAdditionalBoards():
                        {'name':'_DishUp1',     'vec' : (-2366.0,  -234,   824,  0, 0, 0)},
                        {'name':'_DishUp2',     'vec' : (-2366.0,  -234,   842,  0, 0, 0)},
                        {'name':'_DishUp3',     'vec' : (-2366.0,  -630,   824,  0, 0, 0)},
-                       {'name':'_DishUp4',     'vec' : (-2366.0,  -630,   842,  0, 0, 0)}]
+                       {'name':'_DishUp4',     'vec' : (-2366.0,  -630,   842,  0, 0, 0)},
+                       {'name':'_Left1',       'vec' : (-2855,    -2226, 1200,    90, 0, 90)},
+                       {'name':'_Left2',       'vec' : (-1296,    -2226, 1200,    90, 0, 90)},
+                       {'name':'_Left3',       'vec' : (-2066.5,  -2226, 1500,    0,  0, 0 )},
+                       {'name':'_Left1D',      'vec' : (-2837,    -2208, 1191,    90, 0, 90)},
+                       {'name':'_Left2D',      'vec' : (-1314,    -2208, 1191,    90, 0, 90)},
+                       {'name':'_Left3D',      'vec' : (-2066.5,  -2208, 1482,    0,  0, 0 )}]
+
     
     createBoards("KitchenAddons", pp, placementMatrix, groupByName=True)
 
@@ -1128,7 +1131,7 @@ def processAllSpreadSheetsByMaterial():
 #createBaseCorpuses(860.0)
 #createPlots(900)
 #createVitodens()
-#createBackForPlots(600.0)
+createBackForPlots(600.0)
 #createVitodensDownCabinet()
 #createKitchenDownPlanks()
 #createAdditionalBoards()
