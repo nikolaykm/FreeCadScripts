@@ -546,14 +546,14 @@ def createUpCorpuses(height, depth):
     createCabinet('OvenUp', 600.0, height-40, depth, addOns, isBase=False, shiftBlend=220.0, groupName='UpCabinets')
 
     createCabinet('Cab1Up', 1160.0, height, depth, {'shelves' : 2, 'doors' : 2, 'doorsWallRight' : True, 'doorsHoles' : 3, 'doorsHolesSide': 'L'}, isBase=False, groupName='UpCabinets')
-    createCabinet('Cab2Up', 700.0, height+150, 480.0, {'doors' : 1, 'doorsWallRight' : True, 'doorsHoles' : 3, 'doorsHolesSide': 'L'}, isBase=False, isHavingBack=False, groupName='UpCabinets')
+    createCabinet('Cab2Up', 708.0, height+150, 490.0, {'doors' : 1, 'doorsWallRight' : True, 'doorsHoles' : 3, 'doorsHolesSide': 'L'}, isBase=False, isHavingBack=False, groupName='UpCabinets')
     createCabinet('Cab3Up', 600.0, height, 253.0, {'shelves' : 2, 'doors' : 1, 'doorsHoles' : 3, 'doorsHolesSide': 'L'}, isBase=False, groupName='UpCabinets')
 
     placementMatrix = [{'name':'Cab0Up_Fusion',         'x':-1404,      'y':-266,       'z':2450,        'xR':0, 'yR':1, 'zR':0, 'R':180},
                        {'name':'BottlesUp_Fusion',	'x':-1316,      'y':-266,       'z':2197,        'xR':0, 'yR':1, 'zR':0, 'R':180},
                        {'name':'OvenUp_Fusion',		'x':-1766,      'y':-266,       'z':2450,        'xR':0, 'yR':1, 'zR':0, 'R':180},
                        {'name':'Cab1Up_Fusion',         'x':-2646,      'y':-266,       'z':2450,        'xR':0, 'yR':1, 'zR':0, 'R':180},
-                       {'name':'Cab2Up_Fusion',         'x':-3577,      'y':-371,       'z':2450,        'xR':0, 'yR':1, 'zR':0, 'R':180},
+                       {'name':'Cab2Up_Fusion',         'x':-3581,      'y':-368,       'z':2450,        'xR':0, 'yR':1, 'zR':0, 'R':180},
                        {'name':'Cab3Up_Fusion',         'x':-3160,      'y':-2019,      'z':1500,        'xR':0, 'yR':0, 'zR':1, 'R':180}]
 
     placeObjects(placementMatrix)
@@ -606,34 +606,37 @@ def createBackForPlots(height):
     pp = []
     pp.append(["_Right1", 2100.0, height,    [z, z, z, z], plotsBackMaterial, "W", backThickness])
     pp.append(["_Front1", 2010.0, height,    [z, z, z, z], plotsBackMaterial, "W", backThickness])
-#TODO: size of the sides ??? look at the schemas and substract 9mm if needed
-    pp.append(["_Front2", 200.0,  465.0,     [z, z, z, z], plotsBackMaterial, "W", backThickness])
-    pp.append(["_Front3", 200.0,  465.0,     [z, z, z, z], plotsBackMaterial, "W", backThickness])
-    pp.append(["_Front4", 477.0,  950.0,     [z, z, z, z], plotsBackMaterial, "W", backThickness])
-    pp.append(["_Left1",  1081.0, height,    [z, z, z, z], plotsBackMaterial, "W", backThickness])
+    pp.append(["_Front2", 220.0,  465.0,     [z, z, z, z], plotsBackMaterial, "W", backThickness])
+    pp.append(["_Front3", 220.0,  465.0,     [z, z, z, z], plotsBackMaterial, "W", backThickness])
+    pp.append(["_Front4", 950.0,  477.0,     [z, z, z, z], plotsBackMaterial, "W", backThickness])
+    pp.append(["_Left1",  1110.0, height,    [z, z, z, z], plotsBackMaterial, "W", backThickness])
     pp.append(["_Left2",  1541.0, height,    [z, z, z, z], plotsBackMaterial, "W", backThickness])
+    pp.append(["_Left1D", 151.0,  height,    [z, z, z, z], plotsBackMaterial, "W", backThickness])
+    pp.append(["_Left2D", 161.0,  height,    [z, z, z, z], plotsBackMaterial, "W", backThickness])
 
     placementMatrix = [{'name':'_Right1',      'vec' : (-2216,    -116,  1200,    0,  0, 90)},
                        {'name':'_Front1',      'vec' : (-3944,    -1140, 1200,    90, 0, 90)},
-                       {'name':'_Front2',      'vec' : (-4027,    -2057, 1267,    0,  0, 90)},
-                       {'name':'_Front3',      'vec' : (-4027,    -755,  1267,    0,  0, 90)},
-                       {'name':"_Front4",      'vec':  (-3944,    -371.4, 1975, 90, 0, 90)},
-                       {'name':'_Left1',       'vec' : (-3394.5,  -2135, 1200,    0,  0, 90)},
-                       {'name':'_Left2',       'vec' : (-2066.5,  -2288, 1200,    0,  0, 90)}]
+                       {'name':'_Front2',      'vec' : (-4045,    -2057, 1267,    0,  0, 90)},
+                       {'name':'_Front3',      'vec' : (-4045,    -755,  1267,    0,  0, 90)},
+                       {'name':"_Front4",      'vec':  (-3944,    -371.4, 1975,  90, 90, 90)},
+                       {'name':'_Left1',       'vec' : (-3380,  -2135, 1200,    0,  0, 90)},
+                       {'name':'_Left2',       'vec' : (-2066.5,  -2297, 1200,    0,  0, 90)},
+                       {'name':'_Left1D',      'vec' : (-2837,    -2221, 1200,    90, 0, 90)},
+                       {'name':'_Left2D',      'vec' : (-1305,    -2216, 1200,    90, 0, 90)}]
 
     createBoards("PlotsBacks", pp, placementMatrix, groupByName=True)
 
 def createVitodensDownCabinet():
     pp = []
-    pp.append(["_RightBoard",  200.0,  450.0,  [0, 0.8, 0.8, 0.8], cabMaterial, "H"])
-    pp.append(["_DownPlank",   700.0,  100.0,  [0,   2,   2,   2], cabMaterial, "H"])
-    pp.append(["_Door",        695.5,  345.5,  [2,   2,   2,   2], cabMaterial, "H", boardThickness, 2, 'L'])
-    pp.append(["_LeftBoard",   200.0,  450.0,  [0, 0.8, 0.8,   0], cabMaterial, "H"])
+    pp.append(["_RightBoard",  210.0,  450.0,  [0, 0.8, 0.8, 0.8], cabMaterial, "H"])
+    pp.append(["_DownPlank",   708.0,  100.0,  [0,   2,   2,   2], cabMaterial, "H"])
+    pp.append(["_Door",        704.0,  346.0,  [2,   2,   2,   2], cabMaterial, "H", boardThickness, 2, 'L'])
+    pp.append(["_LeftBoard",   210.0,  450.0,  [0, 0.8, 0.8,   0], cabMaterial, "H"])
 
-    placementMatrix = [{'name':'_RightBoard', 'vec' : (-3245,    -233,  1125,    90, 0, 90)},
-                       {'name':'_DownPlank',  'vec' : (-3577.6,  -333,  949.4,   0,  0, 90)},
-                       {'name':'_Door',       'vec' : (-3576.25, -333,  1175.75, 0,  0, 90)},
-                       {'name':'_LeftBoard',  'vec' : (-3927,    -233,  1125,    90, 0, 90)}]
+    placementMatrix = [{'name':'_RightBoard', 'vec' : (-3245,    -230,  1125,    90, 0, 90)},
+                       {'name':'_DownPlank',  'vec' : (-3581,    -335,  949.4,   0,  0, 90)},
+                       {'name':'_Door',       'vec' : (-3581,    -335,  1175.75, 0,  0, 90)},
+                       {'name':'_LeftBoard',  'vec' : (-3935,    -230,  1125,    90, 0, 90)}]
 
     createBoards("VitodensDownCab", pp, placementMatrix, groupByName=True)
 
@@ -672,12 +675,9 @@ def createAdditionalBoards():
     pp.append(["_DishUp2",     600.0,  100.0,  [0,     0,   0,   0],  cabMaterial, "-"])
     pp.append(["_DishUp3",     600.0,  100.0,  [0.8,   0,   0,   0],  cabMaterial, "-"])
     pp.append(["_DishUp4",     600.0,  100.0,  [0.8,   0,   0,   0],  cabMaterial, "-"])
-    pp.append(["_Left1",       197.0,  600.0,  [0, 0, s, s],          cabMaterial, "W"])
-    pp.append(["_Left2",       197.0,  600.0,  [0, 0, s, s],          cabMaterial, "W"])
-    pp.append(["_Left3",       1577.0, 197.0,  [s, s, s, s],          cabMaterial, "W"])
-    pp.append(["_Left1D",      161.0,  600-18, [0, 0, s, s],          cabMaterial, "W"])
-    pp.append(["_Left2D",      161.0,  600-18, [0, 0, s, s],          cabMaterial, "W"])
-    pp.append(["_Left3D",      1541.0, 161.0,  [0, s, 0, 0],          cabMaterial, "W"])
+    pp.append(["_Left1",       178.0,  600.0,  [0, 0, 2, 2],          cabMaterial, "W"])
+    pp.append(["_Left2",       188.0,  600.0,  [0, 0, 2, 2],          cabMaterial, "W"])
+    pp.append(["_Left3",       1577.0, 190.0,  [2, 2, 2, 2],          cabMaterial, "W"])
 
     placementMatrix = [{'name':'_WindowBack',  'vec' : (-2066.5,  -2306,  1200, 0, 0, 90)},
                        {'name':'_DishDoor',    'vec' : (-2366.0,  -683,   479,  0, 0, 90)},
@@ -685,12 +685,9 @@ def createAdditionalBoards():
                        {'name':'_DishUp2',     'vec' : (-2366.0,  -234,   842,  0, 0, 0)},
                        {'name':'_DishUp3',     'vec' : (-2366.0,  -630,   824,  0, 0, 0)},
                        {'name':'_DishUp4',     'vec' : (-2366.0,  -630,   842,  0, 0, 0)},
-                       {'name':'_Left1',       'vec' : (-2855,    -2226, 1200,    90, 0, 90)},
-                       {'name':'_Left2',       'vec' : (-1296,    -2226, 1200,    90, 0, 90)},
-                       {'name':'_Left3',       'vec' : (-2066.5,  -2226, 1500,    0,  0, 0 )},
-                       {'name':'_Left1D',      'vec' : (-2837,    -2208, 1191,    90, 0, 90)},
-                       {'name':'_Left2D',      'vec' : (-1314,    -2208, 1191,    90, 0, 90)},
-                       {'name':'_Left3D',      'vec' : (-2066.5,  -2208, 1482,    0,  0, 0 )}]
+                       {'name':'_Left1',       'vec' : (-2855,    -2235, 1200,    90, 0, 90)},
+                       {'name':'_Left2',       'vec' : (-1296,    -2230, 1200,    90, 0, 90)},
+                       {'name':'_Left3',       'vec' : (-2066.5,  -2230, 1500,    0,  0, 0 )}]
 
     
     createBoards("KitchenAddons", pp, placementMatrix, groupByName=True)
@@ -1127,7 +1124,7 @@ def processAllSpreadSheetsByMaterial():
 #createBaseCorpuses(860.0)
 #createPlots(900)
 #createVitodens()
-createBackForPlots(600.0)
+#createBackForPlots(600.0)
 #createVitodensDownCabinet()
 #createKitchenDownPlanks()
 #createAdditionalBoards()
