@@ -747,15 +747,17 @@ def createLivingRoomShelves():
 
 def createLivingRoomDown():
     pp = []
-    pp.append(["_Down1", 1732.0, 100.0,  [0.8, 0.8, 0.8, 0.8], cabMaterial, "W"])
-    pp.append(["_Down2", 1732.0, 100.0,  [0.8, 0.8, 0.8, 0.8], cabMaterial, "W"])
-    pp.append(["_Down3", 430.0,  100.0,  [0.8, 0.8, 0.8, 0.8], cabMaterial, "W"])
-    pp.append(["_Down4", 430.0,  100.0,  [0.8, 0.8, 0.8, 0.8], cabMaterial, "W"])
+    pp.append(["_Down1", 2482.0, 101.0,  [0.8, 0.8, 0.8, 0.8], cabMaterial, "W"])
+    pp.append(["_Down2", 982.0,  101.0,  [0.8, 0.8, 0.8, 0.8], cabMaterial, "W"])
+    pp.append(["_Down3", 430.0,  101.0,  [0.8, 0.8, 0.8, 0.8], cabMaterial, "W"])
+    pp.append(["_Down4", 580.0,  101.0,  [0.8, 0.8, 0.8, 0.8], cabMaterial, "W"])
+    pp.append(["_Down5", 550.0,  101.0,  [0.8, 0.8, 0.8, 0.8], cabMaterial, "W"])
 
-    placementMatrix = [{'name':"_Down1",    'vec':  (1185,    -515,  50,  0,   0, 90)},
-                       {'name':"_Down2",    'vec':  (2917,    -515,  50,  0,   0, 90)},
+    placementMatrix = [{'name':"_Down1",    'vec':  (1559,    -668,  50,  0,   0, 90)},
+                       {'name':"_Down2",    'vec':  (3292,    -515,  50,  0,   0, 90)},
                        {'name':"_Down3",    'vec':  (3783,    -330,  50,  90,  0, 90)},
-                       {'name':"_Down4",    'vec':  (300,     -330,  50,  90,  0, 90)}]
+                       {'name':"_Down4",    'vec':  (300,     -406,  50,  90,  0, 90)},
+                       {'name':"_Down5",    'vec':  (2783,    -393,  50,  90,  0, 90)}]
 
     createBoards("LivingDown", pp, placementMatrix, groupByName=True)
 
