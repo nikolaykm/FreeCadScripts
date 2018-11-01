@@ -520,7 +520,7 @@ def createBaseCorpuses(height):
     createCabinet('Cab3', 1090.0, height, 370.0, addOns, groupName="BaseCabinets")
  
     createCabinet('Cab4', 600.0, height, 560.0, {'drawers' : 4}, visibleBack=True, groupName="BaseCabinets")
-    createCabinet('Cab5', 968.0, height, 560.0, {'shelves' : 1, 'doors' : 2, 'doorsHoles' : 2, 'doorsHolesSide': 'L'}, visibleBack=True, groupName="BaseCabinets")
+    createCabinet('Cab5', 950.0, height, 560.0, {'shelves' : 1, 'doors' : 2, 'doorsHoles' : 2, 'doorsHolesSide': 'L', 'doorsWallLeft' : True}, visibleBack=True, groupName="BaseCabinets")
 
     placementMatrix = [{'name':'Bottles_Fusion','x':-1316, 	'y':-402,	'z':100,	'xR':0,	'yR':0, 'zR':1, 'R':0},
                        {'name':'Oven_Fusion',	'x':-1766, 	'y':-402, 	'z':100,	'xR':0,	'yR':0, 'zR':1, 'R':0},
@@ -529,7 +529,7 @@ def createBaseCorpuses(height):
                        {'name':'Sink_Fusion',	'x':-3655, 	'y':-1443, 	'z':100,	'xR':0, 'yR':0, 'zR':1, 'R':90},
                        {'name':'Cab3_Fusion',	'x':-3391, 	'y':-1947, 	'z':100,	'xR':0, 'yR':0, 'zR':1, 'R':180},
                        {'name':'Cab4_Fusion',	'x':-2546, 	'y':-2043, 	'z':100,	'xR':0, 'yR':0, 'zR':1, 'R':180},
-                       {'name':'Cab5_Fusion',	'x':-1762, 	'y':-2043, 	'z':100,	'xR':0, 'yR':0, 'zR':1, 'R':180}]
+                       {'name':'Cab5_Fusion',	'x':-1771, 	'y':-2043, 	'z':100,	'xR':0, 'yR':0, 'zR':1, 'R':180}]
 
     placeObjects(placementMatrix)
 
@@ -645,12 +645,12 @@ def createKitchenDownPlanks():
     pp.append(["_Right1_Down", 2310.0, 100.0,  [0.8, 0.8, 0.8, 0.8], cabMaterial, "W"])
     pp.append(["_Front1_Down", 1173.0, 100.0,  [0.8, 0.8, 0.8, 0.8], cabMaterial, "W"])
     pp.append(["_Left1_Down",  2210.0, 100.0,  [0.8, 0.8, 0.8, 0.8], cabMaterial, "W"])
-    pp.append(["_Left2_Down",  560.0,  100.0,  [0.8, 0.8, 0.8, 0.8], cabMaterial, "H"])
+    pp.append(["_Left2_Down",  580.0,  860.0,  [0.8, 0.8, 0.8, 0.8], cabMaterial, "H"])
 
     placementMatrix = [{'name':"_Right1_Down", 'vec':  (-2321,    -617,  50,      0,  0, 90)},
                        {'name':"_Front1_Down", 'vec':  (-3430,    -1221, 50,      90, 0, 90)},
                        {'name':"_Left1_Down",  'vec':  (-2401,    -1808, 50,      0,  0, 90)},
-                       {'name':"_Left2_Down",  'vec':  (-1296,    -2043, 50,      90, 0, 90)}]
+                       {'name':"_Left2_Down",  'vec':  (-1296,    -2033, 430,      90, 0, 90)}]
 
     createBoards("KitchenDownPlanks", pp, placementMatrix, groupByName=True)
 
