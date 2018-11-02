@@ -1,0 +1,11 @@
+0. https://threejs.org/ and  https://www.khronos.org/webgl/wiki/Main_Page
+1. https://tutorials.ubuntu.com/tutorial/install-and-configure-apache#0
+2. sudo vi /etc/hosts -> add 127.0.0.1 test.example.com
+3. sudo apt install npm build-essential
+4. sudo npm install three
+5. systemctl reload apache2
+6. https://github.com/browserify/browserify
+7. npm install -g browserify
+8. browserify main.js > bundle.js
+9. <script src="bundle.js"></script>
+10. https://github.com/mrdoob/three.js/tree/master/examples/js/controls
