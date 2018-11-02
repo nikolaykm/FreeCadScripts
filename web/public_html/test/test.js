@@ -639,11 +639,12 @@ THREE.TrackballControls.prototype.constructor = THREE.TrackballControls;
         renderer.setPixelRatio( window.devicePixelRatio );
         renderer.setSize( window.innerWidth, window.innerHeight );
 
-        controls = new THREE.TrackballControls( camera, renderer.domElement );
-	controls.minDistance = 200;
-	controls.maxDistance = 500;
-
         document.body.appendChild( renderer.domElement );
+
+        controls = new THREE.TrackballControls( camera, renderer.domElement );
+        controls.minDistance = 200;
+        controls.maxDistance = 500;
+
         //
         window.addEventListener( 'resize', onWindowResize, false );
      }
