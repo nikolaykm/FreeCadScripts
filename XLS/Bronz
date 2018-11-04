@@ -1,0 +1,4 @@
+Name	Length	Width	Count	CanRotate	LongCantCount	ShortCantCount	EdgeThickness	CantMaterial	PantsHolesCount	SideForHoles
+SRWD1_Drawer1_Door_Sketch	192	980	3	0	2	2	2	bronzMaterial	0	-
+SRDeskUp1_Door1_Sketch	438	437	2	0	2	2	2	bronzMaterial	2	L
+SRDeskUp2_Door1_Sketch	438	438	5	0	2	2	2	bronzMaterial	2	L
