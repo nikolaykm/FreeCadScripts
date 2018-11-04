@@ -1,0 +1,9 @@
+Name	Length	Width	Count	CanRotate	LongCantCount	ShortCantCount	EdgeThickness	CantMaterial	PantsHolesCount	SideForHoles
+PlotsBacks_Right1_Sketch	2099	599	1	0	2	2	0.5	AmfibiaBack	0	-
+PlotsBacks_Front1_Sketch	2009	599	1	0	2	2	0.5	AmfibiaBack	0	-
+PlotsBacks_Front2_Sketch	219	464	2	0	2	2	0.5	AmfibiaBack	0	-
+PlotsBacks_Front4_Sketch	949	476	1	0	2	2	0.5	AmfibiaBack	0	-
+PlotsBacks_Left1_Sketch	1109	599	1	0	2	2	0.5	AmfibiaBack	0	-
+PlotsBacks_Left2_Sketch	1540	599	1	0	2	2	0.5	AmfibiaBack	0	-
+PlotsBacks_Left1D_Sketch	150	599	1	0	2	2	0.5	AmfibiaBack	0	-
+PlotsBacks_Left2D_Sketch	160	599	1	0	2	2	0.5	AmfibiaBack	0	-
