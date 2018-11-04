@@ -1,0 +1,5 @@
+Name	Length	Width	Count	CanRotate	LongCantCount	ShortCantCount	EdgeThickness	CantMaterial	PantsHolesCount	SideForHoles
+CorBootsDoor1_Sketch	376	654	4	0	2	2	2	newspapers	0	-
+CorPor_Shelf1_Sketch	262	596	4	0	1	2	2	newspapers	0	-
+CorPor_Front1_Sketch	1996	146	2	0	2	2	2	newspapers	0	-
+CorPor_Front2_Sketch	264	146	2	0	2	0	2	newspapers	0	-
