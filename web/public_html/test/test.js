@@ -619,6 +619,60 @@ THREE.TrackballControls = function ( object, domElement ) {
 
 THREE.TrackballControls.prototype = Object.create( THREE.EventDispatcher.prototype );
 THREE.TrackballControls.prototype.constructor = THREE.TrackballControls;
+
+//
+// Initialize a texture and load an image.
+// When the image finished loading copy it into the texture.
+//
+function loadTexture(gl, url) {
+  const texture = gl.createTexture();
+  gl.bindTexture(gl.TEXTURE_2D, texture);
+
+  // Because images have to be download over the internet
+  // they might take a moment until they are ready.
+  // Until then put a single pixel in the texture so we can
+  // use it immediately. When the image has finished downloading
+  // we'll update the texture with the contents of the image.
+  const level = 0;
+  const internalFormat = gl.RGBA;
+  const width = 1;
+  const height = 1;
+  const border = 0;
+  const srcFormat = gl.RGBA;
+  const srcType = gl.UNSIGNED_BYTE;
+  const pixel = new Uint8Array([0, 0, 255, 255]);  // opaque blue
+  gl.texImage2D(gl.TEXTURE_2D, level, internalFormat,
+                width, height, border, srcFormat, srcType,
+                pixel);
+
+  const image = new Image();
+  image.onload = function() {
+    gl.bindTexture(gl.TEXTURE_2D, texture);
+    gl.texImage2D(gl.TEXTURE_2D, level, internalFormat,
+                  srcFormat, srcType, image);
+
+    // WebGL1 has different requirements for power of 2 images
+    // vs non power of 2 images so check if the image is a
+    // power of 2 in both dimensions.
+    if (isPowerOf2(image.width) && isPowerOf2(image.height)) {
+       // Yes, it's a power of 2. Generate mips.
+       gl.generateMipmap(gl.TEXTURE_2D);
+    } else {
+       // No, it's not a power of 2. Turn of mips and set
+       // wrapping to clamp to edge
+       gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+       gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+       gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+    }
+  };
+  image.src = url;
+
+  return texture;
+}
+
+function isPowerOf2(value) {
+  return (value & (value - 1)) == 0;
+}
     
     var camera, scene, renderer, controls;
     var mesh;
@@ -627,19 +681,43 @@ THREE.TrackballControls.prototype.constructor = THREE.TrackballControls;
     animate();
 
     function init() {
+
         camera = new THREE.PerspectiveCamera( 70, window.innerWidth / window.innerHeight, 1, 5000 );
         camera.position.z = 400;
         scene = new THREE.Scene();
-        var texture = new THREE.TextureLoader().load( 'textures/crate.gif' );
-        var geometry = new THREE.BoxBufferGeometry( 700, 300, 18 );
-        var geometry2 = new THREE.BoxBufferGeometry( 300, 1610, 18 );
-        var material = new THREE.MeshBasicMaterial( { map: texture } );
-        mesh = new THREE.Mesh( geometry, material );
-        mesh2 = new THREE.Mesh( geometry2, material );
-        scene.add( mesh );
-        scene.add( mesh2 );
-        mesh2.position.set(-350, 0, 798);
-        mesh2.rotation.set(0, Math.PI / 2, Math.PI / 2);
+
+        var canvas = document.createElement( 'canvas' );
+        canvasTexture = new THREE.CanvasTexture(canvas);
+
+        const image = new Image();
+        image.onload = function() {
+            // use the image, e.g. draw part of it on a canvas
+           var canvas = document.createElement( 'canvas' );
+           var context = canvas.getContext( '2d' );
+           context.drawImage( image, 100, 100, 700, 300, 0, 0, 700, 300 );
+           canvasTexture = new THREE.CanvasTexture(canvas);
+
+           var canvas2 = document.createElement( 'canvas' );
+           var context2 = canvas2.getContext( '2d' );
+           context2.drawImage( image, 250, 260, 1610, 300, 0, 0, 1610, 300 );
+           canvasTexture2 = new THREE.CanvasTexture(canvas);
+
+
+           var geometry = new THREE.BoxBufferGeometry( 700, 300, 18 );
+           var geometry2 = new THREE.BoxBufferGeometry( 1610, 300, 18 );
+           var material = new THREE.MeshBasicMaterial( { map: canvasTexture } );
+           var material2 = new THREE.MeshBasicMaterial( { map: canvasTexture2 } );
+           mesh = new THREE.Mesh( geometry, material );
+           mesh2 = new THREE.Mesh( geometry2, material2 );
+           scene.add( mesh );
+           scene.add( mesh2 );
+           mesh2.position.set(-350, 0, 798);
+           mesh2.rotation.set(Math.PI / 2, Math.PI / 2, Math.PI / 2);
+
+        };
+        image.src = 'textures/shato.jpg'
+
+        //var texture = new THREE.TextureLoader().load( 'textures/shato.jpg' );
 
         renderer = new THREE.WebGLRenderer( { antialias: true } );
         renderer.setPixelRatio( window.devicePixelRatio );
