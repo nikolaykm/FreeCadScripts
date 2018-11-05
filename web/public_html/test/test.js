@@ -627,14 +627,20 @@ THREE.TrackballControls.prototype.constructor = THREE.TrackballControls;
     animate();
 
     function init() {
-        camera = new THREE.PerspectiveCamera( 70, window.innerWidth / window.innerHeight, 1, 1000 );
+        camera = new THREE.PerspectiveCamera( 70, window.innerWidth / window.innerHeight, 1, 5000 );
         camera.position.z = 400;
         scene = new THREE.Scene();
         var texture = new THREE.TextureLoader().load( 'textures/crate.gif' );
-        var geometry = new THREE.BoxBufferGeometry( 200, 200, 200 );
+        var geometry = new THREE.BoxBufferGeometry( 700, 300, 18 );
+        var geometry2 = new THREE.BoxBufferGeometry( 300, 1610, 18 );
         var material = new THREE.MeshBasicMaterial( { map: texture } );
         mesh = new THREE.Mesh( geometry, material );
+        mesh2 = new THREE.Mesh( geometry2, material );
         scene.add( mesh );
+        scene.add( mesh2 );
+        mesh2.position.set(-350, 0, 798);
+        mesh2.rotation.set(0, Math.PI / 2, Math.PI / 2);
+
         renderer = new THREE.WebGLRenderer( { antialias: true } );
         renderer.setPixelRatio( window.devicePixelRatio );
         renderer.setSize( window.innerWidth, window.innerHeight );
@@ -643,7 +649,7 @@ THREE.TrackballControls.prototype.constructor = THREE.TrackballControls;
 
         controls = new THREE.TrackballControls( camera, renderer.domElement );
         controls.minDistance = 200;
-        controls.maxDistance = 500;
+        controls.maxDistance = 3000;
 
         //
         window.addEventListener( 'resize', onWindowResize, false );
