@@ -5,10 +5,18 @@ import sqlite3
 app = Flask(__name__)
 api = Api(app)
 
+conn = sqlite3.connect('example.db')
+c = conn.cursor()
+# Create table
+c.execute('''CREATE TABLE IF NOT EXISTS `SpreadSheets` ( `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` VARCHAR UNIQUE NOT NULL , `projectName` VARCHAR NOT NULL )''')
+c.execute('''CREATE TABLE IF NOT EXISTS `SpreadSheetsRows` ( `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `ssId` INTEGER NOT NULL, `boardName` VARCHAR NOT NULL , `width` INTEGER NOT NULL, `height` INTEGER NOT NULL, `boardThickness` REAL NOT NULL, `downCant` REAL NOT NULL, `upCant` REAL NOT NULL, `leftCant` REAL NOT NULL, `rightCant` REAL NOT NULL, `canRotate` BOOLEAN NOT NULL, `boardMaterial` VARCHAR NOT NULL, `holesCount` INTEGER NOT NULL, `holesSide` CHARACTER(20) NOT NULL, UNIQUE(`ssId`, `boardName`) ON CONFLICT ROLLBACK)''')
+conn.commit()
+conn.close()
+
 spreadsheets = {}
 class Spreadsheet(Resource):
 
-    def get(self, boardName=None):
+    def get(self, spreadSheetName=None, boardName=None):
         if boardName != None:
             for ss in spreadsheets:
                 if(boardName == ss["boardName"]):
@@ -20,7 +28,17 @@ class Spreadsheet(Resource):
             allBoards.append(ss)
         return allBoards, 200           
 
-    def post(self, boardName):
+    def post(self, spreadSheetName, boardName):
+
+        conn = sqlite3.connect('example.db')
+        c = conn.cursor()
+
+        c.execute('''INSERT OR IGNORE INTO SpreadSheets(name, projectName) VALUES (?,?)''', (spreadSheetName, ""))
+        conn.commit()
+
+        c.execute('''SELECT id FROM SpreadSheets WHERE name=?''', (spreadSheetName,))
+        spreadSheetId = c.fetchall()[0][0]
+  
         parser = reqparse.RequestParser()
         parser.add_argument("width")
         parser.add_argument("height")
@@ -35,25 +53,14 @@ class Spreadsheet(Resource):
         parser.add_argument("holesSide")
         args = parser.parse_args()
 
-        for ss in spreadsheets:
-            if(boardName == ss["boardName"]):
-                return "Board with name {} already exists".format(boardName), 400
+        ssRec = (spreadSheetId, boardName, args["width"], args["height"], args["boardThickness"], args["downCant"], args["upCant"], args["leftCant"], args["rightCant"], args["canRotate"], args["boardMaterial"], args["holesCount"], args["holesSide"])
 
-        ssRec = {
-            "boardName": boardName,
-            "width": args["width"],
-            "height": args["height"],
-            "boardThickness": args["boardThickness"],
-            "downCant": args["downCant"],
-            "upCant": args["upCant"],
-            "leftCant": args["leftCant"],
-            "rightCant": args["rightCant"],
-            "canRotate": args["canRotate"],
-            "boardMaterial": args["boardMaterial"],
-            "holesCount": args["holesCount"],
-            "holesSide": args["holesSide"]
-        }
-        spreadsheets.append(ssRec)
+        print ssRec
+
+        c.execute('''INSERT OR IGNORE INTO SpreadSheetsRows(ssId,boardName,width,height,boardThickness,downCant,upCant,leftCant,rightCant,canRotate,boardMaterial,holesCount,holesSide) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)''', ssRec)        
+
+        conn.commit()
+        conn.close()
         return ssRec, 201
 
 #    def put(self, name):
@@ -80,12 +87,6 @@ class Spreadsheet(Resource):
 #        global users
 #        users = [user for user in users if user["name"] != name]
 #        return "{} is deleted.".format(name), 200
-
-conn = sqlite3.connect('example.db')
-c = conn.cursor()
-# Create table
-c.execute('''CREATE TABLE IF NOT EXISTS Spreadsheets
-             (idx int, name text)''')
 
 api.add_resource(Spreadsheet, "/ss", "/ss/<string:spreadSheetName>", "/ss/<string:spreadSheetName>/<string:boardName>")
 
