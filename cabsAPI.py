@@ -1,10 +1,11 @@
 from flask import Flask
 from flask_restful import Api, Resource, reqparse
+import sqlite3
 
 app = Flask(__name__)
 api = Api(app)
 
-spreadsheets = []
+spreadsheets = {}
 class Spreadsheet(Resource):
 
     def get(self, boardName=None):
@@ -80,6 +81,12 @@ class Spreadsheet(Resource):
 #        users = [user for user in users if user["name"] != name]
 #        return "{} is deleted.".format(name), 200
 
-api.add_resource(Spreadsheet, "/ss", "/ss/<string:boardName>")
+conn = sqlite3.connect('example.db')
+c = conn.cursor()
+# Create table
+c.execute('''CREATE TABLE IF NOT EXISTS Spreadsheets
+             (idx int, name text)''')
+
+api.add_resource(Spreadsheet, "/ss", "/ss/<string:spreadSheetName>", "/ss/<string:spreadSheetName>/<string:boardName>")
 
 app.run(debug=True)
