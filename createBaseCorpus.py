@@ -1,3 +1,6 @@
+import requests
+import json
+
 boardThickness = 18.0
 backThickness = 9.0
 cardboardThickness = 3.0
@@ -24,43 +27,14 @@ drawerSliderHole = 10.0
 drawerSliderHoleToBottom = 12.0
 
 def writeRecordInSpreadsheet(spreadsheetName, recArr):
-    #find next empty row
-    row = 1
-    while(True):
-        try:
-            if App.activeDocument().getObject(spreadsheetName).get('A' + str(row)) == '':
-                break; 
-            row = row + 1
-        except ValueError:
-            break
-
-    column = ord('A')
-    for item in recArr:
-        App.activeDocument().getObject(spreadsheetName).set(chr(column) + str(row), str(item))
-        column = column + 1
-
-    App.ActiveDocument.recompute()
-
-    return row
+    recArr.insert(0, spreadsheetName)
+    r = requests.post('http://127.0.0.1:5000/ss/%s/%s?width=%s&height=%s&boardThickness=%s&downCant=%s&upCant=%s&leftCant=%s&rightCant=%s&byFlader=%s&boardMaterial=%s&holesCount=%s&holesSide=%s'%tuple(recArr))
+    print r
+    return recArr[1]
 
 def getRowFromSpreadsheet(spreadsheetName, row):
-    resultDict = dict()
-    column = ord('A')
-    while(True):
-        try:
-            key = App.activeDocument().getObject(spreadsheetName).get(chr(column) + str(1))
-        except ValueError:
-            break
-
-        try:
-            value = App.activeDocument().getObject(spreadsheetName).get(chr(column) + str(row))
-        except ValueError:
-            value = ""
-
-        resultDict[key] = value
-        column = column + 1
-
-    return resultDict
+    r = requests.get('http://127.0.0.1:5000/ss/%s/%s'%(spreadsheetName, row))
+    return json.loads(r.text)[0]
 
 def placeObjects(placementMatrix, namePrefix = ""):
     for p in placementMatrix:
@@ -155,10 +129,10 @@ def createPocketFromSketch(bodyName, sketchName, zL):
 def createBoardFromSheetRow(objName, bodyName, row):
 
     rowDict = getRowFromSpreadsheet(objName + "_Spreadsheet", row)
-    sketchName = rowDict['Name']
-    xL = rowDict['Width']
-    yL = rowDict['Height']
-    zL = rowDict['BoardThickness']
+    sketchName = rowDict['boardName']
+    xL = rowDict['width']
+    yL = rowDict['height']
+    zL = rowDict['boardThickness']
 
     #create the board
     createSketch(sketchName, bodyName, 'XY_Plane', '')
@@ -168,20 +142,20 @@ def createBoardFromSheetRow(objName, bodyName, row):
     createPadFromSketch(bodyName, sketchName, zL)
 
     #cant the board
-    cantToFaceDict = {'WCantFront' : 'Face3', 'WCantBack' : 'Face1', 'HCantLeft' : 'Face4', 'HCantRight' : 'Face2'}
+    cantToFaceDict = {'downCant' : 'Face3', 'upCant' : 'Face1', 'leftCant' : 'Face4', 'rightCant' : 'Face2'}
     for cant,face in cantToFaceDict.items():
         if rowDict[cant] != "" and rowDict[cant] != "0" and rowDict[cant] != 0:
             cantSketchName = sketchName + "_" + cant
             createSketch(cantSketchName, bodyName, sketchName + "_Pad", face)
-            width = rowDict['Width'] if (cant == 'WCantFront' or cant == 'WCantBack') else rowDict['Height']
+            width = rowDict['width'] if (cant == 'downCant' or cant == 'upCant') else rowDict['height']
             conList = []
-            conList.append(Sketcher.Constraint('DistanceY',-1,1,0,1,rowDict['BoardThickness']));
+            conList.append(Sketcher.Constraint('DistanceY',-1,1,0,1,rowDict['boardThickness']));
             conList.append(Sketcher.Constraint('DistanceX',0,1,-1,1,width/2))
-            createRectInSketch(cantSketchName, width, rowDict['BoardThickness'], conList)
+            createRectInSketch(cantSketchName, width, rowDict['boardThickness'], conList)
             createPadFromSketch(bodyName, cantSketchName, rowDict[cant])
 
-    holesCount = rowDict['Holes'] if 'Holes' in rowDict else 0
-    holesSide = rowDict['HolesSide'] if 'HolesSide' in rowDict else '-'
+    holesCount = rowDict['holesCount'] if 'holesCount' in rowDict else 0
+    holesSide = rowDict['holesSide'] if 'holesSide' in rowDict else '-'
 
     startDistX = -xL/2 + 30.0
     startDistY = -yL/2 + 30.0
@@ -215,10 +189,6 @@ def createBoard(material, objName, boardName, width, height, objBoards, cants, b
 def createBoards(name, boardsList, placementMatrix, groupByName=False):
     plotObjects = []
     #create spreadsheet column names
-    App.activeDocument().addObject('Spreadsheet::Sheet', name + "_Spreadsheet")
-    plotObjects.append(name + "_Spreadsheet")
-    spreadSheetHeaders = ['Name', 'Width', 'Height', 'BoardThickness', 'WCantFront', 'WCantBack', 'HCantLeft', 'HCantRight', 'ByFlader', 'Material', 'Holes', 'HolesSide']
-    writeRecordInSpreadsheet(name + "_Spreadsheet", spreadSheetHeaders)
 
     for plotProp in boardsList:
         thickness = 18 if len(plotProp) <= 6 else plotProp[6]
@@ -348,7 +318,6 @@ def createCabinet(name, width, height, depth, addOns, visibleBack = False, isBas
         placementMatrix.append({'name':addOn[0], 'vec' : (xPos, yPos, zPos, 0, 0, (90 if addOn[7] else 0))});
 
     createBoards(name, pp, placementMatrix)
-    objects.append(name + "_Spreadsheet")
     for ppItem in pp:
         objects.append(name + ppItem[0])
 
@@ -378,17 +347,12 @@ def createDrawerSlider(name, sliderName, width, depth, isLeft):
 
     sliderDepth = (int(depth/50.0))*50.0
  
-    #create spreadsheet column names
-    App.activeDocument().addObject('Spreadsheet::Sheet', name + sliderName + "_Spreadsheet")
-    spreadSheetHeaders = ['Name', 'Width', 'Height', 'BoardThickness', 'WCantFront', 'WCantBack', 'HCantLeft', 'HCantRight', 'ByFlader']
-    writeRecordInSpreadsheet(name + sliderName + "_Spreadsheet", spreadSheetHeaders)
-
     bodyName = name + sliderName + "Body"
     createBody(bodyName, [])
     cants = [0, 0, 0, 0]
     calcWidth = 42.0
     calcHeight = sliderDepth
-    sprRec = [bodyName + '_Sketch', calcWidth, calcHeight, 42.0, cants[0], cants[1], cants[2], cants[3], 0]
+    sprRec = [bodyName + '_Sketch', calcWidth, calcHeight, 42.0, cants[0], cants[1], cants[2], cants[3], '', 'Iron', 0, '-']
     row = writeRecordInSpreadsheet(name + sliderName + "_Spreadsheet", sprRec)
     createBoardFromSheetRow(name + sliderName, name + sliderName + "Body", row)
 
@@ -412,7 +376,6 @@ def createDrawerSlider(name, sliderName, width, depth, isLeft):
     Gui.activeDocument().hide(bodyName + "_Pad1_Sketch_Pocket")
 
     App.activeDocument().getObject(name + sliderName + "Body").Placement = App.Placement(App.Vector((-1 if isLeft else 1)*(width-2*boardThickness-42)/2,0,21), App.Rotation(0,0,0), App.Vector(0,0,0))
-    App.activeDocument().removeObject(name + sliderName + "_Spreadsheet")
     App.activeDocument().recompute()
 
 
@@ -475,7 +438,6 @@ def createDrawer(name, width, height, depth, visibleBack, material, doorsMateria
     placementMatrix.append({'name':'_Base', 'vec' : (0,0,zeroZ+drawerSliderHole+drawerSliderHoleToBottom+cardboardThickness+boardThickness, 0, 0, 0)})
 
     createBoards(name, pp, placementMatrix)
-    objects.append(name + "_Spreadsheet")
     for ppItem in pp:
         objects.append(name + ppItem[0])
 
@@ -487,7 +449,7 @@ def createPlot(material, name, plotName, width, plotObjects):
     cants = [0, 0, 0, 0]
     calcWidth = width
     calcHeight = 600
-    sprRec = [bodyName + '_Sketch', calcWidth, calcHeight, 40, cants[0], cants[1], cants[2], cants[3], 'W', material]
+    sprRec = [bodyName + '_Sketch', calcWidth, calcHeight, 40, cants[0], cants[1], cants[2], cants[3], 'W', material, 0, '-']
     row = writeRecordInSpreadsheet(name + "_Spreadsheet", sprRec)
     createBoardFromSheetRow(name, bodyName, row)
 
@@ -565,12 +527,6 @@ def createPlots(height):
     #create plots
     name = "Plots"
     plotObjects = []
-
-    #create spreadsheet column names
-    App.activeDocument().addObject('Spreadsheet::Sheet', name + "_Spreadsheet")
-    plotObjects.append(name + "_Spreadsheet")
-    spreadSheetHeaders = ['Name', 'Width', 'Height', 'BoardThickness', 'WCantFront', 'WCantBack', 'HCantLeft', 'HCantRight', 'ByFlader', 'Material']
-    writeRecordInSpreadsheet(name + "_Spreadsheet", spreadSheetHeaders)
 
     plotProperties = []
     plotProperties.append(["_Right", 2172.0, App.Placement(App.Vector(-2252,-420,height-40),  App.Rotation(App.Vector(0,0,1),0))])
@@ -807,24 +763,18 @@ def createSofaShelves():
 #create Vitodens 111-W with fux
 def createVitodens():
 
-    #create spreadsheet column names
-    App.activeDocument().addObject('Spreadsheet::Sheet', "Vitodens_Spreadsheet")
-    spreadSheetHeaders = ['Name', 'Width', 'Height', 'BoardThickness', 'WCantFront', 'WCantBack', 'HCantLeft', 'HCantRight', 'ByFlader']
-    writeRecordInSpreadsheet("Vitodens_Spreadsheet", spreadSheetHeaders)
-
     bodyName = "Vitodens_111W"
     createBody(bodyName, [])
     cants = [0, 0, 0, 0]
     calcWidth = 600.0
     calcHeight = 480.0
-    sprRec = [bodyName + '_Sketch', calcWidth, calcHeight, 1000.0, cants[0], cants[1], cants[2], cants[3], 0]
+    sprRec = [bodyName + '_Sketch', calcWidth, calcHeight, 1000.0, cants[0], cants[1], cants[2], cants[3], '', 'Iron', 0, '-']
     row = writeRecordInSpreadsheet("Vitodens_Spreadsheet", sprRec)
     createBoardFromSheetRow("Vitodens", "Vitodens_111W", row)
 
     App.activeDocument().getObject("Vitodens_111W").Placement = App.Placement(App.Vector(-3585,-355,1400), App.Rotation(0,0,0), App.Vector(0,0,0))
 
     App.ActiveDocument.addObject("App::DocumentObjectGroup","Vitodens")
-    App.ActiveDocument.getObject("Vitodens").addObject(App.ActiveDocument.getObject("Vitodens_Spreadsheet"))
     App.ActiveDocument.getObject("Vitodens").addObject(App.ActiveDocument.getObject("Vitodens_111W"))
 
 def createLivingRoomCorpuses():
@@ -885,7 +835,6 @@ def createSmallRoomWardrobe():
     placementMatrix = [{'name':"_Down1", 'vec':  (-500,-586,50, 0, 0, 90)}]
     createBoards("SRWD", pp, placementMatrix)
 
-    App.ActiveDocument.getObject("SmallRoomWardrobe").addObject(App.ActiveDocument.getObject("SRWD_Spreadsheet"))
     App.ActiveDocument.getObject("SmallRoomWardrobe").addObject(App.ActiveDocument.getObject("SRWD_Down1"))
 
 def createSmallRoomCabinetsUnderTV():
@@ -913,7 +862,6 @@ def createSmallRoomCabinetsUnderTV():
                        {'name':"_Down3", 'vec':  (-167,-2405, 466, 0, 0, 90)}]
     createBoards("SR", pp, placementMatrix)
 
-    App.ActiveDocument.getObject("SmallRoomCabinets").addObject(App.ActiveDocument.getObject("SR_Spreadsheet"))
     App.ActiveDocument.getObject("SmallRoomCabinets").addObject(App.ActiveDocument.getObject("SR_Plot"))
     App.ActiveDocument.getObject("SmallRoomCabinets").addObject(App.ActiveDocument.getObject("SR_Down1"))
     App.ActiveDocument.getObject("SmallRoomCabinets").addObject(App.ActiveDocument.getObject("SR_Down2"))
@@ -950,7 +898,6 @@ def createSmallRoomDesk():
                        {'name':"_Back",  'vec':  (-767,-4503, 366, 0, 0, 90)}]
     createBoards("SRDesk", pp, placementMatrix)
 
-    App.ActiveDocument.getObject("SmallRoomDesk").addObject(App.ActiveDocument.getObject("SRDesk_Spreadsheet"))
     App.ActiveDocument.getObject("SmallRoomDesk").addObject(App.ActiveDocument.getObject("SRDesk_Plot"))
     App.ActiveDocument.getObject("SmallRoomDesk").addObject(App.ActiveDocument.getObject("SRDesk_Right"))
     App.ActiveDocument.getObject("SmallRoomDesk").addObject(App.ActiveDocument.getObject("SRDesk_Back"))
@@ -962,7 +909,6 @@ def createSmallRoomSofa():
     placementMatrix = [{'name':"_Down",  'vec':  (-3160,-1890, 600, 90, 0, 90)}]
     createBoards("SRSofa", pp, placementMatrix)
 
-    App.ActiveDocument.getObject("SmallRoomSofa").addObject(App.ActiveDocument.getObject("SRSofa_Spreadsheet"))
     App.ActiveDocument.getObject("SmallRoomSofa").addObject(App.ActiveDocument.getObject("SRSofa_Down"))
 
 def createCorridorWardrobe():
@@ -993,7 +939,6 @@ def createCorridorWardrobe():
                        {'name':"_Down3", 'vec':  (-392, 1834, 1265, 0, 0, 90)}]
     createBoards("CorWD", pp, placementMatrix)
 
-    App.ActiveDocument.getObject("CorridorWD").addObject(App.ActiveDocument.getObject("CorWD_Spreadsheet"))
     App.ActiveDocument.getObject("CorridorWD").addObject(App.ActiveDocument.getObject("CorWD_Down1"))
     App.ActiveDocument.getObject("CorridorWD").addObject(App.ActiveDocument.getObject("CorWD_Down2"))
     App.ActiveDocument.getObject("CorridorWD").addObject(App.ActiveDocument.getObject("CorWD_Down3"))
@@ -1065,7 +1010,6 @@ def createPortmanto():
 
     createBoards("CorPor", pp, placementMatrix)
 
-    App.ActiveDocument.getObject("CorridorPortmanto").addObject(App.ActiveDocument.getObject("CorPor_Spreadsheet"))
     for item in placementMatrix:
         App.ActiveDocument.getObject("CorridorPortmanto").addObject(App.ActiveDocument.getObject("CorPor" + item['name']))
 
@@ -1075,58 +1019,54 @@ def processAllSpreadSheetsByMaterial():
     allSpreadSheets = App.ActiveDocument.findObjects('Spreadsheet::Sheet')
     for item in allSpreadSheets:
         rowDict = getRowFromSpreadsheet(item.Name, 0)
-        if 'Material' in rowDict:
+        if 'boardMaterial' in rowDict:
             print "Processing ... " + item.Name
             curRow = 1
             while True:
                 curRowDict = getRowFromSpreadsheet(item.Name, curRow)
-                if curRowDict['Name'] == '': break
+                if curRowDict['boardName'] == '': break
                 #print curRowDict
                 curRow = curRow + 1
 
-                if curRowDict['Material'] not in finalDict:
+                if curRowDict['boardMaterial'] not in finalDict:
                     curRowDict['Count'] = 1
-                    finalDict[curRowDict['Material']] = []
-                    finalDict[curRowDict['Material']].append(curRowDict)
+                    finalDict[curRowDict['boardMaterial']] = []
+                    finalDict[curRowDict['boardMaterial']].append(curRowDict)
                 else:
                     found = False
-                    for x in finalDict[curRowDict['Material']]:
-                       if x['Height'] == curRowDict['Height'] and \
-                          x['Width'] == curRowDict['Width'] and \
-                          x['HCantRight']+x['HCantLeft'] == curRowDict['HCantRight']+curRowDict['HCantLeft'] and \
-                          x['BoardThickness'] == curRowDict['BoardThickness'] and \
-                          x['WCantFront']+x['WCantBack'] == curRowDict['WCantFront']+curRowDict['WCantBack'] and \
-                          x['ByFlader'] == curRowDict['ByFlader'] and \
-                          (('Holes' not in x) or ('Holes' not in curRowDict) or (x['Holes'] == curRowDict['Holes'])) and \
-                          (('HolesSide' not in x) or ('HolesSide' not in curRowDict) or (x['HolesSide'] == curRowDict['HolesSide'])):
+                    for x in finalDict[curRowDict['boardMaterial']]:
+                       if x['height'] == curRowDict['height'] and \
+                          x['width'] == curRowDict['width'] and \
+                          x['rightCant']+x['leftCant'] == curRowDict['rightCant']+curRowDict['leftCant'] and \
+                          x['boardThickness'] == curRowDict['boardThickness'] and \
+                          x['downCant']+x['upCant'] == curRowDict['downCant']+curRowDict['upCant'] and \
+                          x['byFlader'] == curRowDict['byFlader'] and \
+                          (('holesCount' not in x) or ('holesCount' not in curRowDict) or (x['holesCount'] == curRowDict['holesCount'])) and \
+                          (('holesSide' not in x) or ('holesSide' not in curRowDict) or (x['holesSide'] == curRowDict['holesSide'])):
                               x['Count'] = x['Count'] + 1
                               found = True
                               break
                     if not found:
                         curRowDict['Count'] = 1
-                        finalDict[curRowDict['Material']].append(curRowDict)
+                        finalDict[curRowDict['boardMaterial']].append(curRowDict)
 
     for mat in finalDict:
-        #create spreadsheet column names
-        App.activeDocument().addObject('Spreadsheet::Sheet', mat + "_Spreadsheet")
-        spreadSheetHeaders = ['Name', 'Length', 'Width', 'Count', 'CanRotate', 'LongCantCount', 'ShortCantCount', 'EdgeThickness', 'CantMaterial', 'PantsHolesCount', 'SideForHoles']
-        writeRecordInSpreadsheet(mat + "_Spreadsheet", spreadSheetHeaders)
 
         for x in finalDict[mat]:
-            length = x['Height'] if x['ByFlader']=='H' else (x['Width'] if x['ByFlader']=='W' else max(x['Height'], x['Width']))
-            width = x['Width'] if x['ByFlader']=='H' else (x['Height'] if x['ByFlader']=='W' else min(x['Height'], x['Width']))
-            longEdgeCount = int(x['WCantFront'] > 0) + int(x['WCantBack'] > 0) if x['Width'] > x['Height'] else int(x['HCantLeft'] > 0) + int(x['HCantRight'] > 0)
-            shortEdgeCount = int(x['HCantLeft'] > 0) + int(x['HCantRight'] > 0) if x['Width'] > x['Height'] else int(x['WCantFront'] > 0) + int(x['WCantBack'] > 0)
-            edgeThickness = max(x['WCantFront'], x['WCantBack'], x['HCantLeft'], x['HCantRight'])
-            canRotate = 0 if x['ByFlader']=='H' else (0 if x['ByFlader']=='W' else 1)
+            length = x['height'] if x['byFlader']=='H' else (x['width'] if x['byFlader']=='W' else max(x['height'], x['width']))
+            width = x['width'] if x['byFlader']=='H' else (x['height'] if x['byFlader']=='W' else min(x['height'], x['width']))
+            longEdgeCount = int(x['downCant'] > 0) + int(x['upCant'] > 0) if x['width'] > x['height'] else int(x['leftCant'] > 0) + int(x['rightCant'] > 0)
+            shortEdgeCount = int(x['leftCant'] > 0) + int(x['rightCant'] > 0) if x['width'] > x['height'] else int(x['downCant'] > 0) + int(x['upCant'] > 0)
+            edgeThickness = max(x['downCant'], x['upCant'], x['leftCant'], x['rightCant'])
+            canRotate = 0 if x['byFlader']=='H' else (0 if x['byFlader']=='W' else 1)
 
-            row = [x['Name'], length, width, x['Count'], canRotate, longEdgeCount, shortEdgeCount, edgeThickness, x['Material'], x['Holes'] if 'Holes' in x else 0, x['HolesSide'] if 'HolesSide' in x else 0]
+            row = [x['boardName'], length, width, x['Count'], canRotate, longEdgeCount, shortEdgeCount, edgeThickness, x['boardMaterial'], x['holesCount'] if 'holesCount' in x else 0, x['holesSide'] if 'holesSide' in x else 0]
             writeRecordInSpreadsheet(mat + "_Spreadsheet", row)
                     
 ######################################
 # Kitchen and Living room
 ######################################
-#createBaseCorpuses(860.0)
+createBaseCorpuses(860.0)
 #createPlots(900)
 #createVitodens()
 #createBackForPlots(600.0)
