@@ -13,7 +13,6 @@ c.execute('''CREATE TABLE IF NOT EXISTS `SpreadSheetsRows` ( `id` INTEGER PRIMAR
 conn.commit()
 conn.close()
 
-spreadsheets = {}
 class Spreadsheet(Resource):
 
     def get(self, spreadSheetName=None, boardName=None):
@@ -121,6 +120,61 @@ class Spreadsheet(Resource):
 #        users = [user for user in users if user["name"] != name]
 #        return "{} is deleted.".format(name), 200
 
+
+class Board(Resource):
+
+    def get(self):
+        parser = reqparse.RequestParser()
+        parser.add_argument("width")
+        parser.add_argument("height")
+        parser.add_argument("boardThickness")
+        parser.add_argument("downCant")
+        parser.add_argument("upCant")
+        parser.add_argument("leftCant")
+        parser.add_argument("rightCant")
+        parser.add_argument("cantsSubstracted")
+        args = parser.parse_args()
+
+        widthWithoutCants = round(float(args["width"]) - ((float(args["leftCant"]) + float(args["rightCant"])) if args["cantsSubstracted"] != "1" else 0))
+        heightWithoutCants = round(float(args["height"]) - ((float(args["downCant"]) + float(args["upCant"])) if args["cantsSubstracted"] != "1" else 0))
+
+        resultDict = {}
+
+        resultDict['board'] = { 'width' : widthWithoutCants, 
+                                'height' : heightWithoutCants, 
+                                'depth': args["boardThickness"], 
+                                'pos': (0, 0, 0), 
+                                'rot' : (0, 0, 0)}
+
+        leftCant = { 'width' : heightWithoutCants, 
+                     'height' : args["boardThickness"], 
+                     'depth': args["leftCant"],
+                     'pos': (-widthWithoutCants/2.0, 0, float(args["boardThickness"])/2),
+                     'rot' : (90, 0, -90)}
+
+        rightCant = { 'width' : heightWithoutCants,
+                      'height' : args["boardThickness"],       
+                      'depth': args["rightCant"],
+                      'pos': (widthWithoutCants/2.0, 0, float(args["boardThickness"])/2), 
+                      'rot' : (90, 0, 90)}
+
+        downCant =  { 'width' : widthWithoutCants,
+                      'height' : args["boardThickness"],
+                      'depth': args["downCant"],
+                      'pos': (0, -heightWithoutCants/2.0, float(args["boardThickness"])/2),
+                      'rot' : (0, 0, 90)}
+
+        upCant =    { 'width' : widthWithoutCants,
+                      'height' : args["boardThickness"],
+                      'depth': args["upCant"],
+                      'pos': (0, heightWithoutCants/2.0, float(args["boardThickness"])/2),
+                      'rot' : (0, 0, -90)}
+
+        resultDict['cants'] = { 'leftCant' : leftCant, 'rightCant' : rightCant, 'downCant' : downCant, 'upCant' : upCant }
+
+        return resultDict
+
 api.add_resource(Spreadsheet, "/ss", "/ss/<string:spreadSheetName>", "/ss/<string:spreadSheetName>/<string:boardName>")
+api.add_resource(Board, "/board")
 
 app.run(debug=True)

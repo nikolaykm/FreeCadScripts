@@ -126,33 +126,45 @@ def createPocketFromSketch(bodyName, sketchName, zL):
     App.activeDocument().getObject(pocketName).Length = zL
     App.ActiveDocument.recompute()
 
-def createBoardFromSheetRow(objName, bodyName, row):
+def createBoardFromSheetRow(objName, bodyName, row, objList=None):
 
     rowDict = getRowFromSpreadsheet(objName + "_Spreadsheet", row)
     sketchName = rowDict['boardName']
     xL = rowDict['width']
     yL = rowDict['height']
     zL = rowDict['boardThickness']
+    downCant = rowDict['downCant']
+    upCant = rowDict['upCant']
+    leftCant = rowDict['leftCant']
+    rightCant = rowDict['rightCant']
+
+    #Query for the view params
+    r = requests.get('http://127.0.0.1:5000/board?width=%s&height=%s&downCant=%s&upCant=%s&leftCant=%s&rightCant=%s&boardThickness=%s&cantsSubstracted=1'%(xL, yL, downCant, upCant, leftCant, rightCant, zL))
+    boardParamsDict = json.loads(r.text)
+
+    boardObjs = []
+    placementMatrix = []
+
+    for cant in ['leftCant', 'rightCant', 'downCant', 'upCant']:
+        if float(boardParamsDict['cants'][cant]['depth']) != 0:
+            createBody(bodyName+"_"+cant, boardObjs)
+            createSketch(sketchName+"_"+cant, bodyName+"_"+cant, 'XY_Plane', '')
+            conList = [Sketcher.Constraint('Symmetric',0,1,1,2,-1,1)]
+            createRectInSketch(sketchName+"_"+cant, float(boardParamsDict['cants'][cant]['width']), float(boardParamsDict['cants'][cant]['height']), conList)
+            createPadFromSketch(bodyName+"_"+cant, sketchName+"_"+cant, float(boardParamsDict['cants'][cant]['depth']))
+            placementMatrix.append({'name':'_'+cant, 'vec' : (float(boardParamsDict['cants'][cant]['pos'][0]), float(boardParamsDict['cants'][cant]['pos'][1]), float(boardParamsDict['cants'][cant]['pos'][2]), float(boardParamsDict['cants'][cant]['rot'][0]), float(boardParamsDict['cants'][cant]['rot'][1]), float(boardParamsDict['cants'][cant]['rot'][2]))})
 
     #create the board
-    createSketch(sketchName, bodyName, 'XY_Plane', '')
+    createBody(bodyName+("_board" if len(boardObjs) > 0 else ""), boardObjs)
+    createSketch(sketchName, bodyName+("_board" if len(boardObjs) > 1 else ""), 'XY_Plane', '')
     conList = []
     conList.append(Sketcher.Constraint('Symmetric',0,1,1,2,-1,1))
     createRectInSketch(sketchName, xL, yL, conList)
-    createPadFromSketch(bodyName, sketchName, zL)
+    createPadFromSketch(bodyName+("_board" if len(boardObjs) > 1 else ""), sketchName, zL)
+    placementMatrix.append({'name':("_board" if len(boardObjs) > 1 else ""), 'vec' : (0, 0, 0, 0, 0, 0)})
 
-    #cant the board
-    cantToFaceDict = {'downCant' : 'Face3', 'upCant' : 'Face1', 'leftCant' : 'Face4', 'rightCant' : 'Face2'}
-    for cant,face in cantToFaceDict.items():
-        if rowDict[cant] != "" and rowDict[cant] != "0" and rowDict[cant] != 0:
-            cantSketchName = sketchName + "_" + cant
-            createSketch(cantSketchName, bodyName, sketchName + "_Pad", face)
-            width = rowDict['width'] if (cant == 'downCant' or cant == 'upCant') else rowDict['height']
-            conList = []
-            conList.append(Sketcher.Constraint('DistanceY',-1,1,0,1,rowDict['boardThickness']));
-            conList.append(Sketcher.Constraint('DistanceX',0,1,-1,1,width/2))
-            createRectInSketch(cantSketchName, width, rowDict['boardThickness'], conList)
-            createPadFromSketch(bodyName, cantSketchName, rowDict[cant])
+
+    placeObjects(placementMatrix, bodyName)
 
     holesCount = rowDict['holesCount'] if 'holesCount' in rowDict else 0
     holesSide = rowDict['holesSide'] if 'holesSide' in rowDict else '-'
@@ -164,7 +176,7 @@ def createBoardFromSheetRow(objName, bodyName, row):
     stepDist = max(endDistX-startDistX,endDistY-startDistY)/(holesCount-1) if holesSide == 'L' else min(endDistX-startDistX,endDistY-startDistY)/(holesCount-1)
     for holeC in range(0, int(holesCount)):
         holeSketchName = sketchName + "_Hole" + str(holeC)
-        createSketch(holeSketchName, bodyName, sketchName + "_Pad", 'Face5')
+        createSketch(holeSketchName, bodyName+"_board", sketchName + "_Pad", 'Face5')
         distX = 0
         distY = 0
         if (holesSide == 'L' and yL>=xL) or (holesSide == 'S' and yL<=xL):
@@ -174,17 +186,35 @@ def createBoardFromSheetRow(objName, bodyName, row):
             distX = startDistX + holeC*stepDist
             distY = startDistY
         createCircleInSketch(holeSketchName, 18.0, distX, distY)
-        createPocketFromSketch(bodyName, holeSketchName, 15.0)
-        App.ActiveDocument.recompute()
+        createPocketFromSketch(bodyName+"_board", holeSketchName, 15.0)
+    App.ActiveDocument.recompute()
+
+    if len(boardObjs) > 1:
+        createFusion(bodyName, boardObjs, haveFusionSuffix=False)
+    if objList != None:
+        objList.append(bodyName)
 
 def createBoard(material, objName, boardName, width, height, objBoards, cants, boardThickness, fladder, holesCount=0, holesSide='-'):
     bodyName = objName + boardName
-    createBody(bodyName, objBoards)
-    calcWidth = width - cants[2] - cants[3]
-    calcHeight = height - cants[0] - cants[1]
-    sprRec = [bodyName + '_Sketch', int(round(calcWidth)), int(round(calcHeight)), boardThickness, cants[0], cants[1], cants[2], cants[3], fladder, material, holesCount, holesSide]
+
+    #Query for the data params
+    r = requests.get('http://127.0.0.1:5000/board?width=%s&height=%s&downCant=%s&upCant=%s&leftCant=%s&rightCant=%s&boardThickness=%s'%(width, height, cants[0], cants[1], cants[2], cants[3], boardThickness))
+    boardParamsDict = json.loads(r.text)
+
+    sprRec = [bodyName + '_Sketch', 
+              int(round(boardParamsDict['board']['width'])), 
+              int(round(boardParamsDict['board']['height'])), 
+              boardParamsDict['board']['depth'], 
+              boardParamsDict['cants']['downCant']['depth'], 
+              boardParamsDict['cants']['upCant']['depth'], 
+              boardParamsDict['cants']['leftCant']['depth'], 
+              boardParamsDict['cants']['rightCant']['depth'], 
+              fladder, 
+              material, 
+              holesCount, 
+              holesSide]
     row = writeRecordInSpreadsheet(objName + "_Spreadsheet", sprRec)
-    createBoardFromSheetRow(objName, bodyName, row)
+    createBoardFromSheetRow(objName, bodyName, row, objBoards)
 
 def createBoards(name, boardsList, placementMatrix, groupByName=False):
     plotObjects = []
@@ -205,13 +235,13 @@ def createBoards(name, boardsList, placementMatrix, groupByName=False):
         for obj in plotObjects:
             App.ActiveDocument.getObject(name).addObject(App.ActiveDocument.getObject(obj))
 
-def createFusion(itemName, objectsList):
+def createFusion(itemName, objectsList, haveFusionSuffix=True):
     objectsFreeCad = []
     for objName in objectsList:
         objectsFreeCad.append(App.activeDocument().getObject(objName))
 
-    App.activeDocument().addObject("Part::MultiFuse", itemName + "_Fusion")
-    App.activeDocument().getObject(itemName + "_Fusion").Shapes = objectsFreeCad
+    App.activeDocument().addObject("Part::MultiFuse", itemName + ("_Fusion" if haveFusionSuffix else ""))
+    App.activeDocument().getObject(itemName + ("_Fusion" if haveFusionSuffix else "")).Shapes = objectsFreeCad
     App.ActiveDocument.recompute()
             
 def createCabinet(name, width, height, depth, addOns, visibleBack = False, isBase = True, isHavingBack = True, shiftBlend = 0.0, groupName = "", material=cabMaterial, doorsMaterial=cabMaterial, haveWholeBlend=False, legHeight=baseLegHeight):
@@ -348,7 +378,6 @@ def createDrawerSlider(name, sliderName, width, depth, isLeft):
     sliderDepth = (int(depth/50.0))*50.0
  
     bodyName = name + sliderName + "Body"
-    createBody(bodyName, [])
     cants = [0, 0, 0, 0]
     calcWidth = 42.0
     calcHeight = sliderDepth
@@ -445,13 +474,12 @@ def createDrawer(name, width, height, depth, visibleBack, material, doorsMateria
 
 def createPlot(material, name, plotName, width, plotObjects):
     bodyName = name + plotName
-    createBody(bodyName, plotObjects)
     cants = [0, 0, 0, 0]
     calcWidth = width
     calcHeight = 600
     sprRec = [bodyName + '_Sketch', calcWidth, calcHeight, 40, cants[0], cants[1], cants[2], cants[3], 'W', material, 0, '-']
     row = writeRecordInSpreadsheet(name + "_Spreadsheet", sprRec)
-    createBoardFromSheetRow(name, bodyName, row)
+    createBoardFromSheetRow(name, bodyName, row, plotObjects)
 
     App.activeDocument().getObject(name + plotName).newObject("PartDesign::Fillet",name + plotName + "Fillet")
     App.activeDocument().getObject(name + plotName + "Fillet").Base = (App.ActiveDocument.getObject(name + plotName + "_Sketch_Pad"),["Face3"])
@@ -764,7 +792,6 @@ def createSofaShelves():
 def createVitodens():
 
     bodyName = "Vitodens_111W"
-    createBody(bodyName, [])
     cants = [0, 0, 0, 0]
     calcWidth = 600.0
     calcHeight = 480.0
@@ -1109,3 +1136,9 @@ createBaseCorpuses(860.0)
 #processAllSpreadSheetsByMaterial()
 
 #execfile('/home/nm/Dev/FreeCadScripts/createBaseCorpus.py')
+
+#pp = []
+#pp.append(["_Right1", 300.0, 500.0, [1, 0.8, 0.5, 2], "TestMaterial", "W", 18])
+#placementMatrix = [{'name':'_Right1',      'vec' : (0,0,0,0,0,0)}]
+#createBoards("PlotsBacks", pp, placementMatrix, groupByName=True)
+
