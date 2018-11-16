@@ -48937,40 +48937,60 @@ function isPowerOf2(value) {
     init();
     animate();
 
+    function createBoard(res,image)
+    {
+        //use the image, e.g. draw part of it on a canvas
+        var canvas = document.createElement( 'canvas' );
+        canvas.widht = res.board.width;
+        canvas.height = res.board.height;
+        var context = canvas.getContext( '2d' );
+        context.drawImage( image, 100, 100, res.board.width, res.board.height, 0, 0, res.board.width, res.board.height );
+        canvasTexture = new THREE.CanvasTexture(canvas);
+        canvasTexture.minFilter = THREE.LinearFilter;
+        var geometry = new THREE.BoxBufferGeometry( res.board.width, res.board.height, res.board.depth);
+        var material = new THREE.MeshBasicMaterial( { map: canvasTexture } );
+        var greyMaterial = new THREE.MeshBasicMaterial( { color : 0xd3d3d3 });
+        var mats = [greyMaterial, greyMaterial, greyMaterial, greyMaterial, material, material]
+        mesh = new THREE.Mesh( geometry, mats );
+        scene.add( mesh );
+        mesh.position.set(0, 0, res.board.depth/2);
+        mesh.rotation.set(0, 0, 0);
+
+        var cantsNames = ["leftCant", "rightCant", "upCant", "downCant"]
+        for (var i = 0; i < cantsNames.length; i++)
+        {
+            var cName = cantsNames[i];
+            var canvas1 = document.createElement( 'canvas' );
+            canvas1.width  = res.cants[cName].width;
+            canvas1.height = res.cants[cName].height;
+            var context1 = canvas1.getContext( '2d' );
+            context1.drawImage( image, 0, 0, res.cants[cName].width, res.cants[cName].height, 
+                                       0, 0, res.cants[cName].width, res.cants[cName].height );
+            canvasTexture1 = new THREE.CanvasTexture(canvas1);
+            canvasTexture1.minFilter = THREE.LinearFilter;
+            var geometry1 = new THREE.BoxBufferGeometry( res.cants[cName].width, res.cants[cName].height, res.cants[cName].depth);
+            var material1 = new THREE.MeshBasicMaterial( { map: canvasTexture1 } );
+            var mats1 = [material1, material1, material1, material1, material1, material1]
+            mesh1 = new THREE.Mesh( geometry1, mats1 );
+            scene.add( mesh1 );
+            mesh1.position.set(res.cants[cName].pos[0], res.cants[cName].pos[1], res.cants[cName].pos[2]);
+            var rot1 = (res.cants[cName].rot[0]/90)*(Math.PI / 2);
+            var rot2 = (res.cants[cName].rot[1]/90)*(Math.PI / 2);
+            var rot3 = (res.cants[cName].rot[2]/90)*(Math.PI / 2);
+            mesh1.rotation.set(rot3, rot1, rot2);
+        }
+    }
+
     function init() {
 
         camera = new THREE.PerspectiveCamera( 70, window.innerWidth / window.innerHeight, 1, 5000 );
         camera.position.z = 400;
         scene = new THREE.Scene();
 
-        var canvas = document.createElement( 'canvas' );
-        canvasTexture = new THREE.CanvasTexture(canvas);
-
         const image = new Image();
         image.onload = function() {
-            // use the image, e.g. draw part of it on a canvas
-           var canvas = document.createElement( 'canvas' );
-           var context = canvas.getContext( '2d' );
-           context.drawImage( image, 100, 100, 700, 300, 0, 0, 700, 300 );
-           canvasTexture = new THREE.CanvasTexture(canvas);
 
-           var canvas2 = document.createElement( 'canvas' );
-           var context2 = canvas2.getContext( '2d' );
-           context2.drawImage( image, 250, 260, 1610, 300, 0, 0, 1610, 300 );
-           canvasTexture2 = new THREE.CanvasTexture(canvas);
-
-
-           var geometry = new THREE.BoxBufferGeometry( 700, 300, 18 );
-           var geometry2 = new THREE.BoxBufferGeometry( 1610, 300, 18 );
-           var material = new THREE.MeshBasicMaterial( { map: canvasTexture } );
-           var material2 = new THREE.MeshBasicMaterial( { map: canvasTexture2 } );
-           mesh = new THREE.Mesh( geometry, material );
-           mesh2 = new THREE.Mesh( geometry2, material2 );
-           scene.add( mesh );
-           scene.add( mesh2 );
-           mesh2.position.set(-350, 0, 798);
-           mesh2.rotation.set(Math.PI / 2, Math.PI / 2, Math.PI / 2);
-
+            fetch('http://127.0.0.1:5000/board?width=530&height=400&downCant=1&upCant=1&leftCant=1&rightCant=2&boardThickness=18', {mode: 'cors'}).then(data=>{return data.json()}).then(res=>{ createBoard(res, image); });
         };
         image.src = 'textures/shato.jpg'
 
@@ -48986,7 +49006,6 @@ function isPowerOf2(value) {
         controls.minDistance = 200;
         controls.maxDistance = 3000;
 
-        //
         window.addEventListener( 'resize', onWindowResize, false );
      }
 

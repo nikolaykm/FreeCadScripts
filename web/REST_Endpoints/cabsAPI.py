@@ -1,8 +1,11 @@
 from flask import Flask
 from flask_restful import Api, Resource, reqparse
+from flask_cors import CORS
 import sqlite3
 
+
 app = Flask(__name__)
+CORS(app)
 api = Api(app)
 
 conn = sqlite3.connect('example.db')
@@ -140,33 +143,33 @@ class Board(Resource):
 
         resultDict = {}
 
-        resultDict['board'] = { 'width' : widthWithoutCants, 
-                                'height' : heightWithoutCants, 
-                                'depth': args["boardThickness"], 
+        resultDict['board'] = { 'width' : float(widthWithoutCants), 
+                                'height' : float(heightWithoutCants), 
+                                'depth': float(args["boardThickness"]), 
                                 'pos': (0, 0, 0), 
                                 'rot' : (0, 0, 0)}
 
-        leftCant = { 'width' : heightWithoutCants, 
-                     'height' : args["boardThickness"], 
-                     'depth': args["leftCant"],
+        leftCant = { 'width' : float(heightWithoutCants), 
+                     'height' : float(args["boardThickness"]), 
+                     'depth': float(args["leftCant"]),
                      'pos': (-widthWithoutCants/2.0, 0, float(args["boardThickness"])/2),
                      'rot' : (90, 0, -90)}
 
-        rightCant = { 'width' : heightWithoutCants,
-                      'height' : args["boardThickness"],       
-                      'depth': args["rightCant"],
+        rightCant = { 'width' : float(heightWithoutCants),
+                      'height' : float(args["boardThickness"]),
+                      'depth': float(args["rightCant"]),
                       'pos': (widthWithoutCants/2.0, 0, float(args["boardThickness"])/2), 
                       'rot' : (90, 0, 90)}
 
-        downCant =  { 'width' : widthWithoutCants,
-                      'height' : args["boardThickness"],
-                      'depth': args["downCant"],
+        downCant =  { 'width' : float(widthWithoutCants),
+                      'height' : float(args["boardThickness"]),
+                      'depth': float(args["downCant"]),
                       'pos': (0, -heightWithoutCants/2.0, float(args["boardThickness"])/2),
                       'rot' : (0, 0, 90)}
 
-        upCant =    { 'width' : widthWithoutCants,
-                      'height' : args["boardThickness"],
-                      'depth': args["upCant"],
+        upCant =    { 'width' : float(widthWithoutCants),
+                      'height' : float(args["boardThickness"]),
+                      'depth': float(args["upCant"]),
                       'pos': (0, heightWithoutCants/2.0, float(args["boardThickness"])/2),
                       'rot' : (0, 0, -90)}
 
