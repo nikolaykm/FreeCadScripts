@@ -177,7 +177,135 @@ class Board(Resource):
 
         return resultDict
 
+
+class Cab(Resource):
+
+    def get(self):
+        parser = reqparse.RequestParser()
+        parser.add_argument("width", required=True, help="Width cannot be blank!")
+        parser.add_argument("height", required=True, help="Height cannot be blank!")
+        parser.add_argument("depth", required=True, help="Depth cannot be blank!")
+        parser.add_argument("visibleBack")
+        parser.add_argument("isBase")
+        parser.add_argument("isHavingBack")
+        parser.add_argument("shiftBlend")
+        parser.add_argument("haveWholeBlend")
+        parser.add_argument("legHeight")
+        parser.add_argument("sCantT")
+        parser.add_argument("lCantT")
+        parser.add_argument("boardThickness")
+        parser.add_argument("cardboardThickness")
+        parser.add_argument("material")
+        parser.add_argument("cardboardMaterial")
+        args = parser.parse_args()
+
+        width = float(args['width'])
+        height = float(args['height'])
+        depth = float(args['depth'])
+        visibleBack = bool(args['visibleBack']) if args['visibleBack'] != None else False
+        isBase = bool(args['isBase']) if args['isBase'] != None else True
+        isHavingBack = bool(args['isHavingBack']) if args['isHavingBack'] != None else True
+        shiftBlend = float(args['shiftBlend']) if args['shiftBlend'] != None else 0.0
+        haveWholeBlend = bool(args['haveWholeBlend']) if args['haveWholeBlend'] != None else False
+        legHeight = float(args['legHeight']) if args['legHeight'] != None else 100.0
+        sCantT = float(args['sCantT']) if args['sCantT'] != None else 0.8
+        lCantT = float(args['lCantT']) if args['lCantT'] != None else 2.0
+        boardThickness = float(args['boardThickness']) if args['boardThickness'] != None else 18.0
+        cardboardThickness = float(args['cardboardThickness']) if args['cardboardThickness'] != None else 3.0
+        material = args['material'] if args['material'] != None else ""
+        cardboardMaterial = args['cardboardMaterial'] if args['cardboardMaterial'] != None else "_cardboard"
+
+        resultDict = {}
+
+        resultDict['boards'] = [] 
+
+        #create base
+        cants = { 'downCant' : sCantT, 'upCant' : sCantT if visibleBack else 0, 'leftCant' : sCantT, 'rightCant' : sCantT }
+        baseCants = cants
+        baseWidth = calcWidth = width;
+        baseHeight = calcHeight = depth-(0 if visibleBack else cardboardThickness)
+        resultDict['boards'].append({ 'name' : '_Base', 
+                                      'width' : calcWidth, 
+                                      'height' : calcHeight, 
+                                      'cants' : cants, 
+                                      'material' : material, 
+                                      'fladderSide' : "W", 
+                                      'pos' : (0, 0, 0), 
+                                      'rot' : (0, 0, 0)})
+
+        #create left side
+        cants = { 'downCant' : 0, 'upCant' : 0 if isBase else sCantT, 'leftCant' : sCantT, 'rightCant' : sCantT if visibleBack else 0 }
+        calcWidth = depth-(0 if visibleBack else cardboardThickness)
+        calcHeight = height-boardThickness-(legHeight if isBase else 0)
+        resultDict['boards'].append({ 'name' : '_LeftSide', 
+                                      'width' : calcWidth, 
+                                      'height' : calcHeight, 
+                                      'cants' : cants, 
+                                      'material' : material, 
+                                      'fladderSide' : "H",
+                                      'pos' : (-width/2, 0, calcHeight/2+boardThickness),
+                                      'rot' : (90, 0, 90)})
+
+        #create right side
+        cants = { 'downCant' : 0 if isBase else sCantT, 'upCant' : 0, 'leftCant' : sCantT, 'rightCant' : sCantT if visibleBack else 0 }
+        calcWidth = depth-(0 if visibleBack else cardboardThickness)
+        calcHeight = height-boardThickness-(legHeight if isBase else 0)
+        resultDict['boards'].append({ 'name' : '_RightSide',
+                                      'width' : calcWidth, 
+                                      'height' : calcHeight, 
+                                      'cants' : cants, 
+                                      'material' : material, 
+                                      'fladderSide' : "H",
+                                      'pos' : (width/2, 0, calcHeight/2+boardThickness),
+                                      'rot' : (90, 0, -90)})
+
+        if isBase and not haveWholeBlend:
+            #create front blend
+            cants = { 'downCant' : sCantT, 'upCant' : 0, 'leftCant' : 0, 'rightCant' : 0 }
+            calcWidth = width-2*boardThickness;
+            calcHeight = 100
+            resultDict['boards'].append({'name' : "_FrontBlend", 
+                                         'width' : calcWidth, 
+                                         'height' : calcHeight, 
+                                         'cants' : cants, 
+                                         'material' : material, 
+                                         'fladderSide' : "-",
+                                         'pos' : (0, -baseHeight/2+calcHeight/2, height-legHeight-boardThickness), 
+                                         'rot' : (0, 0, 0)})
+
+            #create back blend
+            cants = { 'downCant' : 0, 'upCant' : sCantT if visibleBack else 0, 'leftCant' : 0, 'rightCant' : 0 }
+            calcWidth = width-2*boardThickness;
+            calcHeight = 100
+            resultDict['boards'].append({'name' : "_BackBlend", 
+                                         'width' : calcWidth, 
+                                         'height' : calcHeight, 
+                                         'cants' : cants, 
+                                         'material' : material, 
+                                         'fladderSide' : "-",
+                                         'pos' : (0, baseHeight/2-calcHeight/2, height-legHeight-boardThickness),
+                                         'rot' : (0, 0, 0)})
+        else:
+            #create whole blend
+            cants = { 'downCant' : sCantT, 'upCant' : sCantT if visibleBack else 0, 'leftCant' : 0, 'rightCant' : 0 }
+            calcWidth = width-2*boardThickness;
+            calcHeight = baseHeight
+            resultDict['boards'].append({'name' : "_WholeBlend", 
+                                         'width' : calcWidth, 
+                                         'height' : calcHeight, 
+                                         'cants' : cants, 
+                                         'material' : material, 
+                                         'fladderSide' : "W",
+                                         'pos' : (0, 0, height-boardThickness-shiftBlend-(legHeight if isBase else 0)),
+                                         'rot' : (0, 0, 0)})
+
+        return resultDict
+
+
+
+
 api.add_resource(Spreadsheet, "/ss", "/ss/<string:spreadSheetName>", "/ss/<string:spreadSheetName>/<string:boardName>")
 api.add_resource(Board, "/board")
+api.add_resource(Cab, "/cab")
 
 app.run(debug=True)

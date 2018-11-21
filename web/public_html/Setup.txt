@@ -9,3 +9,5 @@
 8. browserify main.js > bundle.js
 9. <script src="bundle.js"></script>
 10. https://github.com/mrdoob/three.js/tree/master/examples/js/controls
+11. sudo npm install browserify-nodent
+12. sudo browserify -t browserify-nodent test.js > ~/test_bundle.js; sudo cp ~/test_bundle.js . 
