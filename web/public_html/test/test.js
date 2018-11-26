@@ -682,7 +682,7 @@ function isPowerOf2(value) {
 
     function createBoard(res,image, posShift, rotShift)
     {
-        group = new THREE.Group();
+        group = new THREE.Object3D();
 
         //use the image, e.g. draw part of it on a canvas
         var canvas = document.createElement( 'canvas' );
@@ -735,51 +735,88 @@ function isPowerOf2(value) {
         var rot3 = (rotShift[2]/90)*(Math.PI / 2);
         group.rotation.set(rot2, rot3, rot1);
 
-        scene.add(group)
+        //scene.add(group)
+        return group;
+    }
+
+    function createCab(width, height, depth, pos, rot, image)
+    {
+        console.log("@3");
+        const resp = await fetch('http://127.0.0.1:5000/cab?width=' + width + 
+                                 '&height=' + height + 
+                                 '&depth=' + depth, {mode: 'cors'});
+
+        console.log("@4");
+
+        const res = await resp.json(); 
+        console.log(res);
+
+        console.log("@5");
+        cabGroup = new THREE.Object3D();
+        for(var i = 0; i < res.boards.length; i++)
+        {
+            console.log("@6");
+            const response = await fetch('http://127.0.0.1:5000/board?width=' + res.boards[i].width +
+                                         '&height=' + res.boards[i].height +
+                                         '&downCant=' + res.boards[i].cants['downCant'] +
+                                         '&upCant=' + res.boards[i].cants['upCant'] +
+                                         '&leftCant=' + res.boards[i].cants['leftCant'] +
+                                         '&rightCant=' + res.boards[i].cants['rightCant'] +
+                                         '&boardThickness=18', {mode: 'cors'});
+
+            const resB = await response.json();
+            console.log(resB)
+
+            //res.boards[i].pos[0] += pos[0]; res.boards[i].pos[1] += pos[1]; res.boards[i].pos[2] += pos[2];
+            //res.boards[i].rot[0] += rot[0]; res.boards[i].rot[1] += rot[1]; res.boards[i].rot[2] += rot[2];
+            if (i == 0)
+            {
+            boardGroup = createBoard(resB, image, res.boards[i].pos, res.boards[i].rot);
+            cabGroup.add(boardGroup);
+            console.log("@7");
+            }
+        }
+        cabGroup.position.set(pos[0], 0, 0);
+        console.log("setting up cab position: " + pos)
+        //cabGroup.rotation.set(rot[2], rot[3], rot[0]);
+        scene.add(cabGroup);
+        //cabGroup.position.set(pos[0], 0, 0);
+
+        console.log("@8");
+
+        return cabGroup;
     }
 
     function init() {
 
-        camera = new THREE.PerspectiveCamera( 70, window.innerWidth / window.innerHeight, 1, 5000 );
-        camera.position.z = 400;
+        camera = new THREE.PerspectiveCamera( 70, window.innerWidth / window.innerHeight, 1, 10000 );
+        camera.position.x = -1000;
+        camera.position.y = -3000;
+        camera.position.z = 1600;
         scene = new THREE.Scene();
 
         const image = new Image();
         image.onload = function() {
 
-            //fetch('http://127.0.0.1:5000/board?width=530&height=400&downCant=1&upCant=1&leftCant=1&rightCant=2&boardThickness=18', {mode: 'cors'}).then(data=>{return data.json()}).then(res=>{ createBoard(res, image); });
-
-            const resp = await fetch('http://127.0.0.1:5000/cab?width=300&height=860&depth=580', {mode: 'cors'}).then(data=>{return data.json()}).then(res=>{
-                
-                console.log(res)
-                for(var i = 0; i < res.boards.length; i++)
-                {
-                    const response = await fetch('http://127.0.0.1:5000/board?width=' + res.boards[i].width + 
-                                                 '&height=' + res.boards[i].height + 
-                                                 '&downCant=' + res.boards[i].cants['downCant'] + 
-                                                 '&upCant=' + res.boards[i].cants['upCant'] + 
-                                                 '&leftCant=' + res.boards[i].cants['leftCant'] + 
-                                                 '&rightCant=' + res.boards[i].cants['rightCant'] + 
-                                                 '&boardThickness=18', {mode: 'cors'});
-
-                    const resB = await response.json();
-                    console.log(resB)
-
-                    createBoard(resB, image, res.boards[i].pos, res.boards[i].rot);
-                }
-            });
+            var cab1 = await createCab(300, 580, 580, [0, 0, 0], [0, 0, 0], image);
+            //console.log("@1");
+            //var cab1 = await createCab(300, 860, 560, [-1316, -402, 100], [0, 0, 0], image);
+            //console.log("@2");
+            //var cab2 = await createCab(600, 860, 560, [-1766, -402, 100], [0, 0, 0], image);
+            //var cab3 = await createCab(1200, 860, 480, [-3266, -442, 100], [0, 0, 0], image);
+            //var cab4 = await createCab(442, 860, 490, [-3620, -922, 100], [0, 0, 90], image);
 
         };
-        image.src = 'textures/shato.jpg'
+        image.src = 'textures/svetal_abanos.jpg'
 
         var axesHelper = new THREE.AxesHelper( 600 );
-        scene.add( axesHelper );
+        //scene.add( axesHelper );
 
         //grid xy
         var gridXY = new THREE.GridHelper(1000, 1);
         gridXY.rotation.x = Math.PI/2;
         gridXY.position.set(0,0,0);
-        scene.add(gridXY);
+        //scene.add(gridXY);
 
         //var texture = new THREE.TextureLoader().load( 'textures/shato.jpg' );
 
