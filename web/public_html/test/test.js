@@ -739,7 +739,7 @@ function isPowerOf2(value) {
         return group;
     }
 
-    function createCab(width, height, depth, pos, rot, image)
+    async function createCab(width, height, depth, pos, rot, image)
     {
         console.log("@3");
         const resp = await fetch('http://127.0.0.1:5000/cab?width=' + width + 
@@ -767,20 +767,15 @@ function isPowerOf2(value) {
             const resB = await response.json();
             console.log(resB)
 
-            //res.boards[i].pos[0] += pos[0]; res.boards[i].pos[1] += pos[1]; res.boards[i].pos[2] += pos[2];
-            //res.boards[i].rot[0] += rot[0]; res.boards[i].rot[1] += rot[1]; res.boards[i].rot[2] += rot[2];
-            if (i == 0)
-            {
             boardGroup = createBoard(resB, image, res.boards[i].pos, res.boards[i].rot);
             cabGroup.add(boardGroup);
             console.log("@7");
-            }
         }
-        cabGroup.position.set(pos[0], 0, 0);
-        console.log("setting up cab position: " + pos)
-        //cabGroup.rotation.set(rot[2], rot[3], rot[0]);
+        cabGroup.position.set(pos[0], pos[1], pos[2]);
+        console.log("setting up cab position: " + pos);
+        cabGroup.rotation.set((rot[1]/90)*(Math.PI / 2), (rot[2]/90)*(Math.PI / 2), (rot[0]/90)*(Math.PI / 2));
+        console.log("setting up cab rotation: " + rot);
         scene.add(cabGroup);
-        //cabGroup.position.set(pos[0], 0, 0);
 
         console.log("@8");
 
@@ -790,33 +785,30 @@ function isPowerOf2(value) {
     function init() {
 
         camera = new THREE.PerspectiveCamera( 70, window.innerWidth / window.innerHeight, 1, 10000 );
-        camera.position.x = -1000;
-        camera.position.y = -3000;
-        camera.position.z = 1600;
+        camera.position.set(-3000, -3000, 1600);
+        camera.up = new THREE.Vector3(0, 0, 1);
+        camera.lookAt(new THREE.Vector3(-3266, -422, 0));
         scene = new THREE.Scene();
 
         const image = new Image();
         image.onload = function() {
 
-            var cab1 = await createCab(300, 580, 580, [0, 0, 0], [0, 0, 0], image);
-            //console.log("@1");
-            //var cab1 = await createCab(300, 860, 560, [-1316, -402, 100], [0, 0, 0], image);
-            //console.log("@2");
-            //var cab2 = await createCab(600, 860, 560, [-1766, -402, 100], [0, 0, 0], image);
-            //var cab3 = await createCab(1200, 860, 480, [-3266, -442, 100], [0, 0, 0], image);
-            //var cab4 = await createCab(442, 860, 490, [-3620, -922, 100], [0, 0, 90], image);
+            var cab1 = await createCab(300, 860, 560, [-1316, -402, 100], [0, 0, 0], image);
+            var cab2 = await createCab(600, 860, 560, [-1766, -402, 100], [0, 0, 0], image);
+            var cab3 = await createCab(1200, 860, 480, [-3266, -442, 100], [0, 0, 0], image);
+            var cab4 = await createCab(442, 860, 490, [-3620, -922, 100], [90, 0, 0], image);
 
         };
         image.src = 'textures/svetal_abanos.jpg'
 
         var axesHelper = new THREE.AxesHelper( 600 );
-        //scene.add( axesHelper );
+        scene.add( axesHelper );
 
         //grid xy
-        var gridXY = new THREE.GridHelper(1000, 1);
+        var gridXY = new THREE.GridHelper(10000, 100);
         gridXY.rotation.x = Math.PI/2;
         gridXY.position.set(0,0,0);
-        //scene.add(gridXY);
+        scene.add(gridXY);
 
         //var texture = new THREE.TextureLoader().load( 'textures/shato.jpg' );
 
@@ -828,7 +820,7 @@ function isPowerOf2(value) {
 
         controls = new THREE.TrackballControls( camera, renderer.domElement );
         controls.minDistance = 200;
-        controls.maxDistance = 3000;
+        controls.maxDistance = 10000;
 
         window.addEventListener( 'resize', onWindowResize, false );
      }

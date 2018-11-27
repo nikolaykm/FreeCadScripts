@@ -48938,86 +48938,87 @@ function createBoard(res, image, posShift, rotShift) {
 }
 
 function createCab(width, height, depth, pos, rot, image) {
-    var resp, res, i, response, resB;
-    console.log("@3");
-    return fetch('http://127.0.0.1:5000/cab?width=' + width + '&height=' + height + '&depth=' + depth, {
-        mode: 'cors'
-    }).then((function ($await_3) {
-        resp = $await_3;
-        console.log("@4");
-        return resp.json().then((function ($await_4) {
-            res = $await_4;
-            console.log(res);
-            console.log("@5");
-            cabGroup = new THREE.Object3D();
-            i = 0;
-            return (function $Loop_1($Loop_1_exit, $error) {
-                function $Loop_1_next() {
-                    i++;
-                    return $Loop_1($Loop_1_exit, $error);
-                }
-                
-                if (i < res.boards.length) {
-                    console.log("@6");
-                    //res.boards[i].pos[0] += pos[0]; res.boards[i].pos[1] += pos[1]; res.boards[i].pos[2] += pos[2];
-                    //res.boards[i].rot[0] += rot[0]; res.boards[i].rot[1] += rot[1]; res.boards[i].rot[2] += rot[2];
-                    return fetch('http://127.0.0.1:5000/board?width=' + res.boards[i].width + '&height=' + res.boards[i].height + '&downCant=' + res.boards[i].cants['downCant'] + '&upCant=' + res.boards[i].cants['upCant'] + '&leftCant=' + res.boards[i].cants['leftCant'] + '&rightCant=' + res.boards[i].cants['rightCant'] + '&boardThickness=18', {
-                        mode: 'cors'
-                    }).then((function ($await_5) {
-                        response = $await_5;
-                        return response.json().then((function ($await_6) {
-                            resB = $await_6;
-                            console.log(resB);
-                            if (i == 0) {
+    return (function ($return, $error) {
+        var resp, res, i, response, resB;
+        console.log("@3");
+        return fetch('http://127.0.0.1:5000/cab?width=' + width + '&height=' + height + '&depth=' + depth, {
+            mode: 'cors'
+        }).then((function ($await_3) {
+            resp = $await_3;
+            console.log("@4");
+            return resp.json().then((function ($await_4) {
+                res = $await_4;
+                console.log(res);
+                console.log("@5");
+                cabGroup = new THREE.Object3D();
+                i = 0;
+                return (function $Loop_1($Loop_1_exit, $error) {
+                    function $Loop_1_next() {
+                        i++;
+                        return $Loop_1($Loop_1_exit, $error);
+                    }
+                    
+                    if (i < res.boards.length) {
+                        console.log("@6");
+                        return fetch('http://127.0.0.1:5000/board?width=' + res.boards[i].width + '&height=' + res.boards[i].height + '&downCant=' + res.boards[i].cants['downCant'] + '&upCant=' + res.boards[i].cants['upCant'] + '&leftCant=' + res.boards[i].cants['leftCant'] + '&rightCant=' + res.boards[i].cants['rightCant'] + '&boardThickness=18', {
+                            mode: 'cors'
+                        }).then((function ($await_5) {
+                            response = $await_5;
+                            return response.json().then((function ($await_6) {
+                                resB = $await_6;
+                                console.log(resB);
                                 boardGroup = createBoard(resB, image, res.boards[i].pos, res.boards[i].rot);
                                 cabGroup.add(boardGroup);
                                 console.log("@7");
-                            }
-                            return void $Loop_1_next.call(this);
+                                return void $Loop_1_next.call(this);
+                            }).$asyncbind(this, $error), $error);
                         }).$asyncbind(this, $error), $error);
-                    }).$asyncbind(this, $error), $error);
-                } else 
-                    return void $Loop_1_exit();
-            }).$asyncbind(this).then((function ($await_7) {
-                cabGroup.position.set(pos[0], 0, 0);
-                console.log("setting up cab position: " + pos);
-                //cabGroup.rotation.set(rot[2], rot[3], rot[0]);
-                scene.add(cabGroup);
-                //cabGroup.position.set(pos[0], 0, 0);
-                console.log("@8");
-                return cabGroup;
+                    } else 
+                        return void $Loop_1_exit();
+                }).$asyncbind(this).then((function ($await_7) {
+                    cabGroup.position.set(pos[0], pos[1], pos[2]);
+                    console.log("setting up cab position: " + pos);
+                    cabGroup.rotation.set(rot[1] / 90 * (Math.PI / 2), rot[2] / 90 * (Math.PI / 2), rot[0] / 90 * (Math.PI / 2));
+                    console.log("setting up cab rotation: " + rot);
+                    scene.add(cabGroup);
+                    console.log("@8");
+                    return $return(cabGroup);
+                }).$asyncbind(this, $error), $error);
             }).$asyncbind(this, $error), $error);
         }).$asyncbind(this, $error), $error);
-    }).$asyncbind(this, $error), $error);
+    }).$asyncbind(this, true);
 }
 
 function init() {
     camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 1, 10000);
-    camera.position.x = -1000;
-    camera.position.y = -3000;
-    camera.position.z = 1600;
+    camera.position.set(-3000, -3000, 1600);
+    camera.up = new THREE.Vector3(0, 0, 1);
+    camera.lookAt(new THREE.Vector3(-3266, -422, 0));
     scene = new THREE.Scene();
     const image = new Image();
     image.onload = function () {
-        var cab1;
-        //console.log("@1");
-        //var cab1 = await createCab(300, 860, 560, [-1316, -402, 100], [0, 0, 0], image);
-        //console.log("@2");
-        //var cab2 = await createCab(600, 860, 560, [-1766, -402, 100], [0, 0, 0], image);
-        //var cab3 = await createCab(1200, 860, 480, [-3266, -442, 100], [0, 0, 0], image);
-        //var cab4 = await createCab(442, 860, 490, [-3620, -922, 100], [0, 0, 90], image);
-        return createCab(300, 580, 580, [0,0,0], [0,0,0], image).then((function ($await_8) {
+        var cab1, cab2, cab3, cab4;
+        return createCab(300, 860, 560, [-1316,-402,100], [0,0,0], image).then((function ($await_8) {
             cab1 = $await_8;
+            return createCab(600, 860, 560, [-1766,-402,100], [0,0,0], image).then((function ($await_9) {
+                cab2 = $await_9;
+                return createCab(1200, 860, 480, [-3266,-442,100], [0,0,0], image).then((function ($await_10) {
+                    cab3 = $await_10;
+                    return createCab(442, 860, 490, [-3620,-922,100], [90,0,0], image).then((function ($await_11) {
+                        cab4 = $await_11;
+                    }).$asyncbind(this, $error), $error);
+                }).$asyncbind(this, $error), $error);
+            }).$asyncbind(this, $error), $error);
         }).$asyncbind(this, $error), $error);
     };
     image.src = 'textures/svetal_abanos.jpg';
     var axesHelper = new THREE.AxesHelper(600);
-    //scene.add( axesHelper );
+    scene.add(axesHelper);
     //grid xy
-    var gridXY = new THREE.GridHelper(1000, 1);
+    var gridXY = new THREE.GridHelper(10000, 100);
     gridXY.rotation.x = Math.PI / 2;
     gridXY.position.set(0, 0, 0);
-    //scene.add(gridXY);
+    scene.add(gridXY);
     //var texture = new THREE.TextureLoader().load( 'textures/shato.jpg' );
     renderer = new THREE.WebGLRenderer({
         antialias: true
@@ -49027,7 +49028,7 @@ function init() {
     document.body.appendChild(renderer.domElement);
     controls = new THREE.TrackballControls(camera, renderer.domElement);
     controls.minDistance = 200;
-    controls.maxDistance = 3000;
+    controls.maxDistance = 10000;
     window.addEventListener('resize', onWindowResize, false);
 }
 
