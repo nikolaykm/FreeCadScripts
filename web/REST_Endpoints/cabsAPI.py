@@ -16,6 +16,8 @@ c.execute('''CREATE TABLE IF NOT EXISTS `SpreadSheetsRows` ( `id` INTEGER PRIMAR
 conn.commit()
 conn.close()
 
+spaceBetweenDoors = 3.0
+
 class Spreadsheet(Resource):
 
     def get(self, spreadSheetName=None, boardName=None):
@@ -181,6 +183,8 @@ class Board(Resource):
 class Cab(Resource):
 
     def get(self):
+        addOns = dict()
+
         parser = reqparse.RequestParser()
         parser.add_argument("width", required=True, help="Width cannot be blank!")
         parser.add_argument("height", required=True, help="Height cannot be blank!")
@@ -197,6 +201,9 @@ class Cab(Resource):
         parser.add_argument("cardboardThickness")
         parser.add_argument("material")
         parser.add_argument("cardboardMaterial")
+        parser.add_argument("doorsMaterial")
+        parser.add_argument("doors")
+        parser.add_argument("shelves")
         args = parser.parse_args()
 
         width = float(args['width'])
@@ -214,6 +221,10 @@ class Cab(Resource):
         cardboardThickness = float(args['cardboardThickness']) if args['cardboardThickness'] != None else 3.0
         material = args['material'] if args['material'] != None else ""
         cardboardMaterial = args['cardboardMaterial'] if args['cardboardMaterial'] != None else "_cardboard"
+        doorsMaterial = args['doorsMaterial'] if args['doorsMaterial'] != None else ""
+        doors = int(args['doors']) if args['doors'] != None else 0
+        shelves = int(args['shelves']) if args['shelves'] != None else 0
+
 
         resultDict = {}
 
@@ -230,6 +241,7 @@ class Cab(Resource):
                                       'cants' : cants, 
                                       'material' : material, 
                                       'fladderSide' : "W", 
+                                      'thickness' : boardThickness,
                                       'pos' : (0, 0, 0), 
                                       'rot' : (0, 0, 0)})
 
@@ -243,6 +255,7 @@ class Cab(Resource):
                                       'cants' : cants, 
                                       'material' : material, 
                                       'fladderSide' : "H",
+                                      'thickness' : boardThickness,
                                       'pos' : (-width/2, 0, calcHeight/2+boardThickness),
                                       'rot' : (90, 0, 90)})
 
@@ -256,6 +269,7 @@ class Cab(Resource):
                                       'cants' : cants, 
                                       'material' : material, 
                                       'fladderSide' : "H",
+                                      'thickness' : boardThickness,
                                       'pos' : (width/2, 0, calcHeight/2+boardThickness),
                                       'rot' : (90, 0, -90)})
 
@@ -270,6 +284,7 @@ class Cab(Resource):
                                          'cants' : cants, 
                                          'material' : material, 
                                          'fladderSide' : "-",
+                                         'thickness' : boardThickness,
                                          'pos' : (0, -baseHeight/2+calcHeight/2, height-legHeight-boardThickness), 
                                          'rot' : (0, 0, 0)})
 
@@ -283,6 +298,7 @@ class Cab(Resource):
                                          'cants' : cants, 
                                          'material' : material, 
                                          'fladderSide' : "-",
+                                         'thickness' : boardThickness,
                                          'pos' : (0, baseHeight/2-calcHeight/2, height-legHeight-boardThickness),
                                          'rot' : (0, 0, 0)})
         else:
@@ -296,12 +312,84 @@ class Cab(Resource):
                                          'cants' : cants, 
                                          'material' : material, 
                                          'fladderSide' : "W",
+                                         'thickness' : boardThickness,
                                          'pos' : (0, 0, height-boardThickness-shiftBlend-(legHeight if isBase else 0)),
                                          'rot' : (0, 0, 0)})
 
+
+        if isHavingBack:
+            cants = { 'downCant' : 0, 'upCant' : 0, 'leftCant' : 0, 'rightCant' : 0 }
+
+            if not visibleBack:
+                #create back from cardboard
+                calcWidth = width - 3;
+                calcHeight = height-(legHeight if isBase else 0)-3
+                resultDict['boards'].append({'name' : '_Back',  
+                                             'width' : calcWidth, 
+                                             'height' : calcHeight, 
+                                             'cants' : cants, 
+                                             'material' : material+"_card", 
+                                             'fladderSide' : "H", 
+                                             'thickness' : cardboardThickness,
+                                             'pos' : (0, baseHeight/2+cardboardThickness, height/2-(legHeight if isBase else 0)/2),
+                                             'rot' : (0, 90, 0) })
+            else:
+                #create back from normal board
+                calcWidth = width-2*boardThickness;
+                calcHeight = height-(legHeight if isBase else 0)-2*boardThickness
+                resultDict['boards'].append({'name' : '_Back',
+                                             'width' : calcWidth,
+                                             'height' : calcHeight,
+                                             'cants' : cants,
+                                             'material' : material+"_card",
+                                             'fladderSide' : "H",
+                                             'thickness' : boardThickness,
+                                             'pos' : (0, baseHeight/2+baseCants['upCant'], height/2-(legHeight if isBase else 0)/2), 
+                                             'rot' : (0, 90, 0) })
+
+
+        if 'list' not in addOns:
+            addOns['list'] = []
+
+        if doors > 0:
+            calcWidth = width/doors - spaceBetweenDoors - (spaceBetweenDoors/(2*doors) if 'doorsWallRight' in addOns else 0) - (spaceBetweenDoors/(2*doors) if 'doorsWallLeft' in addOns else 0)
+            calcHeight = height-((legHeight+2) if isBase else 0)-spaceBetweenDoors
+            for curDoor in range(0, doors):
+                xPos = calcWidth*curDoor + calcWidth/2 - width/2 + spaceBetweenDoors/2
+                if curDoor == 0 and 'doorsWallLeft' in addOns: xPos = xPos + spaceBetweenDoors/2
+                if curDoor != 0: xPos = xPos + spaceBetweenDoors
+                doorsHoles = addOns['doorsHoles'] if 'doorsHoles' in addOns else 0
+                doorsHolesSide = addOns['doorsHolesSide'] if 'doorsHolesSide' in addOns else '-'
+                addOns['list'].append(["_Door" + str(curDoor+1), calcWidth, calcHeight, {'downCant' : lCantT, 'upCant' : lCantT, 'leftCant' : lCantT, 'rightCant' : lCantT}, xPos, 0, 0, True, doorsHoles, doorsHolesSide])
+
+        if shelves > 0:
+            calcWidth = width - 2*boardThickness
+            calcHeight = depth - (boardThickness if visibleBack else cardboardThickness) - sCantT
+            for curShelf in range(1, shelves+1):
+                yPos = (sCantT - boardThickness/2) if visibleBack else sCantT/2
+                zPos = ((height-(legHeight if isBase else 0))/(shelves+1))*curShelf
+                addOns['list'].append(["_Shelf" + str(curShelf), calcWidth, calcHeight, {'downCant' : sCantT, 'upCant' : 0, 'leftCant' : 0, 'rightCant' : 0}, 0, yPos, zPos, False])
+
+        #create addOns
+        for addOn in addOns['list']:
+            doorsHoles = addOn[8] if len(addOn) >= 9 else 0
+            doorsHolesSide = addOn[9] if len(addOn) >= 10 else '-'
+            xPos = addOn[4]
+            yPos = ((-baseHeight/2-baseCants['downCant']-2) if addOn[7] else 0) + addOn[5]
+            zPos = ((height/2 - ((legHeight+2) if isBase else 0)/2) if addOn[7] else 0) + addOn[6]
+            resultDict['boards'].append({'name' : addOn[0], 
+                                         'width' : addOn[1], 
+                                         'height' : addOn[2], 
+                                         'cants' : addOn[3], 
+                                         'material' : doorsMaterial if addOn[7] else material, 
+                                         'fladderSide' : 'H' if addOn[7] else 'W', 
+                                         'thickness' : boardThickness, 
+                                         'doorHoles' : doorsHoles, 
+                                         'doorHolesSide' : doorsHolesSide,
+                                         'pos' : (xPos, yPos, zPos),
+                                         'rot' : (0, (90 if addOn[7] else 0), 0)})
+
         return resultDict
-
-
 
 
 api.add_resource(Spreadsheet, "/ss", "/ss/<string:spreadSheetName>", "/ss/<string:spreadSheetName>/<string:boardName>")

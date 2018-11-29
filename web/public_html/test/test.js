@@ -679,6 +679,7 @@ function isPowerOf2(value) {
 
     init();
     animate();
+    createModel();
 
     function createBoard(res,image, posShift, rotShift)
     {
@@ -739,12 +740,14 @@ function isPowerOf2(value) {
         return group;
     }
 
-    async function createCab(width, height, depth, pos, rot, image)
+    async function createCab(width, height, depth, pos, rot, boardsImage, backsImage, doors, shelves)
     {
         console.log("@3");
         const resp = await fetch('http://127.0.0.1:5000/cab?width=' + width + 
                                  '&height=' + height + 
-                                 '&depth=' + depth, {mode: 'cors'});
+                                 '&depth=' + depth + 
+                                 '&doors=' + doors + 
+                                 '&shelves=' + shelves,  {mode: 'cors'});
 
         console.log("@4");
 
@@ -762,12 +765,12 @@ function isPowerOf2(value) {
                                          '&upCant=' + res.boards[i].cants['upCant'] +
                                          '&leftCant=' + res.boards[i].cants['leftCant'] +
                                          '&rightCant=' + res.boards[i].cants['rightCant'] +
-                                         '&boardThickness=18', {mode: 'cors'});
+                                         '&boardThickness=' + res.boards[i].thickness, {mode: 'cors'});
 
             const resB = await response.json();
             console.log(resB)
 
-            boardGroup = createBoard(resB, image, res.boards[i].pos, res.boards[i].rot);
+            boardGroup = createBoard(resB, (res.boards[i].material == '_card' ? backsImage : boardsImage), res.boards[i].pos, res.boards[i].rot);
             cabGroup.add(boardGroup);
             console.log("@7");
         }
@@ -782,6 +785,23 @@ function isPowerOf2(value) {
         return cabGroup;
     }
 
+    function loadImage(src)
+    {
+        console.log("!1");
+        return new Promise((resolve, reject) => {
+            console.log("!2");
+            let img = new Image()
+            console.log("!3");
+            img.onload = () => resolve(img)
+            console.log("!4");
+            img.onerror = reject
+            console.log("!5");
+            img.src = src
+            console.log("!6");
+        })
+        console.log("!7");
+    }
+
     function init() {
 
         camera = new THREE.PerspectiveCamera( 70, window.innerWidth / window.innerHeight, 1, 10000 );
@@ -789,17 +809,6 @@ function isPowerOf2(value) {
         camera.up = new THREE.Vector3(0, 0, 1);
         camera.lookAt(new THREE.Vector3(-3266, -422, 0));
         scene = new THREE.Scene();
-
-        const image = new Image();
-        image.onload = function() {
-
-            var cab1 = await createCab(300, 860, 560, [-1316, -402, 100], [0, 0, 0], image);
-            var cab2 = await createCab(600, 860, 560, [-1766, -402, 100], [0, 0, 0], image);
-            var cab3 = await createCab(1200, 860, 480, [-3266, -442, 100], [0, 0, 0], image);
-            var cab4 = await createCab(442, 860, 490, [-3620, -922, 100], [90, 0, 0], image);
-
-        };
-        image.src = 'textures/svetal_abanos.jpg'
 
         var axesHelper = new THREE.AxesHelper( 600 );
         scene.add( axesHelper );
@@ -837,4 +846,15 @@ function isPowerOf2(value) {
          //mesh.rotation.x += 0.005;
          //mesh.rotation.y += 0.01;
          renderer.render( scene, camera );
+     }
+
+     function createModel()
+     {
+        const boardsImage = await loadImage('textures/svetal_abanos.jpg');
+        const backsImage = await loadImage('textures/krusa_mdf.jpg');
+
+        var cab1 = await createCab(300, 860, 560, [-1316, -402, 100], [0, 0, 0], boardsImage, backsImage, 1, 0);
+        var cab2 = await createCab(600, 860, 560, [-1766, -402, 100], [0, 0, 0], boardsImage, backsImage, 0, 0);
+        var cab3 = await createCab(1200, 860, 480, [-3266, -442, 100], [0, 0, 0], boardsImage, backsImage, 2, 1);
+        var cab4 = await createCab(442, 860, 490, [-3620, -922, 100], [90, 0, 0], boardsImage, backsImage, 1, 1);
      }

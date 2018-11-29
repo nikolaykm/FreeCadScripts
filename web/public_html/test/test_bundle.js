@@ -48881,6 +48881,7 @@ var camera, scene, renderer, controls;
 var mesh;
 init();
 animate();
+createModel();
 function createBoard(res, image, posShift, rotShift) {
     group = new THREE.Object3D();
     //use the image, e.g. draw part of it on a canvas
@@ -48937,11 +48938,11 @@ function createBoard(res, image, posShift, rotShift) {
     return group;
 }
 
-function createCab(width, height, depth, pos, rot, image) {
+function createCab(width, height, depth, pos, rot, boardsImage, backsImage, doors, shelves) {
     return (function ($return, $error) {
         var resp, res, i, response, resB;
         console.log("@3");
-        return fetch('http://127.0.0.1:5000/cab?width=' + width + '&height=' + height + '&depth=' + depth, {
+        return fetch('http://127.0.0.1:5000/cab?width=' + width + '&height=' + height + '&depth=' + depth + '&doors=' + doors + '&shelves=' + shelves, {
             mode: 'cors'
         }).then((function ($await_3) {
             resp = $await_3;
@@ -48960,14 +48961,14 @@ function createCab(width, height, depth, pos, rot, image) {
                     
                     if (i < res.boards.length) {
                         console.log("@6");
-                        return fetch('http://127.0.0.1:5000/board?width=' + res.boards[i].width + '&height=' + res.boards[i].height + '&downCant=' + res.boards[i].cants['downCant'] + '&upCant=' + res.boards[i].cants['upCant'] + '&leftCant=' + res.boards[i].cants['leftCant'] + '&rightCant=' + res.boards[i].cants['rightCant'] + '&boardThickness=18', {
+                        return fetch('http://127.0.0.1:5000/board?width=' + res.boards[i].width + '&height=' + res.boards[i].height + '&downCant=' + res.boards[i].cants['downCant'] + '&upCant=' + res.boards[i].cants['upCant'] + '&leftCant=' + res.boards[i].cants['leftCant'] + '&rightCant=' + res.boards[i].cants['rightCant'] + '&boardThickness=' + res.boards[i].thickness, {
                             mode: 'cors'
                         }).then((function ($await_5) {
                             response = $await_5;
                             return response.json().then((function ($await_6) {
                                 resB = $await_6;
                                 console.log(resB);
-                                boardGroup = createBoard(resB, image, res.boards[i].pos, res.boards[i].rot);
+                                boardGroup = createBoard(resB, res.boards[i].material == '_card' ? backsImage : boardsImage, res.boards[i].pos, res.boards[i].rot);
                                 cabGroup.add(boardGroup);
                                 console.log("@7");
                                 return void $Loop_1_next.call(this);
@@ -48989,29 +48990,27 @@ function createCab(width, height, depth, pos, rot, image) {
     }).$asyncbind(this, true);
 }
 
+function loadImage(src) {
+    console.log("!1");
+    return new Promise((resolve, reject) => {
+        console.log("!2");
+        let img = new Image();
+        console.log("!3");
+        img.onload = (() => resolve(img));
+        console.log("!4");
+        img.onerror = reject;
+        console.log("!5");
+        img.src = src;
+        console.log("!6");
+    });
+}
+
 function init() {
     camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 1, 10000);
     camera.position.set(-3000, -3000, 1600);
     camera.up = new THREE.Vector3(0, 0, 1);
     camera.lookAt(new THREE.Vector3(-3266, -422, 0));
     scene = new THREE.Scene();
-    const image = new Image();
-    image.onload = function () {
-        var cab1, cab2, cab3, cab4;
-        return createCab(300, 860, 560, [-1316,-402,100], [0,0,0], image).then((function ($await_8) {
-            cab1 = $await_8;
-            return createCab(600, 860, 560, [-1766,-402,100], [0,0,0], image).then((function ($await_9) {
-                cab2 = $await_9;
-                return createCab(1200, 860, 480, [-3266,-442,100], [0,0,0], image).then((function ($await_10) {
-                    cab3 = $await_10;
-                    return createCab(442, 860, 490, [-3620,-922,100], [90,0,0], image).then((function ($await_11) {
-                        cab4 = $await_11;
-                    }).$asyncbind(this, $error), $error);
-                }).$asyncbind(this, $error), $error);
-            }).$asyncbind(this, $error), $error);
-        }).$asyncbind(this, $error), $error);
-    };
-    image.src = 'textures/svetal_abanos.jpg';
     var axesHelper = new THREE.AxesHelper(600);
     scene.add(axesHelper);
     //grid xy
@@ -49044,6 +49043,28 @@ function animate() {
     //mesh.rotation.x += 0.005;
     //mesh.rotation.y += 0.01;
     renderer.render(scene, camera);
+}
+
+function createModel() {
+    var boardsImage, backsImage, cab1, cab2, cab3, cab4;
+    return loadImage('textures/svetal_abanos.jpg').then((function ($await_8) {
+        boardsImage = $await_8;
+        return loadImage('textures/krusa_mdf.jpg').then((function ($await_9) {
+            backsImage = $await_9;
+            return createCab(300, 860, 560, [-1316,-402,100], [0,0,0], boardsImage, backsImage, 1, 0).then((function ($await_10) {
+                cab1 = $await_10;
+                return createCab(600, 860, 560, [-1766,-402,100], [0,0,0], boardsImage, backsImage, 0, 0).then((function ($await_11) {
+                    cab2 = $await_11;
+                    return createCab(1200, 860, 480, [-3266,-442,100], [0,0,0], boardsImage, backsImage, 2, 1).then((function ($await_12) {
+                        cab3 = $await_12;
+                        return createCab(442, 860, 490, [-3620,-922,100], [90,0,0], boardsImage, backsImage, 1, 1).then((function ($await_13) {
+                            cab4 = $await_13;
+                        }).$asyncbind(this, $error), $error);
+                    }).$asyncbind(this, $error), $error);
+                }).$asyncbind(this, $error), $error);
+            }).$asyncbind(this, $error), $error);
+        }).$asyncbind(this, $error), $error);
+    }).$asyncbind(this, $error), $error);
 }
 
 
